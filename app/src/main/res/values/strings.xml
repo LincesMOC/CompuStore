@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">CompuStore</string>
+    <string name="categories_title">Categorías de Productos</string>
+    <string name="products_title">Productos</string>
+    <string name="assembly_title">Ensambles</string>
+    <string name="clients_title">Clientes</string>
+    <string name="orders_title">Órdenes</string>
+    <string name="reports_title">Reportes</string>
+
+    <string name="category_add">Agregar una nueva categoría</string>
+
+    <string name="category_update">Modificar una categoría</string>
+
+    <string name="category_delete">Eliminar una categoría</string>
+
+
+    <string name="add_msg">Se ha guardado la selección</string>
+    <string name="error_msg">No se ha guardado la selección</string>
+
+    <string name="dummy_title">Titulo</string>
+    <string name="write_hint">Escribe ...</string>
+
+
+    <string name="save_text">Guardar</string>
+    <string name="cancel_text">Canclear</string>
+    <string name="modify_text">Modificar</string>
+    <string name="delete_text">Eliminar</string>
+    <string name="sure_text">¿Esta seguro?</string>
+</resources>

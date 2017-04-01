@@ -35,7 +35,5 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, CategoriesActivity.class);
         startActivity(i);
 
-        //otro comentario con este sé que estoy en mi branch
-
     }
 }

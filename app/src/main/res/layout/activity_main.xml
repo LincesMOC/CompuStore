@@ -17,7 +17,7 @@
         android:id="@+id/idImageButtonCategorias"
         android:src="@drawable/categorias"
         android:scaleType="fitCenter"
-        android:background="white"
+        android:background="@android:color/transparent"
         android:onClick="onImageClick" />
     <ImageButton
         android:layout_width="180dp"
@@ -25,7 +25,7 @@
         android:id="@+id/idImageButtonProductos"
         android:layout_toRightOf="@id/idImageButtonCategorias"
         android:scaleType="fitCenter"
-        android:background="white"
+        android:background="@android:color/transparent"
         android:src="@drawable/productos"
         android:onClick="onImageClick" />
     <ImageButton
@@ -34,7 +34,7 @@
         android:layout_height="140dp"
         android:id="@+id/idImageButtonEnsambles"
         android:scaleType="fitCenter"
-        android:background="white"
+        android:background="@android:color/transparent"
         android:layout_below="@id/idImageButtonCategorias"
         android:src="@drawable/ensambles"
         android:onClick="onImageClick" />
@@ -43,7 +43,7 @@
         android:layout_height="140dp"
         android:id="@+id/idImageButtonClientes"
         android:scaleType="fitCenter"
-        android:background="white"
+        android:background="@android:color/transparent"
         android:layout_toRightOf="@id/idImageButtonEnsambles"
         android:layout_below="@id/idImageButtonProductos"
         android:src="@drawable/clientes"
@@ -56,7 +56,7 @@
         android:layout_below="@id/idImageButtonEnsambles"
         android:src="@drawable/ordenes"
         android:scaleType="fitCenter"
-        android:background="white"
+        android:background="@android:color/transparent"
         android:onClick="onImageClick" />
     <ImageButton
         android:layout_width="180dp"
@@ -64,7 +64,7 @@
         android:id="@+id/idImageButtonReportes"
         android:layout_toRightOf="@id/idImageButtonOrdenes"
         android:scaleType="fitCenter"
-        android:background="white"
+        android:background="@android:color/transparent"
         android:layout_below="@id/idImageButtonClientes"
         android:src="@drawable/reportes"
         android:onClick="onImageClick" />

@@ -229,7 +229,6 @@ public class CategoriesActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
 
-        //hola prueba github
     }
 }
 

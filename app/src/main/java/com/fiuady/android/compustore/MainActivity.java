@@ -11,21 +11,31 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton imageView;
+    ImageButton imageViewCategorias;
+    ImageButton imageViewProductos;
+    ImageButton imageViewEnsambles;
+    ImageButton imageViewClientes;
+    ImageButton imageViewOrdenes;
+    ImageButton imageViewReportes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageView = (ImageButton) findViewById(R.id.idImageButton);
+        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
+        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
+        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
+        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
+        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
+        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
     }
 
     public void onImageClick (View v) {
         Intent i = new Intent(this, CategoriesActivity.class);
         startActivity(i);
 
-        //otro comentario raro
+        //otro comentario con este sé que estoy en mi branch
 
     }
 }

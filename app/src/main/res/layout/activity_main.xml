@@ -13,7 +13,44 @@
     <ImageButton
         android:layout_width="140dp"
         android:layout_height="140dp"
-        android:id="@+id/idImageButton"
+        android:id="@+id/idImageButtonCategorias"
+        android:src="@drawable/categorias"
+        android:onClick="onImageClick" />
+    <ImageButton
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:id="@+id/idImageButtonProductos"
+        android:layout_toRightOf="@id/idImageButtonCategorias"
+        android:src="@drawable/categorias"
+        android:onClick="onImageClick" />
+    <ImageButton
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:id="@+id/idImageButtonEnsambles"
+        android:layout_below="@id/idImageButtonCategorias"
+        android:src="@drawable/categorias"
+        android:onClick="onImageClick" />
+    <ImageButton
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:id="@+id/idImageButtonClientes"
+        android:layout_toRightOf="@id/idImageButtonEnsambles"
+        android:layout_below="@id/idImageButtonProductos"
+        android:src="@drawable/categorias"
+        android:onClick="onImageClick" />
+    <ImageButton
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:id="@+id/idImageButtonOrdenes"
+        android:layout_below="@id/idImageButtonEnsambles"
+        android:src="@drawable/categorias"
+        android:onClick="onImageClick" />
+    <ImageButton
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:id="@+id/idImageButtonReportes"
+        android:layout_toRightOf="@id/idImageButtonOrdenes"
+        android:layout_below="@id/idImageButtonClientes"
         android:src="@drawable/categorias"
         android:onClick="onImageClick" />
 </RelativeLayout>

@@ -27,7 +27,7 @@
         android:scaleType="fitCenter"
         android:background="@android:color/transparent"
         android:src="@drawable/productos"
-        android:onClick="onImageClick" />
+        android:onClick="onImageClickproductos" />
     <ImageButton
         android:layout_width="180dp"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -37,7 +37,7 @@
         android:background="@android:color/transparent"
         android:layout_below="@id/idImageButtonCategorias"
         android:src="@drawable/ensambles"
-        android:onClick="onImageClick" />
+        android:onClick="onImageClickensambles" />
     <ImageButton
         android:layout_width="180dp"
         android:layout_height="140dp"
@@ -47,7 +47,7 @@
         android:layout_toRightOf="@id/idImageButtonEnsambles"
         android:layout_below="@id/idImageButtonProductos"
         android:src="@drawable/clientes"
-        android:onClick="onImageClick" />
+        android:onClick="onImageClickclientes" />
     <ImageButton
         android:layout_width="180dp"
         android:layout_height="140dp"
@@ -57,7 +57,7 @@
         android:src="@drawable/ordenes"
         android:scaleType="fitCenter"
         android:background="@android:color/transparent"
-        android:onClick="onImageClick" />
+        android:onClick="onImageClickensambles" />
     <ImageButton
         android:layout_width="180dp"
         android:layout_height="140dp"
@@ -67,5 +67,5 @@
         android:background="@android:color/transparent"
         android:layout_below="@id/idImageButtonClientes"
         android:src="@drawable/reportes"
-        android:onClick="onImageClick" />
+        android:onClick="onImageClickordenes" />
 </RelativeLayout>

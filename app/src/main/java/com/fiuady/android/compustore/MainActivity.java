@@ -35,5 +35,6 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, CategoriesActivity.class);
         startActivity(i);
 
+        // Hola
     }
 }

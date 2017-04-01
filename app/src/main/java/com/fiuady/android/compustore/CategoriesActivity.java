@@ -228,6 +228,8 @@ public class CategoriesActivity extends AppCompatActivity {
         dialog.show();
 
         return super.onOptionsItemSelected(item);
+
+        //hola prueba github
     }
 }
 

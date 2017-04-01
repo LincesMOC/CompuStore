@@ -24,5 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public void onImageClick (View v) {
         Intent i = new Intent(this, CategoriesActivity.class);
         startActivity(i);
+
+        //hola git ´prueba2
     }
 }

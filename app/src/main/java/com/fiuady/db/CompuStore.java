@@ -204,6 +204,9 @@ public final class CompuStore {
         if (b) {
             ContentValues values = new ContentValues();
             values.put(ProductsTable.Columns.DESCRIPTION, des);
+            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+            values.put(ProductsTable.Columns.PRICE, precio);
+            values.put(ProductsTable.Columns.QUANTITY, qty);
 
             db.update(ProductsTable.NAME,
                     values,
@@ -214,26 +217,28 @@ public final class CompuStore {
         return b;
     }
 
-    public boolean insertCategory(String text) {
+    public boolean insertProduct(String text, int id, int category_id, int precio, int qty) {
         boolean b = true;
-        List<Category> a = getAllCategories();
+        List<Product> a = getAllProducts();
         ContentValues values = new ContentValues();
 
         if (text.isEmpty()) {
             b = false;
         }
 
-        for(Category category : a) {
-            if (category.getDescription().toUpperCase().equals(text.toUpperCase())) {
-
+        for(Product product : a) {
+            if (product.getDescription().toUpperCase().equals(text.toUpperCase())) {
                 b = false;
             }
         }
 
         if (b) {
-            Category c = a.get(a.size()-1);
+            Product c = a.get(a.size()-1);
 
             values.put(CategoriesTable.Columns.DESCRIPTION, text);
+            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+            values.put(ProductsTable.Columns.PRICE, precio);
+            values.put(ProductsTable.Columns.QUANTITY, qty);
 
             db.insert(CategoriesTable.NAME, null, values);
         }

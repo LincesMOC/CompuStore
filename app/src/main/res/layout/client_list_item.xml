@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="?android:listSeparatorTextViewStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/client_fullname_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:textSize="18dp"
+        tools:text="Apellidos,Nombre" />
+
+    <TextView
+        android:id="@+id/client_address_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/client_fullname_text"
+        android:textSize="18dp"
+        tools:text="Dirección" />
+
+    <TextView
+        android:id="@+id/client_email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/client_address_text"
+        android:paddingBottom="16dp"
+        android:textSize="18dp"
+        tools:text="Email" />
+
+    <TextView
+        android:id="@+id/client_phone1_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:textSize="18dp"
+        tools:text="Phone1" />
+
+    <TextView
+        android:id="@+id/client_phone2_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/client_phone1_text"
+        android:textSize="18dp"
+        tools:text="Phone2" />
+
+    <TextView
+        android:id="@+id/client_phone3_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/client_phone2_text"
+        android:textSize="18dp"
+        tools:text="Phone3" />
+
+
+</RelativeLayout>

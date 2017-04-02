@@ -36,6 +36,20 @@ class ProductCursor extends CursorWrapper {
     }
 }
 
+class ClientCursor extends CursorWrapper {
+    public ClientCursor(Cursor cursor) {
+        super(cursor);
+    }
+
+    public Client getClient(){
+        Cursor cursor = getWrappedCursor();
+        return new Client(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.CustomersTable.Columns.ID)),cursor.getString(cursor.getColumnIndex(CustomersTable.Columns.FIRST_NAME)),
+                cursor.getString(cursor.getColumnIndex(CustomersTable.Columns.LAST_NAME)),cursor.getString(cursor.getColumnIndex(CustomersTable.Columns.ADDRESS)),
+                cursor.getString(cursor.getColumnIndex(CustomersTable.Columns.E_MAIL)),cursor.getString(cursor.getColumnIndex(CustomersTable.Columns.PHONE1)),
+                cursor.getString(cursor.getColumnIndex(CustomersTable.Columns.PHONE2)),cursor.getString(cursor.getColumnIndex(CustomersTable.Columns.PHONE3)));
+    }
+}
+
 public final class CompuStore {
     private CompuStoreHelper compuStoreHelper;
     private SQLiteDatabase db;
@@ -156,6 +170,20 @@ public final class CompuStore {
         ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY id", null));
         while(cursor.moveToNext()) {
             list.add(cursor.getProduct());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    // -------------------------------------------------------- CLIENTS --------------------------------------------------------
+
+    public List<Client> getAllClients() {
+        ArrayList<Client> list = new ArrayList<>();
+
+        ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers ORDER BY id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getClient());
         }
         cursor.close();
 

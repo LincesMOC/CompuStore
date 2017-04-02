@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.fiuady.db.Client;
+
 public class MainActivity extends AppCompatActivity {
 
     ImageButton imageViewCategorias;
@@ -24,17 +26,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
-        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
-        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
-        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
-        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
-        imageViewCategorias = (ImageButton) findViewById(R.id.idImageButtonCategorias);
+        imageViewProductos = (ImageButton) findViewById(R.id.idImageButtonProductos);
+        imageViewEnsambles = (ImageButton) findViewById(R.id.idImageButtonEnsambles);
+        imageViewClientes = (ImageButton) findViewById(R.id.idImageButtonClientes);
+        imageViewOrdenes = (ImageButton) findViewById(R.id.idImageButtonOrdenes);
+        imageViewReportes = (ImageButton) findViewById(R.id.idImageButtonReportes);
     }
 
     public void onImageClick (View v) {
         Intent i = new Intent(this, CategoriesActivity.class);
         startActivity(i);
-
-        // Hola
     }
+
+    public void onImageClickclientes (View v) {
+        Intent i = new Intent(this, ClientsActivity.class);
+        startActivity(i);
+    }
+
 }

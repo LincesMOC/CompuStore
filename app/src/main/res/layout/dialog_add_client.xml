@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/add_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        tool:text="@string/dummy_title"/>
+
+    <TextView
+        android:id="@+id/client_firstname_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/add_title"
+        android:textStyle="bold"
+        android:text="@string/client_firstname"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18dp"/>
+
+    <TextView
+        android:id="@+id/client_lastname_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/client_firstname_tag"
+        android:textStyle="bold"
+        android:text="@string/client_lastname"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18dp"/>
+
+    <TextView
+        android:id="@+id/client_address_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/client_lastname_tag"
+        android:textStyle="bold"
+        android:text="@string/client_address"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18dp"/>
+
+    <EditText
+        android:id="@+id/add_text_firstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_title"
+        android:layout_toRightOf="@id/client_address_tag"
+        android:hint="@string/write_hint"
+        android:inputType="text"
+        android:textSize="18dp" />
+
+
+    <EditText
+        android:id="@+id/add_text_lastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_text_firstName"
+        android:layout_toRightOf="@id/client_address_tag"
+        android:hint="@string/write_hint"
+        android:inputType="text"
+        android:textSize="18dp" />
+
+    <EditText
+        android:id="@+id/add_text_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_text_lastName"
+        android:layout_toRightOf="@id/client_address_tag"
+        android:hint="@string/write_hint"
+        android:inputType="text"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/client_email_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/client_address_tag"
+        android:textStyle="bold"
+        android:text="@string/client_email"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18dp"/>
+
+    <EditText
+        android:id="@+id/add_text_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_text_address"
+        android:layout_toRightOf="@id/client_address_tag"
+        android:hint="@string/write_hint"
+        android:inputType="text"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/client_phone1_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/client_email_tag"
+        android:textStyle="bold"
+        android:text="@string/client_phone1"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18dp"/>
+
+    <EditText
+        android:id="@+id/add_text_phone1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_text_email"
+        android:layout_toRightOf="@id/client_address_tag"
+        android:hint="@string/write_hint"
+        android:inputType="text"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/client_phone2_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/client_phone1_tag"
+        android:textStyle="bold"
+        android:text="@string/client_phone2"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18dp"/>
+
+    <EditText
+        android:id="@+id/add_text_phone2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_text_phone1"
+        android:layout_toRightOf="@id/client_address_tag"
+        android:hint="@string/write_hint"
+        android:inputType="text"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/client_phone3_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/client_phone2_tag"
+        android:textStyle="bold"
+        android:text="@string/client_phone3"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18dp"/>
+
+    <EditText
+        android:id="@+id/add_text_phone3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_text_phone2"
+        android:layout_toRightOf="@id/client_address_tag"
+        android:hint="@string/write_hint"
+        android:inputType="text"
+        android:textSize="18dp" />
+
+</RelativeLayout>

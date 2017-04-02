@@ -8,6 +8,8 @@
     <string name="reports_title">Reportes</string>
 
     <string name="category_add">Agregar una nueva categoría</string>
+    <string name="client_add">Agregar un nuevo cliente</string>
+
 
     <string name="category_update">Modificar una categoría</string>
 
@@ -15,15 +17,23 @@
 
 
     <string name="add_msg">Se ha guardado la selección</string>
+    <string name="add_msg_test">PRUEBA</string>
     <string name="error_msg">No se ha guardado la selección</string>
 
     <string name="dummy_title">Titulo</string>
     <string name="write_hint">Escribe ...</string>
+    <string name="client_firstname">Nombre: </string>
+    <string name="client_lastname">Apellido: </string>
+    <string name="client_address">Dirección: </string>
+    <string name="client_email">Email: </string>
+    <string name="client_phone1">Tel. 1: </string>
+    <string name="client_phone2">Tel. 2: </string>
+    <string name="client_phone3">Tel. 3: </string>
 
 
     <string name="save_text">Guardar</string>
-    <string name="cancel_text">Canclear</string>
+    <string name="cancel_text">Cancelar</string>
     <string name="modify_text">Modificar</string>
     <string name="delete_text">Eliminar</string>
-    <string name="sure_text">¿Esta seguro?</string>
+    <string name="sure_text">¿Está seguro?</string>
 </resources>

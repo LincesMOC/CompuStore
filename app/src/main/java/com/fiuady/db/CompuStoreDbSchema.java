@@ -1,6 +1,7 @@
 package com.fiuady.db;
 
 public final class CompuStoreDbSchema {
+
     public static final class CategoriesTable {
         public static final String NAME = "product_categories";
 
@@ -49,10 +50,10 @@ public final class CompuStoreDbSchema {
             public static final String FIRST_NAME = "first_name";
             public static final String LAST_NAME = "last_name";
             public static final String ADDRESS = "address";
+            public static final String E_MAIL = "e_mail";
             public static final String PHONE1 = "phone1";
             public static final String PHONE2 = "phone2";
             public static final String PHONE3 = "phone3";
-            public static final String E_MAIL = "e_mail";
         }
     }
 

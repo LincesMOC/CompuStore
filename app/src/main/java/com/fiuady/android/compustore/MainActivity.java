@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.fiuady.db.Client;
+
 public class MainActivity extends AppCompatActivity {
 
     ImageButton imageViewCategorias;
@@ -36,8 +38,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void onImageClickproductos (View v){
-        Intent i = new Intent(this,ProductsActivity.class);
+    public void onImageClickproductos (View v) {
+        Intent i = new Intent(this, ProductsActivity.class);
         startActivity(i);
     }
+
+    public void onImageClickclientes (View v) {
+        Intent i = new Intent(this, ClientsActivity.class);
+        startActivity(i);
+    }
+
 }

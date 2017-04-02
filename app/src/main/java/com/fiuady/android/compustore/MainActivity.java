@@ -38,6 +38,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void onImageClickproductos (View v) {
+        Intent i = new Intent(this, ProductsActivity.class);
+        startActivity(i);
+    }
+
     public void onImageClickclientes (View v) {
         Intent i = new Intent(this, ClientsActivity.class);
         startActivity(i);

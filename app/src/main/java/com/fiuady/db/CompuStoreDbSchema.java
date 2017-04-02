@@ -11,7 +11,7 @@ public final class CompuStoreDbSchema {
         }
     }
 
-    public static final class ProductsTable {
+    public static final class ProductsTable{
         public static final String NAME = "products";
 
         public static final class Columns {

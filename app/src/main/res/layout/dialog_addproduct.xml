@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/add_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:text="Agregar producto"
+         />
+
+    <TextView
+        android:id="@+id/add_categoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_title"
+        android:padding="5dp"
+        android:textSize="18sp"
+        android:text="Categoria: "
+        />
+
+    <TextView
+        android:id="@+id/add_descripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_categoria"
+        android:padding="5dp"
+        android:textSize="18sp"
+        android:text="Descripción: "
+        />
+    <TextView
+        android:id="@+id/add_precio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_descripcion"
+        android:padding="5dp"
+        android:textSize="18sp"
+        android:text="Precio: "
+        />
+
+    <TextView
+        android:id="@+id/add_cantidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_precio"
+        android:padding="5dp"
+        android:textSize="18sp"
+        tool:text="Cantidad: "
+        />
+    <EditText
+        android:id="@+id/add_txtcateg"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/add_title"
+        android:layout_toRightOf="@+id/add_descripcion"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/add_txtdesc"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/add_txtcateg"
+        android:layout_toRightOf="@+id/add_descripcion"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/add_txtprecio"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/add_txtdesc"
+        android:layout_toRightOf="@+id/add_descripcion"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/add_txtcantidad"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/add_txtprecio"
+        android:layout_toRightOf="@+id/add_descripcion"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

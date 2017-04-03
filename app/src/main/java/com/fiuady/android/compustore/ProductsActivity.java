@@ -175,8 +175,6 @@ public class ProductsActivity extends AppCompatActivity {
         for(Category category :categories){
             adapter.add(category.getDescription());
         }
-
-
     }
 
     @Override

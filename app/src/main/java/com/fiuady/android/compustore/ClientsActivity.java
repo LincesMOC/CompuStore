@@ -5,6 +5,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +51,19 @@ public class ClientsActivity extends AppCompatActivity {
         }
 
         public void bindClient(Client client){
+
+            txtFullName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final PopupMenu popup = new PopupMenu(ClientsActivity.this, txtFullName);
+                    popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
+
+                }
+            });
+
+
+
             txtFullName.setText(client.getLastName()+", "+client.getFirstName());
             txtAddress.setText(client.getAddress());
             txtEmail.setText(client.getEmail());
@@ -80,6 +94,7 @@ public class ClientsActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {return clients.size();}
+
     }
 
     @Override
@@ -168,4 +183,6 @@ public class ClientsActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

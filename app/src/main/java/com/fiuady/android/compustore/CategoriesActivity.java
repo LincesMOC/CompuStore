@@ -40,9 +40,13 @@ public class CategoriesActivity extends AppCompatActivity {
         }
 
         public void bindCategory(final Category category) {
+
             txtDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
+
                     final PopupMenu popup = new PopupMenu(CategoriesActivity.this, txtDescription);
                     popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
 
@@ -123,8 +127,13 @@ public class CategoriesActivity extends AppCompatActivity {
                         }
                     });
                     popup.show();
+
+
+
+
                 }
             });
+
             txtDescription.setText(category.getDescription());
         }
     }

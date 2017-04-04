@@ -40,9 +40,11 @@ public class CategoriesActivity extends AppCompatActivity {
         }
 
         public void bindCategory(final Category category) {
+
             txtDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     final PopupMenu popup = new PopupMenu(CategoriesActivity.this, txtDescription);
                     popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
 
@@ -123,8 +125,11 @@ public class CategoriesActivity extends AppCompatActivity {
                         }
                     });
                     popup.show();
+
+
                 }
             });
+
             txtDescription.setText(category.getDescription());
         }
     }
@@ -184,6 +189,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View view = getLayoutInflater().inflate(R.layout.dialog_add, null);
         TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
@@ -208,7 +214,10 @@ public class CategoriesActivity extends AppCompatActivity {
                         Toast.makeText(CategoriesActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
                     }
                 }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
+
+
                     public void onClick(DialogInterface dialog, int id) {
+
                         if (compuStore.insertCategory(txtAdd.getText().toString())) {
                             Toast.makeText(CategoriesActivity.this, R.string.add_msg, Toast.LENGTH_SHORT).show();
                             adapter = new CategoryAdapter(compuStore.getAllCategories());
@@ -216,6 +225,7 @@ public class CategoriesActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(CategoriesActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
 

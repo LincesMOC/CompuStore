@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.fiuady.db.Client;
 
 public class MainActivity extends AppCompatActivity {

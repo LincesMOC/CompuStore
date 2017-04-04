@@ -189,4 +189,41 @@ public final class CompuStore {
 
         return list;
     }
+
+    public boolean insertClient(String firstName, String lastName, String address, String email, String phone1,
+                                String phone2, String phone3) {
+        boolean b = true;
+        List<Client> a = getAllClients();
+        ContentValues values = new ContentValues();
+
+        if (firstName.isEmpty()||lastName.isEmpty()||address.isEmpty()) {
+            b = false;
+        }
+
+        for(Client client : a) {
+
+            if(client.getFirstName().toUpperCase().equals(firstName.toUpperCase()) &&
+                    client.getLastName().toUpperCase().equals(lastName.toUpperCase())){
+                b=false;
+            }
+
+        }
+
+        if (b) {
+            Client c = a.get(a.size()-1);
+
+            values.put(CustomersTable.Columns.FIRST_NAME, firstName);
+            values.put(CustomersTable.Columns.LAST_NAME, lastName);
+            values.put(CustomersTable.Columns.ADDRESS,address);
+            values.put(CustomersTable.Columns.E_MAIL, email);
+            values.put(CustomersTable.Columns.PHONE1, phone1);
+            values.put(CustomersTable.Columns.PHONE2,phone2);
+            values.put(CustomersTable.Columns.PHONE3,phone3);
+
+            db.insert(CustomersTable.NAME,null,values);
+        }
+
+        return b;
+    }
+
 }

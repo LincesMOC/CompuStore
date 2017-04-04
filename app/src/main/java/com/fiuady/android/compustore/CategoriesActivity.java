@@ -127,8 +127,6 @@ public class CategoriesActivity extends AppCompatActivity {
                     popup.show();
 
 
-
-
                 }
             });
 

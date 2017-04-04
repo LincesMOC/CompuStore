@@ -36,6 +36,17 @@ class ProductCursor extends CursorWrapper {
     }
 }
 
+class AssemblyProductCursor extends CursorWrapper{
+    public AssemblyProductCursor(Cursor cursor){super(cursor);}
+
+    public AssemblyProduct getAssemblyProduct(){
+        Cursor cursor = getWrappedCursor();
+        return new AssemblyProduct(cursor.getInt(cursor.getColumnIndex(AssemblyProductsTable.Columns.ID)),
+                cursor.getInt(cursor.getColumnIndex(AssemblyProductsTable.Columns.PRODUCT_ID)),
+                cursor.getInt(cursor.getColumnIndex(AssemblyProductsTable.Columns.QUANTITY)));
+    }
+}
+
 class ClientCursor extends CursorWrapper {
     public ClientCursor(Cursor cursor) {
         super(cursor);
@@ -175,6 +186,112 @@ public final class CompuStore {
 
         return list;
     }
+
+    public boolean updateProduct(String des, int id, int category_id, int precio, int qty) {
+        boolean b = true;
+        List<Product> a = getAllProducts();
+
+        if (des.isEmpty()) {
+            b = false;
+        }
+
+        for(Product product : a) {
+            if (product.getDescription().toUpperCase().equals(des.toUpperCase())) {
+                b = false;
+            }
+        }
+
+        if (b) {
+            ContentValues values = new ContentValues();
+            values.put(ProductsTable.Columns.DESCRIPTION, des);
+            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+            values.put(ProductsTable.Columns.PRICE, precio);
+            values.put(ProductsTable.Columns.QUANTITY, qty);
+
+            db.update(ProductsTable.NAME,
+                    values,
+                    ProductsTable.Columns.ID+ "= ?",
+                    new String[] {Integer.toString(id)});
+        }
+
+        return b;
+    }
+
+    public boolean insertProduct(String text, int id, int category_id, int precio, int qty) {
+        boolean b = true;
+        List<Product> a = getAllProducts();
+        ContentValues values = new ContentValues();
+
+        if (text.isEmpty()) {
+            b = false;
+        }
+
+        for(Product product : a) {
+            if (product.getDescription().toUpperCase().equals(text.toUpperCase())) {
+                b = false;
+            }
+        }
+
+        if (b) {
+            Product c = a.get(a.size()-1);
+
+            values.put(CategoriesTable.Columns.DESCRIPTION, text);
+            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+            values.put(ProductsTable.Columns.PRICE, precio);
+            values.put(ProductsTable.Columns.QUANTITY, qty);
+
+            db.insert(CategoriesTable.NAME, null, values);
+        }
+
+        return b;
+    }
+
+    public boolean deleteProduct(int id, boolean dlt) {
+        boolean c = false;
+        boolean d = true;
+        boolean e = true;
+        List<Product> a = getAllProducts();
+        List<AssemblyProduct> b = getAllAssemblyProducts();
+
+        for(Product product : a) {
+            if (e) {
+                if (product.getId() == id) {  // Condicion si la categoria ya exite en categorias
+                    e = false;
+                    if (d) {
+                        for(AssemblyProduct assemblyProduct : b) {
+                            if (assemblyProduct.getProduct_id() == id) {  // Condicion si algun producto tiene asignado la categoria
+                                c = true;
+                                d = false;
+                            }
+                            else {
+                                if (dlt){  // Quiero elimanrlo?
+                                    db.delete(ProductsTable.NAME, ProductsTable.Columns.ID + "= ?",
+                                            new String[] {Integer.toString(id)});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return  c;
+    }
+
+    // ----------------------------------------------- AssemblyProducts --------------------------------------------------------
+    public List<AssemblyProduct> getAllAssemblyProducts(){
+        ArrayList<AssemblyProduct> list = new ArrayList<>();
+
+        AssemblyProductCursor cursor = new AssemblyProductCursor(db.rawQuery("select * from assembly_products order by id",null));
+        while (cursor.moveToNext()){
+            list.add(cursor.getAssemblyProduct());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+
 
     // -------------------------------------------------------- CLIENTS --------------------------------------------------------
 

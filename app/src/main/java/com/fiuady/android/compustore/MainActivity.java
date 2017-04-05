@@ -47,4 +47,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void onImageClickordenes (View view) {
+        Intent i = new Intent(this, OrdersActivity.class);
+        startActivity(i);
+    }
 }

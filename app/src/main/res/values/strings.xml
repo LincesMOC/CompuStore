@@ -8,6 +8,7 @@
     <string name="reports_title">Reportes</string>
 
     <string name="category_add">Agregar una nueva categoría</string>
+    <string name="product_add">Agregar un nuevo producto</string>
     <string name="client_add">Agregar un nuevo cliente</string>
 
 
@@ -19,6 +20,7 @@
     <string name="add_msg">Se ha guardado la selección</string>
     <string name="add_msg_test">PRUEBA</string>
     <string name="error_msg">No se ha guardado la selección</string>
+    <string name="error_msg1">El precio no es aceptable</string>
 
     <string name="dummy_title">Titulo</string>
     <string name="write_hint">Escribe ...</string>

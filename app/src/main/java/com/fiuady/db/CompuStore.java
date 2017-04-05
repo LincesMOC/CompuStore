@@ -178,7 +178,7 @@ public final class CompuStore {
     public List<Product> getAllProducts() {
         ArrayList<Product> list = new ArrayList<>();
 
-        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY id", null));
+        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY description", null));
         while(cursor.moveToNext()) {
             list.add(cursor.getProduct());
         }
@@ -217,7 +217,7 @@ public final class CompuStore {
         return b;
     }
 
-    public boolean insertProduct(String text, int id, int category_id, int precio, int qty) {
+    public boolean insertProduct(String text, int category_id, int precio, int qty) {
         boolean b = true;
         List<Product> a = getAllProducts();
         ContentValues values = new ContentValues();
@@ -235,12 +235,12 @@ public final class CompuStore {
         if (b) {
             Product c = a.get(a.size()-1);
 
-            values.put(CategoriesTable.Columns.DESCRIPTION, text);
+            values.put(ProductsTable.Columns.DESCRIPTION, text);
             values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
             values.put(ProductsTable.Columns.PRICE, precio);
             values.put(ProductsTable.Columns.QUANTITY, qty);
 
-            db.insert(CategoriesTable.NAME, null, values);
+            db.insert(ProductsTable.NAME, null, values);
         }
 
         return b;

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +25,7 @@ import com.fiuady.db.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ProductsActivity extends AppCompatActivity {
 
@@ -152,6 +155,7 @@ public class ProductsActivity extends AppCompatActivity {
     private RecyclerView productRV;
     private Spinner categorispinner;
     private CompuStore compuStore;
+    private List<Category> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +163,7 @@ public class ProductsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_products);
 
         categorispinner = (Spinner)findViewById(R.id.spinnercategories);
+        //txtcateg = (Spinner) findViewById(R.id.add_txtcateg);
         compuStore = new CompuStore(getApplicationContext());
 
         productRV = (RecyclerView) findViewById(R.id.recyclerviewproductos);
@@ -168,10 +173,12 @@ public class ProductsActivity extends AppCompatActivity {
         productRV.setAdapter(adapter);
 
         ArrayAdapter<String> adapter= new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
+        //ArrayAdapter<String> adapter1= new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
         categorispinner.setAdapter(adapter);
+        //txtcateg.setAdapter(adapter);
 
         adapter.add("Todos");
-        List<Category> categories = compuStore.getAllCategories();
+        categories = compuStore.getAllCategories();
         for(Category category :categories){
             adapter.add(category.getDescription());
         }
@@ -185,6 +192,80 @@ public class ProductsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        final View view = getLayoutInflater().inflate(R.layout.dialog_addproduct, null);
+        final EditText txtdescripcion = (EditText) view.findViewById(R.id.add_txtdesc);
+        final EditText txtprecio = (EditText) view.findViewById(R.id.add_txtprecio);
+
+
+        //spinner----------------------------------
+        final Spinner txtcateg = (Spinner)view.findViewById(R.id.addtxtcateg);
+        ArrayAdapter<String> adapter1= new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
+        txtcateg.setAdapter(adapter1);
+        for(Category category :categories){
+            adapter1.add(category.getDescription());
+        }
+        //------------------
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setCancelable(false);
+
+        builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+               dialog.dismiss();
+           }
+        }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                boolean comprecio = false;
+                try{
+                   Integer.parseInt(txtprecio.getText().toString());
+                }catch (NumberFormatException nfe){
+                    comprecio = true;
+                }
+
+                if(comprecio){
+                    dialog.dismiss();
+                    Toast.makeText(ProductsActivity.this, R.string.error_msg1, Toast.LENGTH_SHORT).show();
+                }else{
+
+                AlertDialog.Builder build = new AlertDialog.Builder(ProductsActivity.this);
+                build.setCancelable(false);
+                build.setTitle(getString(R.string.product_add));
+                build.setMessage(R.string.sure_text);
+
+                build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        Toast.makeText(ProductsActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
+                    }
+                }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        List<Category> categories = compuStore.getAllCategories();
+
+                        if (compuStore.insertProduct(txtdescripcion.getText().toString(),categories.get(txtcateg.getSelectedItemPosition()).getId(),Integer.parseInt(txtprecio.getText().toString()),0)) {
+                            Toast.makeText(ProductsActivity.this, R.string.add_msg, Toast.LENGTH_SHORT).show();
+                            adapter = new ProductsActivity.ProductAdapter(compuStore.getAllProducts());
+                            productRV.setAdapter(adapter);
+                        } else {
+                            Toast.makeText(ProductsActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                build.create().show();
+
+                }
+            }
+        });
+
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
         return super.onOptionsItemSelected(item);
     }
 }

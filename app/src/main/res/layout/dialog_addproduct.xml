@@ -20,7 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_title"
-        android:padding="5dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:textSize="18sp"
         android:text="Categoria: "
         />
@@ -30,7 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_categoria"
-        android:padding="5dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:textSize="18sp"
         android:text="Descripción: "
         />
@@ -39,43 +41,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_descripcion"
-        android:padding="5dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:textSize="18sp"
         android:text="Precio: "
         />
 
-    <TextView
-        android:id="@+id/add_cantidad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_precio"
-        android:padding="5dp"
-        android:textSize="18sp"
-        tool:text="Cantidad: "
-        />
-    <EditText
-        android:id="@+id/add_txtcateg"
-        android:layout_width="wrap_content"
+
+    <Spinner
+        android:id="@+id/addtxtcateg"
+        android:layout_width="match_parent"
         android:layout_below="@+id/add_title"
         android:layout_toRightOf="@+id/add_descripcion"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" ></Spinner>
 
     <EditText
         android:id="@+id/add_txtdesc"
-        android:layout_width="wrap_content"
-        android:layout_below="@+id/add_txtcateg"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/addtxtcateg"
+        android:hint="Escribe la descripcion"
         android:layout_toRightOf="@+id/add_descripcion"
         android:layout_height="wrap_content" />
     <EditText
         android:id="@+id/add_txtprecio"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_below="@+id/add_txtdesc"
-        android:layout_toRightOf="@+id/add_descripcion"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/add_txtcantidad"
-        android:layout_width="wrap_content"
-        android:layout_below="@+id/add_txtprecio"
+        android:hint="Escribe el precio"
         android:layout_toRightOf="@+id/add_descripcion"
         android:layout_height="wrap_content" />
 

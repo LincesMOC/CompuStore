@@ -36,4 +36,21 @@
     <string name="modify_text">Modificar</string>
     <string name="delete_text">Eliminar</string>
     <string name="sure_text">¿Está seguro?</string>
+
+    <string-array name="client_filter_array">
+        <item>Nombre</item>
+        <item>Apellido</item>
+        <item>Dirección</item>
+        <item>Teléfono</item>
+        <item>Email</item>
+    </string-array>
+
+    <string-array name="status_order_array">
+        <item>Pendiente</item>
+        <item>Cancelado</item>
+        <item>Confirmado</item>
+        <item>En tránsito</item>
+        <item>Finalizado</item>
+    </string-array>
+
 </resources>

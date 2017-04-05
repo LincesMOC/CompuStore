@@ -311,7 +311,7 @@ public final class CompuStore {
     public List<Client> getAllClients() {
         ArrayList<Client> list = new ArrayList<>();
 
-        ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers ORDER BY id", null));
+        ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers ORDER BY last_name", null));
         while(cursor.moveToNext()){
             list.add(cursor.getClient());
         }

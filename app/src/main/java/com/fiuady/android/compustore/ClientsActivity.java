@@ -12,7 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -199,6 +201,12 @@ public class ClientsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_clients);
 
         compuStore = new CompuStore(this);
+
+        Spinner spinner = (Spinner)findViewById(R.id.client_filter_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.client_filter_array,android.R.layout.simple_spinner_dropdown_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_multiple_choice);
+        spinner.setAdapter(adapter);
 
         clientRV=(RecyclerView)findViewById(R.id.activity_clients_RV);
         clientRV.setLayoutManager(new LinearLayoutManager(this)); //Porque el recycler view NO es un layout, necesitamos uno.

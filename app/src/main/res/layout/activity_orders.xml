@@ -17,40 +17,39 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/filtrado_tag"
+            android:id="@+id/status_order_TAG"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:paddingTop="10dp"
-            android:text="Filtrado: "
+            android:text="Estado: "
             android:textColor="@android:color/black"
             android:textSize="18dp" />
 
         <Spinner
-            android:id="@+id/client_filter_spinner"
+            android:id="@+id/status_order_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/filtrado_tag"
+            android:layout_toRightOf="@id/status_order_TAG"
             android:layout_alignParentTop="true"></Spinner>
 
-        <ImageButton
-            android:id="@+id/search_imagebutton"
+        <Spinner
+            android:id="@+id/client_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_search_category_default"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
             android:layout_alignParentRight="true"
-            android:layout_alignBottom="@+id/edittextdescripcion" />
+            android:layout_alignParentTop="true"></Spinner>
 
-        <EditText
-            android:id="@+id/edittextdescripcion"
-            android:layout_width="200dp"
+        <TextView
+            android:id="@+id/client_TAG"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/search_imagebutton"
-            android:textSize="16dp"
-            android:textAlignment="center"
-            android:hint="Texto de búsqueda..." />
+            android:layout_toLeftOf="@id/client_spinner"
+            android:paddingTop="10dp"
+            android:text="Cliente: "
+            android:textColor="@android:color/black"
+            android:textSize="18dp" />
+
 
     </RelativeLayout>
 

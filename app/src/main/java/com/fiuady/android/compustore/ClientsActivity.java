@@ -1,6 +1,7 @@
 package com.fiuady.android.compustore;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +27,7 @@ public class ClientsActivity extends AppCompatActivity {
     private ClientAdapter C_adapter;
     private CompuStore compuStore;
 
-    private class ClientHolder extends RecyclerView.ViewHolder {
+    private class ClientHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView txtFullName;
         private TextView txtAddress;
@@ -35,12 +35,14 @@ public class ClientsActivity extends AppCompatActivity {
         private TextView txtPhone2;
         private TextView txtPhone3;
         private TextView txtEmail;
+
         List<Client> clients;
 
 
         public ClientHolder(View itemView,List<Client> clients) {
             super(itemView);
             this.clients=clients;
+            itemView.setOnClickListener(this);
 
             txtFullName=(TextView)itemView.findViewById(R.id.client_fullname_text);
             txtAddress=(TextView)itemView.findViewById(R.id.client_address_text);
@@ -52,24 +54,132 @@ public class ClientsActivity extends AppCompatActivity {
 
         public void bindClient(Client client){
 
-            txtFullName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    final PopupMenu popup = new PopupMenu(ClientsActivity.this, txtFullName);
-                    popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
-
-                }
-            });
-
-
-
             txtFullName.setText(client.getLastName()+", "+client.getFirstName());
             txtAddress.setText(client.getAddress());
             txtEmail.setText(client.getEmail());
             txtPhone1.setText(client.getPhone1());
             txtPhone2.setText(client.getPhone2());
             txtPhone3.setText(client.getPhone3());
+        }
+
+
+        @Override
+        public void onClick(View v) {
+
+            int position=getAdapterPosition();
+            final Client client = clients.get(position);
+
+            final PopupMenu popup = new PopupMenu(ClientsActivity.this,itemView);
+            popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
+
+            if (compuStore.deleteClient(client.getId(), false)) {
+                popup.getMenu().removeItem(R.id.menu_item2);
+            }
+
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
+
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    if ((item.getTitle().toString()).equalsIgnoreCase("Modificar")){
+
+                        Toast.makeText(ClientsActivity.this,"MODIFICAR!",Toast.LENGTH_SHORT).show();
+
+                        int position=getAdapterPosition();
+                        final Client client = clients.get(position);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ClientsActivity.this);
+                        final View view = getLayoutInflater().inflate(R.layout.dialog_add_client, null);
+
+                        final EditText txtAdd_firstName = (EditText) view.findViewById(R.id.add_text_firstName);
+                        txtAdd_firstName.setText(client.getFirstName());
+                        final EditText txtAdd_lastName = (EditText) view.findViewById(R.id.add_text_lastName);
+                        txtAdd_lastName.setText(client.getLastName());
+                        final EditText txtAdd_address = (EditText) view.findViewById(R.id.add_text_address);
+                        txtAdd_address.setText(client.getAddress());
+                        final EditText txtAdd_email = (EditText) view.findViewById(R.id.add_text_email);
+                        txtAdd_email.setText(client.getEmail());
+                        final EditText txtAdd_phone1 = (EditText) view.findViewById(R.id.add_text_phone1);
+                        txtAdd_phone1.setText(client.getPhone1());
+                        final EditText txtAdd_phone2 = (EditText) view.findViewById(R.id.add_text_phone2);
+                        txtAdd_phone2.setText(client.getPhone2());
+                        final EditText txtAdd_phone3 = (EditText) view.findViewById(R.id.add_text_phone3);
+                        txtAdd_phone3.setText(client.getPhone3());
+
+                        builder.setCancelable(false);
+
+                        builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                AlertDialog.Builder build = new AlertDialog.Builder(ClientsActivity.this);
+                                build.setCancelable(false);
+                                build.setTitle(getString(R.string.client_add));
+                                build.setMessage(R.string.sure_text);
+
+                                build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if (compuStore.updateClient(txtAdd_firstName.getText().toString(),txtAdd_lastName.getText().toString(),
+                                                txtAdd_address.getText().toString(),txtAdd_email.getText().toString(),txtAdd_phone1.getText().toString(),
+                                                txtAdd_phone2.getText().toString(),txtAdd_phone3.getText().toString(),client.getId())) {
+
+                                            Toast.makeText(ClientsActivity.this, R.string.add_msg, Toast.LENGTH_SHORT).show();
+
+                                            C_adapter = new ClientsActivity.ClientAdapter(compuStore.getAllClients());
+                                            clientRV.setAdapter(C_adapter);
+
+                                        } else {
+                                            Toast.makeText(ClientsActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+                                build.create().show();
+                            }
+                        });
+                        builder.setView(view);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                    } else if ((item.getTitle().toString()).equalsIgnoreCase("Eliminar")) {
+
+                        int position=getAdapterPosition();
+                        final Client client = clients.get(position);
+
+                        Toast.makeText(ClientsActivity.this, "ELIMINAR!", Toast.LENGTH_LONG).show();
+
+                        AlertDialog.Builder build = new AlertDialog.Builder(ClientsActivity.this);
+                        build.setCancelable(false);
+                        build.setTitle(getString(R.string.client_delete));
+                        build.setMessage(R.string.sure_text);
+
+                        build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(ClientsActivity.this, R.string.add_msg, Toast.LENGTH_SHORT).show();
+                                compuStore.deleteClient(client.getId(), true);
+                                C_adapter = new ClientsActivity.ClientAdapter(compuStore.getAllClients());
+                                clientRV.setAdapter(C_adapter);
+                            }
+                        });
+
+                        build.create().show();
+                    }
+
+                    return true;
+                }
+            });
+
+            popup.show();
         }
     }
 
@@ -122,6 +232,8 @@ public class ClientsActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View view = getLayoutInflater().inflate(R.layout.dialog_add_client, null);
+
+
         TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
 
         final EditText txtAdd_firstName = (EditText) view.findViewById(R.id.add_text_firstName);
@@ -133,6 +245,7 @@ public class ClientsActivity extends AppCompatActivity {
         final EditText txtAdd_phone3 = (EditText) view.findViewById(R.id.add_text_phone3);
 
         txtTitle.setText(R.string.client_add);
+
         builder.setCancelable(false);
 
         builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {

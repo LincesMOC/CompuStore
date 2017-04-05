@@ -14,7 +14,7 @@
     <string name="category_update">Modificar una categoría</string>
 
     <string name="category_delete">Eliminar una categoría</string>
-
+    <string name="client_delete">Eliminar un cliente</string>
 
     <string name="add_msg">Se ha guardado la selección</string>
     <string name="add_msg_test">PRUEBA</string>

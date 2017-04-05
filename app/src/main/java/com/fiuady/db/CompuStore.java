@@ -61,6 +61,19 @@ class ClientCursor extends CursorWrapper {
     }
 }
 
+class OrderCursor extends CursorWrapper {
+    public OrderCursor(Cursor cursor) {
+        super(cursor);
+    }
+
+    public Order getOrder(){
+        Cursor cursor = getWrappedCursor();
+        return new Order(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.OrdersTable.Columns.ID)),cursor.getInt(cursor.getColumnIndex(OrdersTable.Columns.STATUS_ID)),
+                cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.OrdersTable.Columns.CUSTOMER_ID)),cursor.getString(cursor.getColumnIndex(OrdersTable.Columns.DATE)),
+                cursor.getString(cursor.getColumnIndex(OrdersTable.Columns.CHANGE_LOG)));
+    }
+}
+
 public final class CompuStore {
     private CompuStoreHelper compuStoreHelper;
     private SQLiteDatabase db;
@@ -307,6 +320,35 @@ public final class CompuStore {
         return list;
     }
 
+    public boolean updateClient(String firstName, String lastName, String address, String email, String phone1,
+                                String phone2, String phone3,int id) {
+        boolean b = true;
+        List<Client> a = getAllClients();
+
+        if (firstName.isEmpty()||lastName.isEmpty()||address.isEmpty()) {
+            b = false;
+        }
+
+        if (b) {
+            ContentValues values = new ContentValues();
+
+            values.put(CustomersTable.Columns.FIRST_NAME, firstName);
+            values.put(CustomersTable.Columns.LAST_NAME, lastName);
+            values.put(CustomersTable.Columns.ADDRESS,address);
+            values.put(CustomersTable.Columns.E_MAIL, email);
+            values.put(CustomersTable.Columns.PHONE1, phone1);
+            values.put(CustomersTable.Columns.PHONE2,phone2);
+            values.put(CustomersTable.Columns.PHONE3,phone3);
+
+            db.update(CustomersTable.NAME,
+                    values,
+                    CustomersTable.Columns.ID+ "= ?",
+                    new String[] {Integer.toString(id)});
+        }
+
+        return b;
+    }
+
     public boolean insertClient(String firstName, String lastName, String address, String email, String phone1,
                                 String phone2, String phone3) {
         boolean b = true;
@@ -341,6 +383,53 @@ public final class CompuStore {
         }
 
         return b;
+    }
+
+    public boolean deleteClient(int id, boolean dlt) {
+        boolean c = false;
+        boolean d = true;
+        boolean e = true;
+
+        List<Client> a = getAllClients();
+        List<Order> b = getAllOrders();
+
+        for(Client client : a) {
+            if (e) {
+                if (client.getId() == id) {  // Condición si la categoría ya existe en categorias
+                    e = false;
+                    if (d) {
+                        for(Order order : b) {
+                            if (order.getCustomer_id() == id) {  // Condicion si algún cliente tiene asignado una orden
+                                c = true;
+                                d = false;
+                            }
+                            else {
+                                if (dlt){  // Quiero elimanrlo?
+                                    db.delete(CustomersTable.NAME, CustomersTable.Columns.ID + "= ?",
+                                            new String[] {Integer.toString(id)});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return  c;
+    }
+
+
+    // -------------------------------------------------------- ORDERS --------------------------------------------------------
+
+    public List<Order> getAllOrders() {
+        ArrayList<Order> list = new ArrayList<>();
+
+        OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders ORDER BY id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getOrder());
+        }
+        cursor.close();
+        return list;
     }
 
 }

@@ -83,11 +83,6 @@ public class ClientsActivity extends AppCompatActivity {
 
                     if ((item.getTitle().toString()).equalsIgnoreCase("Modificar")){
 
-                        Toast.makeText(ClientsActivity.this,"MODIFICAR!",Toast.LENGTH_SHORT).show();
-
-                        int position=getAdapterPosition();
-                        final Client client = clients.get(position);
-
                         AlertDialog.Builder builder = new AlertDialog.Builder(ClientsActivity.this);
                         final View view = getLayoutInflater().inflate(R.layout.dialog_add_client, null);
 
@@ -139,7 +134,6 @@ public class ClientsActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-
                                 build.create().show();
                             }
                         });
@@ -148,11 +142,6 @@ public class ClientsActivity extends AppCompatActivity {
                         dialog.show();
 
                     } else if ((item.getTitle().toString()).equalsIgnoreCase("Eliminar")) {
-
-                        int position=getAdapterPosition();
-                        final Client client = clients.get(position);
-
-                        Toast.makeText(ClientsActivity.this, "ELIMINAR!", Toast.LENGTH_LONG).show();
 
                         AlertDialog.Builder build = new AlertDialog.Builder(ClientsActivity.this);
                         build.setCancelable(false);
@@ -171,14 +160,11 @@ public class ClientsActivity extends AppCompatActivity {
                                 clientRV.setAdapter(C_adapter);
                             }
                         });
-
                         build.create().show();
                     }
-
                     return true;
                 }
             });
-
             popup.show();
         }
     }
@@ -233,7 +219,6 @@ public class ClientsActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View view = getLayoutInflater().inflate(R.layout.dialog_add_client, null);
 
-
         TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
 
         final EditText txtAdd_firstName = (EditText) view.findViewById(R.id.add_text_firstName);
@@ -270,8 +255,6 @@ public class ClientsActivity extends AppCompatActivity {
                 }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-
-                        //Toast.makeText(ClientsActivity.this, R.string.add_msg_test, Toast.LENGTH_SHORT).show();
 
                         if(compuStore.insertClient(txtAdd_firstName.getText().toString(),txtAdd_lastName.getText().toString(),
                         txtAdd_address.getText().toString(),txtAdd_email.getText().toString(),txtAdd_phone1.getText().toString(),

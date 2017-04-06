@@ -12,9 +12,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:textSize="18dp"
-        tools:text="Nombre del cliente" />
+        android:paddingTop="10dp"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        tools:text="Nombre del cliente"/>
 
     <TextView
         android:id="@+id/txt_orderDate"
@@ -22,15 +23,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:textSize="18dp"
-        tools:text="Fecha" />
+        tools:text="Fecha"/>
 
     <TextView
         android:id="@+id/txt_orderStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/txt_clientName"
         android:textSize="18dp"
-        tools:text="Estado..." />
+        tools:text="Estado..."/>
 
 </RelativeLayout>

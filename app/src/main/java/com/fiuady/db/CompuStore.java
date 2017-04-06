@@ -432,5 +432,30 @@ public final class CompuStore {
         return list;
     }
 
+    public String getCustomer(int id){
+        //List<Client> clients = getAllClients();
+        String clientName = null;
 
+        //for (Client client : clients) {
+            //if (client.getId() == id){
+              //  clientName = client.getFirstName() + " " + client.getLastName();
+            //}
+            //else {clientName = null;}
+        //}
+        //return clientName;
+
+        ArrayList<Client> list = new ArrayList<>();
+
+        ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers WHERE id LIKE "+Integer.toString(id), null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getClient());
+        }
+        cursor.close();
+
+        for (Client client : list){
+            clientName = client.getFirstName() +" "+ client.getLastName();
+        }
+
+        return clientName;
+    }
 }

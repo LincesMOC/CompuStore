@@ -63,7 +63,6 @@ public class ClientsActivity extends AppCompatActivity {
             txtPhone3.setText(client.getPhone3());
         }
 
-
         @Override
         public void onClick(View v) {
 
@@ -284,3 +283,21 @@ public class ClientsActivity extends AppCompatActivity {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

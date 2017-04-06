@@ -165,7 +165,7 @@ public class ProductsActivity extends AppCompatActivity {
                                 }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
 
-                                        if (compuStore.updateProduct(product.getDescription(),product.getId(),product.getCategory_id(),product.getPrice(),Integer.parseInt(spinstock.getSelectedItem().toString()))) {
+                                        if (compuStore.updateProduct(product.getDescription(),product.getId(),product.getCategory_id(),product.getPrice(),Integer.parseInt(spinstock.getSelectedItem().toString()))) {//HACER FUNCION ACTUALIZAR STOCK PARA EVITAR COMPROBACIONES
                                             Toast.makeText(ProductsActivity.this,"El valor fue actualizado", Toast.LENGTH_SHORT).show();
                                         } else {
                                             Toast.makeText(ProductsActivity.this, R.string.error_msg2, Toast.LENGTH_SHORT).show();

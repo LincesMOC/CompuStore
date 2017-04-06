@@ -159,6 +159,7 @@ public class ProductsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_products);
 
         categorispinner = (Spinner)findViewById(R.id.spinnercategories);
+
         compuStore = new CompuStore(getApplicationContext());
 
         productRV = (RecyclerView) findViewById(R.id.recyclerviewproductos);

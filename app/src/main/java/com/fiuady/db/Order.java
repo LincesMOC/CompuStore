@@ -21,6 +21,25 @@ public class Order {
 
     public int getStatus_id() {return status_id;}
 
+    public String getStatus_String(){
+
+        if (status_id == 0){
+            return "Pendiente";
+        }
+        else if (status_id == 1){
+            return "Cancelado";
+        }
+        else if (status_id == 2){
+            return "Confirmado";
+        }
+        else if (status_id == 3){
+            return "En tránsito";
+        }
+        else
+
+        return "Finalizado";
+    }
+
     public int getCustomer_id() {return customer_id;}
 
     public String getDate() {return date;}

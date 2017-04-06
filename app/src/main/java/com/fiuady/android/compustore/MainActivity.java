@@ -50,5 +50,5 @@ public class MainActivity extends AppCompatActivity {
     public void onImageClickordenes (View view) {
         Intent i = new Intent(this, OrdersActivity.class);
         startActivity(i);
-    }
+        }
 }

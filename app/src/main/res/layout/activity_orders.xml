@@ -1,69 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/activity_orders"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="16dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.fiuady.android.compustore.ClientsActivity">
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/status_order_TAG"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:paddingTop="10dp"
-            android:text="Estado: "
-            android:textColor="@android:color/black"
-            android:textSize="18dp" />
-
-        <Spinner
-            android:id="@+id/status_order_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/status_order_TAG"
-            android:layout_alignParentTop="true"></Spinner>
-
-        <Spinner
-            android:id="@+id/client_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"></Spinner>
-
-        <TextView
-            android:id="@+id/client_TAG"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/client_spinner"
-            android:paddingTop="10dp"
-            android:text="Cliente: "
-            android:textColor="@android:color/black"
-            android:textSize="18dp" />
-
-
-    </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/activity_clients_RV"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contextClickable="false"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:scrollbars="vertical"
-        tools:context="com.fiuady.android.compustore.ClientsActivity">
-
-    </android.support.v7.widget.RecyclerView>
-
-</LinearLayout>
+    tools:context="com.fiuady.android.compustore.OrdersActivity">
+</android.support.v7.widget.RecyclerView>

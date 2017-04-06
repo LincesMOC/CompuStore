@@ -40,7 +40,6 @@ public class ClientsActivity extends AppCompatActivity {
 
         List<Client> clients;
 
-
         public ClientHolder(View itemView,List<Client> clients) {
             super(itemView);
             this.clients=clients;
@@ -186,20 +185,16 @@ public class ClientsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(ClientHolder holder, int position) {
-            holder.bindClient(clients.get(position));
-        }
+        public void onBindViewHolder(ClientHolder holder, int position) {holder.bindClient(clients.get(position));}
 
         @Override
         public int getItemCount() {return clients.size();}
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clients);
-
         compuStore = new CompuStore(this);
 
         Spinner spinner = (Spinner)findViewById(R.id.client_filter_spinner);

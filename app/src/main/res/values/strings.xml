@@ -18,9 +18,11 @@
 
 
     <string name="add_msg">Se ha guardado la selección</string>
+    <string name="dlt_msg">Se ha borrado la selección</string>
     <string name="add_msg_test">PRUEBA</string>
     <string name="error_msg">No se ha guardado la selección</string>
     <string name="error_msg1">El precio no es aceptable</string>
+    <string name="error_msg2">Las descripciones deben ser distintas</string>
 
     <string name="dummy_title">Titulo</string>
     <string name="write_hint">Escribe ...</string>

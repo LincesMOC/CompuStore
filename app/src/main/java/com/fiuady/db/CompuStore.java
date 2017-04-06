@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.fiuady.db.CompuStoreDbSchema.*;
 
@@ -277,6 +281,53 @@ public final class CompuStore {
 
         return  c;
     }
+
+    public List<Product> filterProducts(int categoryid, String texto){
+        ArrayList<Product> products = new ArrayList<>();
+        if(texto.trim() == ""){
+            if(categoryid == -1){ //texto nada categ todas
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+
+            }else{//texto nada categ algo
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products WHERE category_id = "+Integer.toString(categoryid) +" ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+            }
+
+        }else{
+            if(categoryid == -1){ //texto algo categ todas
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like "+texto.toString()+" ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+
+            }else{ //texto algo categorias algo
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like "+texto.toString()+" having category_id = "+Integer.toString(categoryid)+" ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+
+            }
+        }
+
+        //casos categoria todas texto nada, categoria algo texto nada
+        //categoria todas texto algo, categoria algo texto algo
+
+        return products;
+    }
+
 
     // ----------------------------------------------- AssemblyProducts --------------------------------------------------------
     public List<AssemblyProduct> getAllAssemblyProducts(){

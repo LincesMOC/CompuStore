@@ -43,7 +43,7 @@ public class ProductsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     final PopupMenu popup = new PopupMenu(ProductsActivity.this, txtDescription);
-                    popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
+                    popup.getMenuInflater().inflate(R.menu.option3_menu, popup.getMenu());
 
                     if (compuStore.deleteProduct(product.getId(), false)) {
                         popup.getMenu().removeItem(R.id.menu_item2);
@@ -53,7 +53,7 @@ public class ProductsActivity extends AppCompatActivity {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
 
-                            if (item.getTitle().equals(popup.getMenu().getItem(0).getTitle())) {
+                            if (item.getTitle().toString().equalsIgnoreCase("Modificar")) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ProductsActivity.this);
                                 final View view = getLayoutInflater().inflate(R.layout.dialog_addproduct, null);
                                 TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
@@ -122,10 +122,10 @@ public class ProductsActivity extends AppCompatActivity {
                                 dialog.show();
                             }
 
-                            else{
+                            if (item.getTitle().toString().equalsIgnoreCase("Eliminar")) {
                                 AlertDialog.Builder build = new AlertDialog.Builder(ProductsActivity.this);
                                 build.setCancelable(false);
-                                build.setTitle(getString(R.string.category_delete));
+                                build.setTitle("Eliminar un producto");
                                 build.setMessage(R.string.sure_text);
 
                                 build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
@@ -141,6 +141,38 @@ public class ProductsActivity extends AppCompatActivity {
                                     }
                                 });
 
+                                build.create().show();
+                            }
+
+                            if (item.getTitle().toString().equalsIgnoreCase("Agregar stock")) {
+                                AlertDialog.Builder build = new AlertDialog.Builder(ProductsActivity.this);
+                                build.setCancelable(false);
+                                final View view = getLayoutInflater().inflate(R.layout.dialog_addstock, null);
+                                build.setTitle("Agregar stock");
+                                final Spinner spinstock = (Spinner)view.findViewById(R.id.spinnerstock);
+                                ArrayAdapter<Integer> adapter2= new ArrayAdapter<Integer>(ProductsActivity.this,android.R.layout.simple_spinner_dropdown_item);
+                                //funcion para agregar al adapter numeros arriba del valor de stock actual
+                                int stock = compuStore.getProductStock(product.getId());
+                                for(int i=stock;i<stock+30;i++){
+                                    adapter2.add(i);
+                                }
+                                spinstock.setAdapter(adapter2);
+
+                                build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                        if (compuStore.updateProduct(product.getDescription(),product.getId(),product.getCategory_id(),product.getPrice(),Integer.parseInt(spinstock.getSelectedItem().toString()))) {
+                                            Toast.makeText(ProductsActivity.this,"El valor fue actualizado", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(ProductsActivity.this, R.string.error_msg2, Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+                                });
                                 build.create().show();
                             }
                             return true;
@@ -181,6 +213,7 @@ public class ProductsActivity extends AppCompatActivity {
     private Spinner categorispinner;
     private CompuStore compuStore;
     private List<Category> categories;
+    private EditText texto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,12 +221,13 @@ public class ProductsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_products);
 
         categorispinner = (Spinner)findViewById(R.id.spinnercategories);
+        texto = (EditText) findViewById(R.id.edittextdescripcion);
         //txtcateg = (Spinner) findViewById(R.id.add_txtcateg);
         compuStore = new CompuStore(getApplicationContext());
 
         productRV = (RecyclerView) findViewById(R.id.recyclerviewproductos);
         productRV.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ProductAdapter(compuStore.getAllProducts());
+        adapter = new ProductAdapter(new ArrayList<Product>());
         productRV.setAdapter(adapter);
 
 
@@ -203,7 +237,7 @@ public class ProductsActivity extends AppCompatActivity {
         //txtcateg.setAdapter(adapter);
 
         adapter.add("Todos");
-        categories = compuStore.getAllCategories();
+        categories = compuStore.getAllCategoriesid();
         for(Category category :categories){
             adapter.add(category.getDescription());
         }
@@ -291,9 +325,7 @@ public class ProductsActivity extends AppCompatActivity {
     }
 
     public void onSearchClick(View v){
-
-        adapter = new ProductsActivity.ProductAdapter(compuStore.getAllProducts());
+        adapter = new ProductsActivity.ProductAdapter(compuStore.filterProducts(categorispinner.getSelectedItemPosition()-1,texto.getText().toString()));
         productRV.setAdapter(adapter);
-
     }
 }

@@ -91,6 +91,18 @@ public final class CompuStore {
         return list;
     }
 
+    public List<Category> getAllCategoriesid() {
+        ArrayList<Category> list = new ArrayList<>();
+
+        CategoryCursor cursor = new CategoryCursor(db.rawQuery("SELECT * FROM product_categories ORDER BY id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getCategory());
+        }
+        cursor.close();
+
+        return list;
+    }
+
     public boolean updateCategory(String des, int id) {
         boolean b = true;
         List<Category> a = getAllCategories();
@@ -284,7 +296,7 @@ public final class CompuStore {
 
     public List<Product> filterProducts(int categoryid, String texto){
         ArrayList<Product> products = new ArrayList<>();
-        if(texto.trim() == ""){
+        if(texto.isEmpty()){
             if(categoryid == -1){ //texto nada categ todas
 
                 ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY description", null));
@@ -305,7 +317,7 @@ public final class CompuStore {
         }else{
             if(categoryid == -1){ //texto algo categ todas
 
-                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like "+texto.toString()+" ORDER BY description", null));
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like '%"+texto.toString()+"%' ORDER BY description", null));
                 while(cursor.moveToNext()) {
                     products.add(cursor.getProduct());
                 }
@@ -313,12 +325,11 @@ public final class CompuStore {
 
             }else{ //texto algo categorias algo
 
-                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like "+texto.toString()+" having category_id = "+Integer.toString(categoryid)+" ORDER BY description", null));
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like '%"+texto.toString()+"%' group by description having category_id = "+Integer.toString(categoryid)+" ORDER BY description", null));
                 while(cursor.moveToNext()) {
                     products.add(cursor.getProduct());
                 }
                 cursor.close();
-
             }
         }
 
@@ -326,6 +337,21 @@ public final class CompuStore {
         //categoria todas texto algo, categoria algo texto algo
 
         return products;
+    }
+
+    public int getProductStock(int id){
+        int stock = 0;
+        ArrayList<Product> products = new ArrayList<>();
+
+        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where id like "+Integer.toString(id),null));
+        while(cursor.moveToNext()) {
+            products.add(cursor.getProduct());
+        }
+        cursor.close();
+
+        stock = products.get(0).getQuantity();
+
+        return stock;
     }
 
 

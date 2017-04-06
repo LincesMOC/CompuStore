@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true">
@@ -69,6 +69,7 @@
             android:src="@android:drawable/ic_search_category_default"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
+            android:onClick="onSearchClick"
             android:layout_height="30dp" />
 
     </RelativeLayout>
@@ -80,5 +81,5 @@
 
 </LinearLayout>
 
-</ScrollView>
+</RelativeLayout>
 

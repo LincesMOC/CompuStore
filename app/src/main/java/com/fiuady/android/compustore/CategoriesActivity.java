@@ -176,8 +176,6 @@ public class CategoriesActivity extends AppCompatActivity {
         categoryRV = (RecyclerView) findViewById(R.id.activity_categories);
         categoryRV.setLayoutManager(new LinearLayoutManager(this));
         adapter = new CategoryAdapter(compuStore.getAllCategories());
-
-
         categoryRV.setAdapter(adapter);
     }
 

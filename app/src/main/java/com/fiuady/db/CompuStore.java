@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.fiuady.db.CompuStoreDbSchema.*;
 
@@ -76,6 +80,18 @@ public final class CompuStore {
     // ------------------------------------------------------ CATEGORIES --------------------------------------------------------
 
     public List<Category> getAllCategories() {
+        ArrayList<Category> list = new ArrayList<>();
+
+        CategoryCursor cursor = new CategoryCursor(db.rawQuery("SELECT * FROM product_categories ORDER BY id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getCategory());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public List<Category> getAllCategoriesid() {
         ArrayList<Category> list = new ArrayList<>();
 
         CategoryCursor cursor = new CategoryCursor(db.rawQuery("SELECT * FROM product_categories ORDER BY id", null));
@@ -178,7 +194,7 @@ public final class CompuStore {
     public List<Product> getAllProducts() {
         ArrayList<Product> list = new ArrayList<>();
 
-        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY id", null));
+        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY description", null));
         while(cursor.moveToNext()) {
             list.add(cursor.getProduct());
         }
@@ -217,7 +233,23 @@ public final class CompuStore {
         return b;
     }
 
-    public boolean insertProduct(String text, int id, int category_id, int precio, int qty) {
+    public boolean updateProductstock(String des, int id, int category_id, int precio, int qty){
+
+            ContentValues values = new ContentValues();
+            values.put(ProductsTable.Columns.DESCRIPTION, des);
+            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+            values.put(ProductsTable.Columns.PRICE, precio);
+            values.put(ProductsTable.Columns.QUANTITY, qty);
+
+            db.update(ProductsTable.NAME,
+                    values,
+                    ProductsTable.Columns.ID+ "= ?",
+                    new String[] {Integer.toString(id)});
+
+        return true;
+    }
+
+    public boolean insertProduct(String text, int category_id, int precio, int qty) {
         boolean b = true;
         List<Product> a = getAllProducts();
         ContentValues values = new ContentValues();
@@ -235,12 +267,12 @@ public final class CompuStore {
         if (b) {
             Product c = a.get(a.size()-1);
 
-            values.put(CategoriesTable.Columns.DESCRIPTION, text);
+            values.put(ProductsTable.Columns.DESCRIPTION, text);
             values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
             values.put(ProductsTable.Columns.PRICE, precio);
             values.put(ProductsTable.Columns.QUANTITY, qty);
 
-            db.insert(CategoriesTable.NAME, null, values);
+            db.insert(ProductsTable.NAME, null, values);
         }
 
         return b;
@@ -277,6 +309,67 @@ public final class CompuStore {
 
         return  c;
     }
+
+    public List<Product> filterProducts(int categoryid, String texto){
+        ArrayList<Product> products = new ArrayList<>();
+        if(texto.isEmpty()){
+            if(categoryid == -1){ //texto nada categ todas
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+
+            }else{//texto nada categ algo
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products WHERE category_id = "+Integer.toString(categoryid) +" ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+            }
+
+        }else{
+            if(categoryid == -1){ //texto algo categ todas
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like '%"+texto.toString()+"%' ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+
+            }else{ //texto algo categorias algo
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like '%"+texto.toString()+"%' group by description having category_id = "+Integer.toString(categoryid)+" ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+            }
+        }
+
+        //casos categoria todas texto nada, categoria algo texto nada
+        //categoria todas texto algo, categoria algo texto algo
+
+        return products;
+    }
+
+    public int getProductStock(int id){
+        int stock = 0;
+        ArrayList<Product> products = new ArrayList<>();
+
+        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where id like "+Integer.toString(id),null));
+        while(cursor.moveToNext()) {
+            products.add(cursor.getProduct());
+        }
+        cursor.close();
+
+        stock = products.get(0).getQuantity();
+
+        return stock;
+    }
+
 
     // ----------------------------------------------- AssemblyProducts --------------------------------------------------------
     public List<AssemblyProduct> getAllAssemblyProducts(){

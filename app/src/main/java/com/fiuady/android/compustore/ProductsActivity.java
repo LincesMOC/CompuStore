@@ -164,7 +164,6 @@ public class ProductsActivity extends AppCompatActivity {
         productRV = (RecyclerView) findViewById(R.id.recyclerviewproductos);
         productRV.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ProductAdapter(compuStore.getAllProducts());
-
         productRV.setAdapter(adapter);
 
         ArrayAdapter<String> adapter= new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);

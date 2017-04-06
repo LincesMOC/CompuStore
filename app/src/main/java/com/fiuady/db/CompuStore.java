@@ -233,6 +233,22 @@ public final class CompuStore {
         return b;
     }
 
+    public boolean updateProductstock(String des, int id, int category_id, int precio, int qty){
+
+            ContentValues values = new ContentValues();
+            values.put(ProductsTable.Columns.DESCRIPTION, des);
+            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+            values.put(ProductsTable.Columns.PRICE, precio);
+            values.put(ProductsTable.Columns.QUANTITY, qty);
+
+            db.update(ProductsTable.NAME,
+                    values,
+                    ProductsTable.Columns.ID+ "= ?",
+                    new String[] {Integer.toString(id)});
+
+        return true;
+    }
+
     public boolean insertProduct(String text, int category_id, int precio, int qty) {
         boolean b = true;
         List<Product> a = getAllProducts();

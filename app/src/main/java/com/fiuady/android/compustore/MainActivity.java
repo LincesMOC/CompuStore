@@ -47,4 +47,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void onImageClickensambles (View v){
+        Intent i = new Intent(this, AssembliesActivity.class);
+        startActivity(i);
+    }
+
 }

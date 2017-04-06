@@ -150,11 +150,11 @@ public class ProductsActivity extends AppCompatActivity {
                                 final View view = getLayoutInflater().inflate(R.layout.dialog_addstock, null);
                                 build.setTitle("Agregar stock");
                                 final Spinner spinstock = (Spinner)view.findViewById(R.id.spinnerstock);
-                                ArrayAdapter<Integer> adapter2= new ArrayAdapter<Integer>(ProductsActivity.this,android.R.layout.simple_spinner_dropdown_item);
+                                ArrayAdapter<String> adapter2= new ArrayAdapter<String>(ProductsActivity.this,android.R.layout.simple_spinner_dropdown_item);
                                 //funcion para agregar al adapter numeros arriba del valor de stock actual
                                 int stock = compuStore.getProductStock(product.getId());
                                 for(int i=stock;i<stock+30;i++){
-                                    adapter2.add(i);
+                                    adapter2.add(Integer.toString(i));
                                 }
                                 spinstock.setAdapter(adapter2);
 
@@ -173,7 +173,9 @@ public class ProductsActivity extends AppCompatActivity {
 
                                     }
                                 });
-                                build.create().show();
+                                build.setView(view);
+                                AlertDialog dialog = build.create();
+                                dialog.show();
                             }
                             return true;
                         }

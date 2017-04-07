@@ -31,3 +31,4 @@ public class AssemblyProduct {
         this.qty = qty;
     }
 }
+

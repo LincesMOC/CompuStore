@@ -13,7 +13,6 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,7 +28,14 @@
         <activity android:name=".AgregarEnsamble" />
         <activity android:name=".AgregarProductoparaEnsamble" />
         <activity android:name=".AgregarOrdenes" />
-        <activity android:name=".AgregarEnsambleParaOrden"></activity>
+        <activity android:name=".AgregarEnsambleParaOrden">
+        <activity android:name=".ReportsActivity"
+                android:label="@string/reports_title"
+                />
+            <activity android:name=".MisssingProductsActivity"
+                android:label="@string/reports_title"
+                ></activity>
+
     </application>
 
 </manifest>

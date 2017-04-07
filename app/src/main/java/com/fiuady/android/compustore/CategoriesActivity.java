@@ -1,5 +1,6 @@
 package com.fiuady.android.compustore;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -98,6 +100,7 @@ public class CategoriesActivity extends AppCompatActivity {
                                         build.create().show();
                                     }
                                 });
+
                                 builder.setView(view);
                                 AlertDialog dialog = builder.create();
                                 dialog.show();
@@ -158,8 +161,14 @@ public class CategoriesActivity extends AppCompatActivity {
         public int getItemCount() {
             return categories.size();
         }
+    }
 
-
+    private static void mantenerDialogo(AlertDialog dialog){
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
     }
 
     private CompuStore compuStore;
@@ -237,7 +246,6 @@ public class CategoriesActivity extends AppCompatActivity {
         dialog.show();
 
         return super.onOptionsItemSelected(item);
-
     }
 }
 

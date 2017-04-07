@@ -56,5 +56,8 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, OrdersActivity.class);
         startActivity(i);
     }
-
+    public void onImageClickreportes (View v) {
+        Intent i = new Intent(MainActivity.this, ReportsActivity.class);
+        startActivity(i);
+    }
 }

@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.fiuady.db.Client;
 import com.fiuady.db.CompuStore;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientsActivity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class ClientsActivity extends AppCompatActivity {
     private RecyclerView clientRV;
     private ClientAdapter C_adapter;
     private CompuStore compuStore;
+    private MultiSpinner spinner;
 
     private class ClientHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -196,11 +199,21 @@ public class ClientsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_clients);
         compuStore = new CompuStore(this);
 
-        Spinner spinner = (Spinner)findViewById(R.id.client_filter_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.client_filter_array,android.R.layout.simple_spinner_dropdown_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_list_item_multiple_choice);
-        spinner.setAdapter(adapter);
+        spinner = (MultiSpinner) findViewById(R.id.client_filter_spinner);
+
+        List<String> list = new ArrayList<>();
+        list.add("Nombre");
+        list.add("Apellido");
+        list.add("Dirección");
+        list.add("Teléfono");
+        list.add("Email");
+
+        spinner.setItems(list, "Todos", new MultiSpinner.MultiSpinnerListener() {
+            @Override
+            public void onItemsSelected(boolean[] selected) {
+                //Que hacer con los datos
+            }
+        });
 
         clientRV=(RecyclerView)findViewById(R.id.activity_clients_RV);
         clientRV.setLayoutManager(new LinearLayoutManager(this)); //Porque el recycler view NO es un layout, necesitamos uno.

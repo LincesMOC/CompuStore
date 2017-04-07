@@ -31,6 +31,7 @@ public class ClientsActivity extends AppCompatActivity {
     private ClientAdapter C_adapter;
     private CompuStore compuStore;
     private MultiSpinner spinner;
+    private EditText LISTA;
 
     private class ClientHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -54,6 +55,7 @@ public class ClientsActivity extends AppCompatActivity {
             txtPhone2=(TextView)itemView.findViewById(R.id.client_phone2_text);
             txtPhone3=(TextView)itemView.findViewById(R.id.client_phone3_text);
             txtEmail=(TextView)itemView.findViewById(R.id.client_email_text);
+
         }
 
         public void bindClient(Client client){
@@ -103,6 +105,9 @@ public class ClientsActivity extends AppCompatActivity {
                         txtAdd_phone2.setText(client.getPhone2());
                         final EditText txtAdd_phone3 = (EditText) view.findViewById(R.id.add_text_phone3);
                         txtAdd_phone3.setText(client.getPhone3());
+
+                        TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
+                        txtTitle.setText(R.string.client_update);
 
                         builder.setCancelable(false);
 
@@ -201,7 +206,10 @@ public class ClientsActivity extends AppCompatActivity {
 
         spinner = (MultiSpinner) findViewById(R.id.client_filter_spinner);
 
-        List<String> list = new ArrayList<>();
+
+        LISTA = (EditText)findViewById(R.id.edittextdescripcion);
+
+        final List<String> list = new ArrayList<>();
         list.add("Nombre");
         list.add("Apellido");
         list.add("Dirección");
@@ -211,9 +219,15 @@ public class ClientsActivity extends AppCompatActivity {
         spinner.setItems(list, "Todos", new MultiSpinner.MultiSpinnerListener() {
             @Override
             public void onItemsSelected(boolean[] selected) {
-                //Que hacer con los datos
-                //DQDJAWNDKJQ
 
+                int i=0;
+
+                for (Boolean b : selected){
+                    if (b){
+                        Toast.makeText(ClientsActivity.this,"Seleccionado: "+Integer.toString(i), Toast.LENGTH_SHORT).show();
+                    }
+                    i++;
+                }
             }
         });
 

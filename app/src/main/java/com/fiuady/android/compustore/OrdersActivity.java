@@ -1,5 +1,6 @@
 package com.fiuady.android.compustore;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fiuady.db.Assembly;
 import com.fiuady.db.Client;
 import com.fiuady.db.CompuStore;
 import com.fiuady.db.Order;
@@ -116,8 +118,7 @@ public class OrdersActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        Toast.makeText(OrdersActivity.this, R.string.add_msg, Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
     }
+
 }

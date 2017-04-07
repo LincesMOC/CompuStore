@@ -33,7 +33,7 @@ public class AgregarEnsamble extends AppCompatActivity {
     private CompuStore compuStore;
     private List<Category> categories;
     private EditText texto;
-    private ArrayList<Product> products;
+
 
     private class ProductHolder extends RecyclerView.ViewHolder {
 
@@ -57,74 +57,36 @@ public class AgregarEnsamble extends AppCompatActivity {
 
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
-                        public boolean onMenuItemClick(MenuItem item) {
+                        public boolean onMenuItemClick(final MenuItem item) {
 
                             if (item.getTitle().toString().equalsIgnoreCase("Modificar")) {
-//                                AlertDialog.Builder builder = new AlertDialog.Builder(AgregarEnsamble.this);
-//                                final View view = getLayoutInflater().inflate(R.layout.dialog_addproduct, null);
-//                                TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
-//                                txtTitle.setText(R.string.product_update);
-//
-//                                final EditText txtdescripcion = (EditText) view.findViewById(R.id.add_txtdesc);
-//                                final EditText txtprecio = (EditText) view.findViewById(R.id.add_txtprecio);
-//                                final Spinner txtcateg = (Spinner)view.findViewById(R.id.addtxtcateg);
-//                                ArrayAdapter<String> adapter1= new ArrayAdapter<String>(AgregarEnsamble.this, android.R.layout.simple_spinner_dropdown_item);
-//                                txtcateg.setAdapter(adapter1);
-//                                for(Category category : categories){
-//                                    adapter1.add(category.getDescription());
-//                                }
-//
-//                                builder.setCancelable(false);
-//                                builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
-//                                    public void onClick(DialogInterface dialog, int id) {
-//                                        dialog.dismiss();
-//                                    }
-//                                }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
-//                                    public void onClick(DialogInterface dialog, int id) {
-//                                        boolean comprecio = false;
-//                                        try{
-//                                            Integer.parseInt(txtprecio.getText().toString());
-//                                        }catch (NumberFormatException nfe){
-//                                            comprecio = true;
-//                                        }
-//
-//                                        if(comprecio){
-//                                            dialog.dismiss();
-//                                            Toast.makeText(AgregarEnsamble.this, R.string.error_msg1, Toast.LENGTH_SHORT).show();
-//                                        }else {
-//
-//                                            AlertDialog.Builder build = new AlertDialog.Builder(AgregarEnsamble.this);
-//                                            build.setCancelable(false);
-//                                            build.setTitle("Modificar producto");   // aqui cambiar por string de categories
-//                                            build.setMessage(R.string.sure_text);
-//
-//                                            build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
-//                                                public void onClick(DialogInterface dialog, int id) {
-//                                                    dialog.dismiss();
-//                                                }
-//                                            }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
-//                                                public void onClick(DialogInterface dialog, int id) {
-//
-//                                                    List<Category> categories = compuStore.getAllCategories();
-//
-//                                                    if (compuStore.updateProduct(txtdescripcion.getText().toString(),product.getId(),categories.get(txtcateg.getSelectedItemPosition()).getId(),Integer.parseInt(txtprecio.getText().toString()),product.getQuantity())) {
-//                                                        Toast.makeText(AgregarEnsamble.this, R.string.add_msg, Toast.LENGTH_SHORT).show();
-//                                                        adapter = new ProductAdapter(compuStore.getAllProducts());
-//                                                        productRV.setAdapter(adapter);
-//                                                    } else {
-//                                                        Toast.makeText(AgregarEnsamble.this, R.string.error_msg2, Toast.LENGTH_SHORT).show();
-//                                                    }
-//
-//                                                }
-//                                            });
-//
-//                                            build.create().show();
-//                                        }
-//                                    }
-//                                });
-//                                builder.setView(view);
-//                                AlertDialog dialog = builder.create();
-//                                dialog.show();
+                                AlertDialog.Builder build = new AlertDialog.Builder(AgregarEnsamble.this);
+                                build.setCancelable(false);
+                                final View view = getLayoutInflater().inflate(R.layout.dialog_addstock, null);
+                                build.setTitle("Cantidad para ensamble");
+                                final Spinner spinstock = (Spinner)view.findViewById(R.id.spinnerstock);
+                                ArrayAdapter<String> adapter2= new ArrayAdapter<String>(AgregarEnsamble.this,android.R.layout.simple_spinner_dropdown_item);
+                                //funcion para agregar al adapter numeros arriba del valor de stock actual
+                                int stock = product.getQuantity();
+
+                                for(int i=stock;i<stock+10;i++){
+                                    adapter2.add(Integer.toString(i));
+                                }
+                                spinstock.setAdapter(adapter2);
+
+                                build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        product.setQuantity(Integer.parseInt(spinstock.getSelectedItem().toString()));
+                                        Toast.makeText(AgregarEnsamble.this,"El valor fue actualizado", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                build.setView(view);
+                                AlertDialog dialog = build.create();
+                                dialog.show();
                             }
 
                             if (item.getTitle().toString().equalsIgnoreCase("Eliminar")) {
@@ -139,10 +101,10 @@ public class AgregarEnsamble extends AppCompatActivity {
                                     }
                                 }).setPositiveButton(R.string.delete_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-//                                        Toast.makeText(AgregarEnsamble.this, R.string.dlt_msg, Toast.LENGTH_SHORT).show();
-//                                        compuStore.deleteProduct(product.getId(), true);
-//                                        adapter = new ProductsActivity.ProductAdapter(compuStore.getAllProducts());
-//                                        productRV.setAdapter(adapter);
+                                        products.remove(product);
+                                        adapter = new ProductAdapter(products);
+                                        productRV.setAdapter(adapter);
+                                        Toast.makeText(AgregarEnsamble.this, "Eliminado de ensamble", Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
@@ -181,6 +143,8 @@ public class AgregarEnsamble extends AppCompatActivity {
         }
     }
 
+    private ArrayList<Product> products;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,6 +155,7 @@ public class AgregarEnsamble extends AppCompatActivity {
         productRV.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ProductAdapter(new ArrayList<Product>());
         productRV.setAdapter(adapter);
+        products = new ArrayList<Product>();
 
     }
 
@@ -216,9 +181,23 @@ public class AgregarEnsamble extends AppCompatActivity {
             //TextView labelprueba = (TextView)findViewById(R.id.labelprueba);
             //labelprueba.setText(Integer.toString(productid));
             //products.add() Hacer funcion que regrese un producto de la base de datos
-            products.add(compuStore.getProductfromid(productid));
-            adapter = new ProductAdapter(products);
-            productRV.setAdapter(adapter);
+            //products.add(compuStore.getProductfromid(productid));
+            Product product = compuStore.getProductfromid(productid);
+            boolean duplicado = false;
+            for(Product product1: products){
+                if(product1.getId() == product.getId()){
+                    duplicado = true;
+                }
+            }
+            if(duplicado){
+                Toast.makeText(AgregarEnsamble.this, "El producto ya esta en el ensamble", Toast.LENGTH_SHORT).show();
+            }else {
+                product.setQuantity(1);
+                products.add(product);
+                adapter = new ProductAdapter(products);
+                productRV.setAdapter(adapter);
+                Toast.makeText(AgregarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

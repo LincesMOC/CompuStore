@@ -49,6 +49,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
+        <RelativeLayout
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.fiuady.android.compustore.ProductsActivity">
+
+        <Button
+        android:id="@+id/btncancelar"
+        android:layout_alignParentBottom="true"
+        android:text="Cancelar"
+        android:layout_alignParentStart="true"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnguardar"
+            android:layout_alignParentBottom="true"
+            android:text="Guardar"
+            android:layout_alignParentEnd="true"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

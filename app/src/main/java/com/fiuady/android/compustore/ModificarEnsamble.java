@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fiuady.db.Assembly;
+import com.fiuady.db.AssemblyProduct;
 import com.fiuady.db.Category;
 import com.fiuady.db.CompuStore;
 import com.fiuady.db.Product;
@@ -26,8 +26,7 @@ import com.fiuady.db.Product;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AgregarEnsamble extends AppCompatActivity {
-
+public class ModificarEnsamble extends AppCompatActivity {
     private RecyclerView productRV;
     private ProductAdapter adapter;
     private CompuStore compuStore;
@@ -48,24 +47,20 @@ public class AgregarEnsamble extends AppCompatActivity {
             txtDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final PopupMenu popup = new PopupMenu(AgregarEnsamble.this, txtDescription);
+                    final PopupMenu popup = new PopupMenu(ModificarEnsamble.this, txtDescription);
                     popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
-
-//                    if (compuStore.deleteProduct(product.getId(), false)) {
-//                        popup.getMenu().removeItem(R.id.menu_item2);
-//                    }
 
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(final MenuItem item) {
 
                             if (item.getTitle().toString().equalsIgnoreCase("Modificar")) {
-                                AlertDialog.Builder build = new AlertDialog.Builder(AgregarEnsamble.this);
+                                AlertDialog.Builder build = new AlertDialog.Builder(ModificarEnsamble.this);
                                 build.setCancelable(false);
                                 final View view = getLayoutInflater().inflate(R.layout.dialog_addstock, null);
                                 build.setTitle("Cantidad para ensamble");
                                 final Spinner spinstock = (Spinner)view.findViewById(R.id.spinnerstock);
-                                ArrayAdapter<String> adapter2= new ArrayAdapter<String>(AgregarEnsamble.this,android.R.layout.simple_spinner_dropdown_item);
+                                ArrayAdapter<String> adapter2= new ArrayAdapter<String>(ModificarEnsamble.this,android.R.layout.simple_spinner_dropdown_item);
                                 //funcion para agregar al adapter numeros arriba del valor de stock actual
                                 int stock = product.getQuantity();
 
@@ -81,7 +76,7 @@ public class AgregarEnsamble extends AppCompatActivity {
                                 }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         product.setQuantity(Integer.parseInt(spinstock.getSelectedItem().toString()));
-                                        Toast.makeText(AgregarEnsamble.this,"El valor fue actualizado", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ModificarEnsamble.this,"El valor fue actualizado", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 build.setView(view);
@@ -90,7 +85,7 @@ public class AgregarEnsamble extends AppCompatActivity {
                             }
 
                             if (item.getTitle().toString().equalsIgnoreCase("Eliminar")) {
-                                AlertDialog.Builder build = new AlertDialog.Builder(AgregarEnsamble.this);
+                                AlertDialog.Builder build = new AlertDialog.Builder(ModificarEnsamble.this);
                                 build.setCancelable(false);
                                 build.setTitle("Eliminar producto de ensamble");
                                 build.setMessage(R.string.sure_text);
@@ -104,7 +99,7 @@ public class AgregarEnsamble extends AppCompatActivity {
                                         products.remove(product);
                                         adapter = new ProductAdapter(products);
                                         productRV.setAdapter(adapter);
-                                        Toast.makeText(AgregarEnsamble.this, "Eliminado de ensamble", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ModificarEnsamble.this, "Eliminado de ensamble", Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
@@ -150,13 +145,30 @@ public class AgregarEnsamble extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_ensamble);
 
-        compuStore= new CompuStore(AgregarEnsamble.this);
+        compuStore= new CompuStore(ModificarEnsamble.this);
         productRV = (RecyclerView) findViewById(R.id.recyclerviewproductos);
         productRV.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ProductAdapter(new ArrayList<Product>());
-        productRV.setAdapter(adapter);
-        products = new ArrayList<Product>();
 
+        int paso = getIntent().getExtras().getInt("assemblyid");
+
+        ArrayList<AssemblyProduct> ap = compuStore.getEspecificAssemblyProducts(paso);
+        ArrayList<Product> products2 = new ArrayList<>();
+
+        for(AssemblyProduct apr : ap){
+
+            for(Product p:compuStore.getAllProducts()) {
+
+                if(apr.getProduct_id() == p.getId()){
+                    products2.add(p);
+                }
+            }
+        }
+        products = new ArrayList<>();
+        adapter = new ProductAdapter(products2);
+        productRV.setAdapter(adapter);
+        descrip = (EditText)findViewById(R.id.edittextdescripcion);
+        descrip.setText(compuStore.getAssemblydesc(paso));
     }
 
     @Override
@@ -167,7 +179,7 @@ public class AgregarEnsamble extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent i = new Intent(AgregarEnsamble.this,AgregarProductoparaEnsamble.class);
+        Intent i = new Intent(ModificarEnsamble.this,AgregarProductoparaEnsamble.class);
         startActivityForResult(i,2);
         return super.onOptionsItemSelected(item);
     }
@@ -190,13 +202,13 @@ public class AgregarEnsamble extends AppCompatActivity {
                 }
             }
             if(duplicado){
-                Toast.makeText(AgregarEnsamble.this, "El producto ya esta en el ensamble", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ModificarEnsamble.this, "El producto ya esta en el ensamble", Toast.LENGTH_SHORT).show();
             }else {
                 product.setQuantity(1);
                 products.add(product);
                 adapter = new ProductAdapter(products);
                 productRV.setAdapter(adapter);
-                Toast.makeText(AgregarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ModificarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -206,7 +218,7 @@ public class AgregarEnsamble extends AppCompatActivity {
 
         descrip = (EditText)findViewById(R.id.edittextdescripcion);
         if(descrip.getText().toString().isEmpty()){
-            Toast.makeText(AgregarEnsamble.this, "Agrega una descripcion", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ModificarEnsamble.this, "Agrega una descripcion", Toast.LENGTH_SHORT).show();
         }else {
             //Agregar ensamble
             compuStore.insertAssembly(descrip.getText().toString());
@@ -216,7 +228,7 @@ public class AgregarEnsamble extends AppCompatActivity {
                 compuStore.insertAssemblyproducts(idensa,p.getId(),p.getQuantity());
             }
 
-            Toast.makeText(AgregarEnsamble.this, "Ensamble agregado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ModificarEnsamble.this, "Ensamble agregado", Toast.LENGTH_SHORT).show();
             finish();
         }
 

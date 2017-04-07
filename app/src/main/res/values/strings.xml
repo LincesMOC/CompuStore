@@ -56,12 +56,4 @@
         <item>Email</item>
     </string-array>
 
-    <string-array name="status_order_array">
-        <item>Pendiente</item>
-        <item>Cancelado</item>
-        <item>Confirmado</item>
-        <item>En tránsito</item>
-        <item>Finalizado</item>
-    </string-array>
-
 </resources>

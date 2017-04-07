@@ -1,5 +1,6 @@
 package com.fiuady.android.compustore;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,7 @@ import com.fiuady.db.Client;
 import com.fiuady.db.CompuStore;
 import com.fiuady.db.Order;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrdersActivity extends AppCompatActivity {
@@ -27,6 +30,8 @@ public class OrdersActivity extends AppCompatActivity {
     private OrderAdapter O_adapter;
     private CompuStore compuStore;
     private Spinner clientsSpinner;
+    private MultiSpinner orderStateSpinner;
+    private EditText LISTA;
 
     private class OrderHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -97,13 +102,32 @@ public class OrdersActivity extends AppCompatActivity {
         cs_adapter.add(client.getFirstName() + " " + client.getLastName());}
 
         //SPINNER DE ESTADO DE ORDEN
-        Spinner spinner = (Spinner)findViewById(R.id.status_order_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.status_order_array,android.R.layout.simple_spinner_dropdown_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_list_item_multiple_choice);
-        spinner.setAdapter(adapter);
+        LISTA = (EditText)findViewById(R.id.edittextdescripcion);
+        orderStateSpinner = (MultiSpinner) findViewById(R.id.status_order_spinner);
 
-        orderRV = (RecyclerView)findViewById(R.id.activity_orders);
+        final List<String> list = new ArrayList<>();
+        list.add("Pendiente");
+        list.add("Cancelado");
+        list.add("Confirmado");
+        list.add("En tránsito");
+        list.add("Finalizado");
+
+        orderStateSpinner.setItems(list, "Todos", new MultiSpinner.MultiSpinnerListener() {
+            @Override
+            public void onItemsSelected(boolean[] selected) {
+
+                int i=0;
+
+                for (Boolean b : selected){
+                    if (b){
+                        Toast.makeText(OrdersActivity.this,"Seleccionado: "+Integer.toString(i), Toast.LENGTH_SHORT).show();
+                    }
+                    i++;
+                }
+            }
+        });
+
+        orderRV = (RecyclerView)findViewById(R.id.activity_orders_RV); //activity_orders?
         orderRV.setLayoutManager(new LinearLayoutManager(this));
 
         O_adapter = new OrderAdapter(compuStore.getAllOrders());
@@ -118,6 +142,8 @@ public class OrdersActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i = new Intent(OrdersActivity.this,AgregarOrdenes.class);
+        startActivity(i);
         return super.onOptionsItemSelected(item);
     }
 

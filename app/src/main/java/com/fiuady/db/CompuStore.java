@@ -40,6 +40,17 @@ class ProductCursor extends CursorWrapper {
     }
 }
 
+class AssemblyCursor extends CursorWrapper {
+    public AssemblyCursor(Cursor cursor) {
+        super(cursor);
+    }
+
+    public Assembly getAssembly(){
+        Cursor cursor = getWrappedCursor();
+        return new Assembly(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.AssembliesTable.Columns.ID)),cursor.getString(cursor.getColumnIndex(CompuStoreDbSchema.AssembliesTable.Columns.DESCRIPTION)));
+    }
+}
+
 class AssemblyProductCursor extends CursorWrapper{
     public AssemblyProductCursor(Cursor cursor){super(cursor);}
 
@@ -75,6 +86,18 @@ class OrderCursor extends CursorWrapper {
         return new Order(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.OrdersTable.Columns.ID)),cursor.getInt(cursor.getColumnIndex(OrdersTable.Columns.STATUS_ID)),
                 cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.OrdersTable.Columns.CUSTOMER_ID)),cursor.getString(cursor.getColumnIndex(OrdersTable.Columns.DATE)),
                 cursor.getString(cursor.getColumnIndex(OrdersTable.Columns.CHANGE_LOG)));
+    }
+}
+
+class OrderAssembliesCursor extends CursorWrapper {
+    public OrderAssembliesCursor(Cursor cursor) {
+        super(cursor);
+    }
+
+    public OrderAssembly getOrderAssembly(){
+        Cursor cursor = getWrappedCursor();
+        return new OrderAssembly(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.OrderAssembliesTable.Columns.ID)),cursor.getInt(cursor.getColumnIndex(OrderAssembliesTable.Columns.ASSEMBLY_ID)),
+                cursor.getInt(cursor.getColumnIndex(OrderAssembliesTable.Columns.QUANTITY)));
     }
 }
 
@@ -383,8 +406,109 @@ public final class CompuStore {
         return stock;
     }
 
+    // -------------------------------------------------------- ASSEMBLIES --------------------------------------------------------
 
-    // ----------------------------------------------- AssemblyProducts --------------------------------------------------------
+
+    public List<Assembly> getAllAssemblies() {
+        ArrayList<Assembly> list = new ArrayList<>();
+
+        AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies ORDER BY description", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getAssembly());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public boolean updateAssembly(String des, int id) {
+        boolean b = true;
+        List<Assembly> a = getAllAssemblies();
+
+        if (des.isEmpty()) {
+            b = false;
+        }
+
+        for(Assembly assembly : a) {
+            if (assembly.getDescription().toUpperCase().equals(des.toUpperCase())) {
+                b = false;
+            }
+        }
+
+        if (b) {
+            ContentValues values = new ContentValues();
+            values.put(AssembliesTable.Columns.DESCRIPTION, des);
+
+            db.update(AssembliesTable.NAME,
+                    values,
+                    AssembliesTable.Columns.ID+ "= ?",
+                    new String[] {Integer.toString(id)});
+        }
+
+        return b;
+    }
+
+    public boolean insertAssembly(String text) {
+        boolean b = true;
+        List<Assembly> a = getAllAssemblies();
+        ContentValues values = new ContentValues();
+
+        if (text.isEmpty()) {
+            b = false;
+        }
+
+        for(Assembly assembly : a) {
+            if (assembly.getDescription().toUpperCase().equals(text.toUpperCase())) {
+
+                b = false;
+            }
+        }
+
+        if (b) {
+            Assembly c = a.get(a.size()-1);
+
+            values.put(AssembliesTable.Columns.DESCRIPTION, text);
+
+            db.insert(AssembliesTable.NAME, null, values);
+        }
+
+        return b;
+    }
+
+    public boolean deleteAssembly(int id, boolean dlt) {
+        boolean c = false;
+        boolean d = true;
+        boolean e = true;
+        List<Assembly> a = getAllAssemblies();
+        List<OrderAssembly> b = getAllOrderAssemblies();
+
+        for(Assembly assembly : a) {
+            if (e) {
+                if (assembly.getId() == id) {  // Condicion si la categoria ya exite en categorias
+                    e = false;
+                    if (d) {
+                        for(OrderAssembly orderAssembly : b) {
+                            if (orderAssembly.getAssembly_id() == id) {  // Condicion si algún cliente tiene asignado una orden
+                                c = true;
+                                d = false;
+                            }
+                            else {
+                                if (dlt){  // Quiero elimanrlo?
+                                    db.delete(AssembliesTable.NAME, AssembliesTable.Columns.ID + "= ?",
+                                            new String[] {Integer.toString(id)});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return  c;
+    }
+
+
+    // ----------------------------------------------- ASSEMBLY PRODUCTS--------------------------------------------------------
     public List<AssemblyProduct> getAllAssemblyProducts(){
         ArrayList<AssemblyProduct> list = new ArrayList<>();
 
@@ -396,9 +520,6 @@ public final class CompuStore {
 
         return list;
     }
-
-
-
 
 
     // -------------------------------------------------------- CLIENTS --------------------------------------------------------
@@ -553,4 +674,18 @@ public final class CompuStore {
 
         return clientName;
     }
+
+    // -------------------------------------------------------- ORDER ASSEMBLIES --------------------------------------------------------
+
+    public List<OrderAssembly> getAllOrderAssemblies() {
+        ArrayList<OrderAssembly> list = new ArrayList<>();
+
+        OrderAssembliesCursor cursor = new OrderAssembliesCursor(db.rawQuery("SELECT * FROM order_assemblies ORDER BY id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getOrderAssembly());
+        }
+        cursor.close();
+        return list;
+    }
+
 }

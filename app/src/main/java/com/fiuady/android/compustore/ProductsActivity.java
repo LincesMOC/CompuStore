@@ -57,7 +57,7 @@ public class ProductsActivity extends AppCompatActivity {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ProductsActivity.this);
                                 final View view = getLayoutInflater().inflate(R.layout.dialog_addproduct, null);
                                 TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
-                                txtTitle.setText("Modificar producto"); // aqui cambiar por string de categories
+                                txtTitle.setText(R.string.product_update);
 
                                 final EditText txtdescripcion = (EditText) view.findViewById(R.id.add_txtdesc);
                                 final EditText txtprecio = (EditText) view.findViewById(R.id.add_txtprecio);

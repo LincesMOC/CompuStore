@@ -39,14 +39,14 @@
             android:layout_alignParentTop="true"></Spinner>
 
         <TextView
-            android:id="@+id/client_TAG"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/client_spinner"
-            android:paddingTop="10dp"
-            android:text="Cliente: "
-            android:textColor="@android:color/black"
-            android:textSize="18dp" />
+        android:id="@+id/client_TAG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/client_spinner"
+        android:paddingTop="10dp"
+        android:text="Cliente: "
+        android:textColor="@android:color/black"
+        android:textSize="18dp" />
 
 
     </RelativeLayout>

@@ -10,12 +10,19 @@
     <string name="category_add">Agregar una nueva categoría</string>
     <string name="product_add">Agregar un nuevo producto</string>
     <string name="client_add">Agregar un nuevo cliente</string>
-
+    <string name="assembly_add">Agregar un nuevo cliente</string>
 
     <string name="category_update">Modificar una categoría</string>
+    <string name="product_update">Modificar un cliente</string>
+    <string name="client_update">Modificar un cliente</string>
+    <string name="assembly_update">Modificar un cliente</string>
+
 
     <string name="category_delete">Eliminar una categoría</string>
+    <string name="product_delete">Eliminar una categoría</string>
     <string name="client_delete">Eliminar un cliente</string>
+    <string name="assembly_delete">Eliminar un cliente</string>
+
 
     <string name="add_msg">Se ha guardado la selección</string>
     <string name="dlt_msg">Se ha borrado la selección</string>

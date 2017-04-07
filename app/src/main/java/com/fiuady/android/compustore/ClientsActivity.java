@@ -212,6 +212,8 @@ public class ClientsActivity extends AppCompatActivity {
             @Override
             public void onItemsSelected(boolean[] selected) {
                 //Que hacer con los datos
+                //DQDJAWNDKJQ
+
             }
         });
 

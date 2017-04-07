@@ -104,7 +104,7 @@ public class OrdersActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_multiple_choice);
         spinner.setAdapter(adapter);
 
-        orderRV = (RecyclerView)findViewById(R.id.activity_orders);
+        orderRV = (RecyclerView)findViewById(R.id.activity_orders_RV);
         orderRV.setLayoutManager(new LinearLayoutManager(this));
 
         O_adapter = new OrderAdapter(compuStore.getAllOrders());

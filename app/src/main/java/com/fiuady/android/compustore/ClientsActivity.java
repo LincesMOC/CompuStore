@@ -148,7 +148,7 @@ public class ClientsActivity extends AppCompatActivity {
 
                         AlertDialog.Builder build = new AlertDialog.Builder(ClientsActivity.this);
                         build.setCancelable(false);
-                        build.setTitle(getString(R.string.client_delete));
+                        build.setTitle(getString(R.string.client_delete));  ///AFQFADFQFQ
                         build.setMessage(R.string.sure_text);
 
                         build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {

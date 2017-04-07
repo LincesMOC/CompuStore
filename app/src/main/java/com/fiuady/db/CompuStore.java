@@ -279,6 +279,7 @@ public final class CompuStore {
     }
 
     // ----------------------------------------------- AssemblyProducts --------------------------------------------------------
+
     public List<AssemblyProduct> getAllAssemblyProducts(){
         ArrayList<AssemblyProduct> list = new ArrayList<>();
 
@@ -290,8 +291,6 @@ public final class CompuStore {
 
         return list;
     }
-
-
 
     // -------------------------------------------------------- CLIENTS --------------------------------------------------------
 

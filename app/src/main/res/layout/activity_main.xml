@@ -67,5 +67,5 @@
         android:background="@android:color/transparent"
         android:layout_below="@id/idImageButtonClientes"
         android:src="@drawable/reportes"
-        android:onClick="onImageClickensambles" />
+        android:onClick="onImageClickreportes" />
 </RelativeLayout>

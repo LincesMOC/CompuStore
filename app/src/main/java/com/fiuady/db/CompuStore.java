@@ -183,7 +183,7 @@ public final class CompuStore {
         }
 
         if (b) {
-            Category c = a.get(a.size()-1);
+//            Category c = a.get(a.size()-1);
 
             values.put(CategoriesTable.Columns.DESCRIPTION, text);
 
@@ -480,7 +480,7 @@ public final class CompuStore {
         }
 
         if (b) {
-            Assembly c = a.get(a.size()-1);
+//            Assembly c = a.get(a.size()-1);
 
             values.put(AssembliesTable.Columns.DESCRIPTION, text);
 
@@ -535,6 +535,35 @@ public final class CompuStore {
 
         return list;
     }
+
+//    public boolean insertAssemblyproducts(int id, int productid, int qty) {
+//        boolean b = true;
+//        List<Product> a = getAllProducts();
+//        ContentValues values = new ContentValues();
+//
+//        if (text.isEmpty()) {
+//            b = false;
+//        }
+//
+//        for(Product product : a) {
+//            if (product.getDescription().toUpperCase().equals(text.toUpperCase())) {
+//                b = false;
+//            }
+//        }
+//
+//        if (b) {
+//            Product c = a.get(a.size()-1);
+//
+//            values.put(ProductsTable.Columns.DESCRIPTION, text);
+//            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+//            values.put(ProductsTable.Columns.PRICE, precio);
+//            values.put(ProductsTable.Columns.QUANTITY, qty);
+//
+//            db.insert(ProductsTable.NAME, null, values);
+//        }
+//
+//        return b;
+//    }
 
 
     // -------------------------------------------------------- CLIENTS --------------------------------------------------------

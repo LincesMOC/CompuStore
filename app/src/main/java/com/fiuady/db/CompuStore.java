@@ -1,5 +1,6 @@
 package com.fiuady.db;
 
+import android.app.assist.AssistStructure;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -549,6 +550,33 @@ public final class CompuStore {
 
     }
 
+    public int getAssemblyid (String desc){
+        int a;
+        ArrayList<Assembly> assemblies = new ArrayList<>();
+
+        AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies where description like '"+desc.toString()+"'", null));
+        while(cursor.moveToNext()) {
+            assemblies.add(cursor.getAssembly());
+        }
+        cursor.close();
+        a = assemblies.get(0).getId();
+        return a;
+    }
+
+    public String getAssemblydesc (int id){
+        String a;
+        ArrayList<Assembly> assemblies = new ArrayList<>();
+
+        AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies where id = "+Integer.toString(id), null));
+        while(cursor.moveToNext()) {
+            assemblies.add(cursor.getAssembly());
+        }
+        cursor.close();
+        a = assemblies.get(0).getDescription();
+
+        return a;
+    }
+
 
     // ----------------------------------------------- ASSEMBLY PRODUCTS--------------------------------------------------------
     public List<AssemblyProduct> getAllAssemblyProducts(){
@@ -563,35 +591,32 @@ public final class CompuStore {
         return list;
     }
 
-//    public boolean insertAssemblyproducts(int id, int productid, int qty) {
-//        boolean b = true;
-//        List<Product> a = getAllProducts();
-//        ContentValues values = new ContentValues();
-//
-//        if (text.isEmpty()) {
-//            b = false;
-//        }
-//
-//        for(Product product : a) {
-//            if (product.getDescription().toUpperCase().equals(text.toUpperCase())) {
-//                b = false;
-//            }
-//        }
-//
-//        if (b) {
-//            Product c = a.get(a.size()-1);
-//
-//            values.put(ProductsTable.Columns.DESCRIPTION, text);
-//            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
-//            values.put(ProductsTable.Columns.PRICE, precio);
-//            values.put(ProductsTable.Columns.QUANTITY, qty);
-//
-//            db.insert(ProductsTable.NAME, null, values);
-//        }
-//
-//        return b;
-//    }
+    public ArrayList<AssemblyProduct> getEspecificAssemblyProducts(int id){
+        ArrayList<AssemblyProduct> list = new ArrayList<>();
 
+        AssemblyProductCursor cursor = new AssemblyProductCursor(db.rawQuery("select * from assembly_products where id = "+Integer.toString(id)+" order by id",null));
+        while (cursor.moveToNext()){
+            list.add(cursor.getAssemblyProduct());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public void insertAssemblyproducts(int idensammble, int productid, int qty) {
+        ContentValues values = new ContentValues();
+
+        values.put(AssemblyProductsTable.Columns.ID,idensammble);
+        values.put(AssemblyProductsTable.Columns.PRODUCT_ID,productid);
+        values.put(AssemblyProductsTable.Columns.QUANTITY,qty);
+
+
+        db.insert(AssemblyProductsTable.NAME, null, values);
+    }
+
+    public void deleteAssemblyproducts(int idensammble){
+        db.delete(AssemblyProductsTable.NAME, AssemblyProductsTable.Columns.ID + "= ?",
+                new String[] {Integer.toString(idensammble)});
+    }
 
     // -------------------------------------------------------- CLIENTS --------------------------------------------------------
 

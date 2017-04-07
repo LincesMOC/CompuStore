@@ -46,71 +46,29 @@ public class AssembliesActivity extends AppCompatActivity {
                   final PopupMenu popup = new PopupMenu(AssembliesActivity.this, txtDescription);
                   popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
 
-                  // if (compuStore.deleteCategory(category.getId(), false)) {
-                  //     popup.getMenu().removeItem(R.id.menu_item2);
-                  // }
-
                   popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                       @Override
                       public boolean onMenuItemClick(MenuItem item) {
 
-                            if ((item.getTitle().toString()).equalsIgnoreCase("Modificar")) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(AssembliesActivity.this);
-                                final View view = getLayoutInflater().inflate(R.layout.dialog_add, null);
-                                TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
-                                final EditText txtAdd = (EditText) view.findViewById(R.id.add_text);
-
-                                txtTitle.setText(R.string.assembly_update);
-
-                                builder.setCancelable(false);
-                                builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.dismiss();
-                                    }
-                                }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        AlertDialog.Builder build = new AlertDialog.Builder(AssembliesActivity.this);
-                                        build.setCancelable(false);
-                                        build.setTitle(getString(R.string.assembly_update));
-                                        build.setMessage(R.string.sure_text);
-
-                                        build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.dismiss();
-                                            }
-                                        }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                if (compuStore.updateAssembly(txtAdd.getText().toString(), assembly.getId())) {
-                                                  Toast.makeText(AssembliesActivity.this, R.string.add_msg, Toast.LENGTH_SHORT).show();
-                                                  A_adapter = new AssembliesActivity.AssemblyAdapter(compuStore.getAllAssemblies());
-                                                  assemblyRV.setAdapter(A_adapter);
-                                              } else {
-                                                  Toast.makeText(AssembliesActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
-                                              }
-                                          }
-                                      });
-
-                                      build.create().show();
-                                  }
-                              });
-                              builder.setView(view);
-                              AlertDialog dialog = builder.create();
-                              dialog.show();
+                          if ((item.getTitle().toString()).equalsIgnoreCase("Modificar")) {
+                              Intent i = new Intent(AssembliesActivity.this,ModificarEnsamble.class);
+                              i.putExtra("assemblyid",assembly.getId());
+                              startActivity(i);
                           }
 
                           else{
                               AlertDialog.Builder build = new AlertDialog.Builder(AssembliesActivity.this);
                                build.setCancelable(false);
-                               build.setTitle(getString(R.string.assembly_delete));
+                               build.setTitle("Eliminar ensamble");
                                build.setMessage(R.string.sure_text);
 
                                build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
                                    public void onClick(DialogInterface dialog, int id) {
                                        dialog.dismiss();
                                    }
-                               }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
+                               }).setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
                                    public void onClick(DialogInterface dialog, int id) {
-                                       Toast.makeText(AssembliesActivity.this, R.string.add_msg, Toast.LENGTH_SHORT).show();
+                                       Toast.makeText(AssembliesActivity.this, "Se ha eliminado el ensamble", Toast.LENGTH_SHORT).show();
                                        compuStore.deleteAssembly(assembly.getId(), true);
                                        A_adapter = new AssembliesActivity.AssemblyAdapter(compuStore.getAllAssemblies());
                                        assemblyRV.setAdapter(A_adapter);
@@ -123,8 +81,6 @@ public class AssembliesActivity extends AppCompatActivity {
                        }
                    });
                    popup.show();
-
-
                }
            });
 
@@ -182,5 +138,12 @@ public class AssembliesActivity extends AppCompatActivity {
         Intent i = new Intent(AssembliesActivity.this,AgregarEnsamble.class);
         startActivity(i);
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        A_adapter = new AssemblyAdapter(compuStore.getAllAssemblies());
+        assemblyRV.setAdapter(A_adapter);
     }
 }

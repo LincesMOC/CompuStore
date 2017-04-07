@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.fiuady.db.Assembly;
 import com.fiuady.db.CompuStore;
+import com.fiuady.db.Product;
 
 public class AssembliesActivity extends AppCompatActivity {
 
@@ -36,16 +37,16 @@ public class AssembliesActivity extends AppCompatActivity {
 //                    final PopupMenu popup = new PopupMenu(AssembliesActivity.this, txtDescription);
 //                    popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
 //
-//                    if (compuStore.deleteCategory(category.getId(), false)) {
-//                        popup.getMenu().removeItem(R.id.menu_item2);
-//                    }
+////                    if (compuStore.deleteCategory(category.getId(), false)) {
+////                        popup.getMenu().removeItem(R.id.menu_item2);
+////                    }
 //
 //                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 //                        @Override
 //                        public boolean onMenuItemClick(MenuItem item) {
 //
 //                            if (item.getTitle().equals(popup.getMenu().getItem(0).getTitle())) {
-//                                AlertDialog.Builder builder = new AlertDialog.Builder(CategoriesActivity.this);
+//                                AlertDialog.Builder builder = new AlertDialog.Builder(AssembliesActivity.this);
 //                                final View view = getLayoutInflater().inflate(R.layout.dialog_add, null);
 //                                TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
 //                                final EditText txtAdd = (EditText) view.findViewById(R.id.add_text);

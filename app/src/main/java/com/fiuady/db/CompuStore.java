@@ -406,6 +406,21 @@ public final class CompuStore {
         return stock;
     }
 
+    public Product getProductfromid(int id){
+        Product product;
+        ArrayList<Product> products = new ArrayList<>();
+
+        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where id = "+Integer.toString(id),null));
+        while(cursor.moveToNext()) {
+            products.add(cursor.getProduct());
+        }
+        cursor.close();
+
+        product = products.get(0);
+
+        return product;
+    }
+
     // -------------------------------------------------------- ASSEMBLIES --------------------------------------------------------
 
 

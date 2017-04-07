@@ -1,6 +1,7 @@
 package com.fiuady.android.compustore;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -179,10 +180,8 @@ public class AssembliesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        //Aqui va agregar ensamble en otra activity
-                //Esa otra activity lleva a otra activity
-
+        Intent i = new Intent(AssembliesActivity.this,AgregarEnsamble.class);
+        startActivity(i);
         return super.onOptionsItemSelected(item);
     }
 }

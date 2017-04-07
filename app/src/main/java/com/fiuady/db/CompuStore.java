@@ -542,11 +542,31 @@ public final class CompuStore {
                 assemblies.add(cursor.getAssembly());
             }
             cursor.close();
+        } else{
+
+            AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies where description like '%"+texto.toString()+"%' ORDER BY description", null));
+            while(cursor.moveToNext()) {
+                assemblies.add(cursor.getAssembly());
+            }
+            cursor.close();
         }
 
+        return assemblies;
+    }
 
-        return null;
+    public Assembly getAssemblyFromId(int id){
+        Assembly assembly;
+        ArrayList<Assembly> assemblies = new ArrayList<>();
 
+        AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies where id = "+Integer.toString(id),null));
+        while(cursor.moveToNext()) {
+            assemblies.add(cursor.getAssembly());
+        }
+        cursor.close();
+
+        assembly = assemblies.get(0);
+
+        return assembly;
     }
 
 
@@ -746,6 +766,58 @@ public final class CompuStore {
         return clientName;
     }
 
+    public boolean insertOrder(int id, int status_id, int customer_id, String date,String change_log) {
+        boolean b = true;
+        //List<Product> a = getAllProducts();
+        //ContentValues values = new ContentValues();
+//
+        //if (text.isEmpty()) {
+        //    b = false;
+        //}
+//
+        //for(Product product : a) {
+        //    if (product.getDescription().toUpperCase().equals(text.toUpperCase())) {
+        //        b = false;
+        //    }
+        //}
+//
+        //if (b) {
+        //    Product c = a.get(a.size()-1);
+//
+        //    values.put(ProductsTable.Columns.DESCRIPTION, text);
+        //    values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+        //    values.put(ProductsTable.Columns.PRICE, precio);
+        //    values.put(ProductsTable.Columns.QUANTITY, qty);
+//
+        //    db.insert(ProductsTable.NAME, null, values);
+        //}
+        return b;
+    }
+
+    //public List<OrderAssembly> getOrderAssemblies(int id){ //Me dan el id de la orden y me da las order assemblies
+
+       //ArrayList<Assembly> assemblies = new ArrayList<>();
+
+       //if (texto.isEmpty()){
+       //    AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies ORDER BY description", null));
+       //    while(cursor.moveToNext()) {
+       //        assemblies.add(cursor.getAssembly());
+       //    }
+       //    cursor.close();
+       //} else{
+
+       //    AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies where description like '%"+texto.toString()+"%' ORDER BY description", null));
+       //    while(cursor.moveToNext()) {
+       //        assemblies.add(cursor.getAssembly());
+       //    }
+       //    cursor.close();
+       //}
+
+       //return assemblies;
+
+      // return null;
+    //}
+
     // -------------------------------------------------------- ORDER ASSEMBLIES --------------------------------------------------------
 
     public List<OrderAssembly> getAllOrderAssemblies() {
@@ -758,6 +830,22 @@ public final class CompuStore {
         cursor.close();
         return list;
     }
+
+    public boolean insertOrderAssembly(int assembly_id, int qty) {
+        boolean b = true;
+        List<OrderAssembly> a = getAllOrderAssemblies();
+        ContentValues values = new ContentValues();
+
+            OrderAssembly c = a.get(a.size()-1);
+
+            values.put(OrderAssembliesTable.Columns.ASSEMBLY_ID, assembly_id);
+            values.put(OrderAssembliesTable.Columns.QUANTITY, qty);
+
+            db.insert(OrderAssembliesTable.NAME, null, values);
+
+        return b;
+    }
+
 
     // -------------------------------------------------------- REPORTS --------------------------------------------------------
 

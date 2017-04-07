@@ -1,5 +1,6 @@
 package com.fiuady.android.compustore;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.fiuady.db.Assembly;
 import com.fiuady.db.Client;
 import com.fiuady.db.CompuStore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AgregarOrdenes extends AppCompatActivity {
@@ -44,30 +46,30 @@ public class AgregarOrdenes extends AppCompatActivity {
                 public void onClick(View v) {
                     //CUANDO DAS CLICK A UN ASSEMBLY
 
-                    final PopupMenu popup = new PopupMenu(AgregarOrdenes.this, txtDescription);
-                    popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
-
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
-
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-
-                            if ((item.getTitle().toString()).equalsIgnoreCase("Modificar")){
-
-                                AlertDialog.Builder build = new AlertDialog.Builder(AgregarOrdenes.this);
-                                build.setCancelable(false);
-                                final View view = getLayoutInflater().inflate(R.layout.dialog_add_assemblyfororder,null);
-                                build.setTitle("Cantidad de ensambles");
-
-                                final Spinner spin_assemblyQty = (Spinner)view.findViewById(R.id.add_assemblyQty);
-                                ArrayAdapter<String> AQ_adapter= new ArrayAdapter<String>(AgregarOrdenes.this,android.R.layout.simple_spinner_dropdown_item);
-
-                                //funcion para agregar al adapter numeros arriba del valor de stock actual
-                            }
-
-                            return true;
-                        }
-                    });
+                    //final PopupMenu popup = new PopupMenu(AgregarOrdenes.this, txtDescription);
+                    //popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
+//
+                    //popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
+//
+                    //    @Override
+                    //    public boolean onMenuItemClick(MenuItem item) {
+//
+                    //        if ((item.getTitle().toString()).equalsIgnoreCase("Modificar")){
+//
+                    //            AlertDialog.Builder build = new AlertDialog.Builder(AgregarOrdenes.this);
+                    //            build.setCancelable(false);
+                    //            final View view = getLayoutInflater().inflate(R.layout.dialog_add_assemblyfororder,null);
+                    //            build.setTitle("Cantidad de ensambles");
+//
+                    //            final Spinner spin_assemblyQty = (Spinner)view.findViewById(R.id.add_assemblyQty);
+                    //            ArrayAdapter<String> AQ_adapter= new ArrayAdapter<String>(AgregarOrdenes.this,android.R.layout.simple_spinner_dropdown_item);
+//
+                    //            //funcion para agregar al adapter numeros arriba del valor de stock actual
+                    //        }
+//
+                    //        return true;
+                    //    }
+                    //});
 
                 }
             });
@@ -101,6 +103,8 @@ public class AgregarOrdenes extends AppCompatActivity {
         }
     }
 
+    private ArrayList<Assembly> assemblies;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,8 +124,10 @@ public class AgregarOrdenes extends AppCompatActivity {
         assemblyRV = (RecyclerView)findViewById(R.id.addOrder_assemblies_RV);
         assemblyRV.setLayoutManager(new LinearLayoutManager(this));
 
-        A_adapter = new AssemblyAdapter(compuStore.getAllAssemblies());
+        A_adapter = new AssemblyAdapter(new ArrayList<Assembly>());
         assemblyRV.setAdapter(A_adapter);
+
+        assemblies = new ArrayList<Assembly>();
     }
 
     @Override
@@ -133,6 +139,14 @@ public class AgregarOrdenes extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //AGREGAR ENSAMBLE PARA ÓRDENES
+
+        Intent i = new Intent(AgregarOrdenes.this,AgregarEnsambleParaOrden.class);
+        startActivityForResult(i,3);
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

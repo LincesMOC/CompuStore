@@ -28,7 +28,8 @@
         <activity android:name=".OrdersActivity" />
         <activity android:name=".AgregarEnsamble" />
         <activity android:name=".AgregarProductoparaEnsamble" />
-        <activity android:name=".AgregarOrdenes"></activity>
+        <activity android:name=".AgregarOrdenes" />
+        <activity android:name=".AgregarEnsambleParaOrden"></activity>
     </application>
 
 </manifest>

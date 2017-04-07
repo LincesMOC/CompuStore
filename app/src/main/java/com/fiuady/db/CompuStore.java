@@ -522,6 +522,22 @@ public final class CompuStore {
         return  c;
     }
 
+    public List<Assembly> filterAssemblies(String texto){
+        ArrayList<Assembly> assemblies = new ArrayList<>();
+
+        if (texto.isEmpty()){
+            AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies ORDER BY description", null));
+            while(cursor.moveToNext()) {
+                assemblies.add(cursor.getAssembly());
+            }
+            cursor.close();
+        }
+
+
+        return null;
+
+    }
+
 
     // ----------------------------------------------- ASSEMBLY PRODUCTS--------------------------------------------------------
     public List<AssemblyProduct> getAllAssemblyProducts(){

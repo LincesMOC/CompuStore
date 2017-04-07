@@ -61,6 +61,18 @@ class ClientCursor extends CursorWrapper {
     }
 }
 
+class MissingProductCursor extends CursorWrapper {
+    public MissingProductCursor(Cursor cursor) { super(cursor);}
+
+    public MissingProduct getMissingProduct(){
+        Cursor cursor = getWrappedCursor();
+        return new MissingProduct(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.ProductsTable.Columns.ID)),
+                cursor.getString(cursor.getColumnIndex(CompuStoreDbSchema.ProductsTable.Columns.DESCRIPTION)),
+                cursor.getInt(cursor.getColumnIndex(ProductsTable.Columns.QUANTITY)));
+    }
+
+}
+
 public final class CompuStore {
     private CompuStoreHelper compuStoreHelper;
     private SQLiteDatabase db;
@@ -342,4 +354,25 @@ public final class CompuStore {
         return b;
     }
 
+    // -------------------------------------------------------- REPORTS --------------------------------------------------------
+
+    public List<MissingProduct> getAllMissingProduct() {
+        ArrayList<MissingProduct> list = new ArrayList<>();
+
+        MissingProductCursor cursor = new MissingProductCursor(
+                db.rawQuery("SELECT s.id, s.description, SUM(q.qty * r.qty) AS qty " +
+                        "FROM orders p " +
+                        "INNER JOIN order_assemblies q ON (p.id = q.id) " +
+                        "INNER JOIN assembly_products r ON (q.assembly_id = r.id) " +
+                        "INNER JOIN products s ON (r.product_id = s.id) " +
+                        "WHERE p.status_id = 0 OR p.status_id = 2 " +
+                        "GROUP BY s.description " +
+                        "ORDER BY s.id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getMissingProduct());
+        }
+        cursor.close();
+
+        return list;
+    }
 }

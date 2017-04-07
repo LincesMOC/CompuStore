@@ -160,8 +160,6 @@ public class CategoriesActivity extends AppCompatActivity {
         public int getItemCount() {
             return categories.size();
         }
-
-
     }
 
     private static void mantenerDialogo(AlertDialog dialog){

@@ -633,6 +633,18 @@ public final class CompuStore {
         db.insert(AssemblyProductsTable.NAME, null, values);
     }
 
+    public void updateAssemblyproducts(int idensammble, int productid, int qty) {
+        ContentValues values = new ContentValues();
+
+        values.put(AssemblyProductsTable.Columns.ID,idensammble);
+        values.put(AssemblyProductsTable.Columns.PRODUCT_ID,productid);
+        values.put(AssemblyProductsTable.Columns.QUANTITY,qty);
+
+
+        db.update(AssemblyProductsTable.NAME, values, AssemblyProductsTable.Columns.ID+ "= ?",
+                new String[] {Integer.toString(idensammble)});
+    }
+
     public void deleteAssemblyproducts(int idensammble){
         db.delete(AssemblyProductsTable.NAME, AssemblyProductsTable.Columns.ID + "= ?",
                 new String[] {Integer.toString(idensammble)});

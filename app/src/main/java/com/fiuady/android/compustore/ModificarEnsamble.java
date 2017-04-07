@@ -139,6 +139,7 @@ public class ModificarEnsamble extends AppCompatActivity {
     }
 
     private ArrayList<Product> products;
+    int paso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +151,7 @@ public class ModificarEnsamble extends AppCompatActivity {
         productRV.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ProductAdapter(new ArrayList<Product>());
 
-        int paso = getIntent().getExtras().getInt("assemblyid");
+        paso = getIntent().getExtras().getInt("assemblyid");
 
         ArrayList<AssemblyProduct> ap = compuStore.getEspecificAssemblyProducts(paso);
         ArrayList<Product> products2 = new ArrayList<>();
@@ -222,13 +223,17 @@ public class ModificarEnsamble extends AppCompatActivity {
         }else {
             //Agregar ensamble
             compuStore.insertAssembly(descrip.getText().toString());
-            int idensa = compuStore.getAssemblyid(descrip.getText().toString());
-            //Agregar cada producto del ensamble con cantidades
-            for(Product p :products){
-                compuStore.insertAssemblyproducts(idensa,p.getId(),p.getQuantity());
+            if(compuStore.updateAssembly(descrip.getText().toString(),paso)){
+                for(Product p :products){
+                    //compuStore.insertAssemblyproducts(idensa,p.getId(),p.getQuantity());
+                }
             }
 
-            Toast.makeText(ModificarEnsamble.this, "Ensamble agregado", Toast.LENGTH_SHORT).show();
+//            int idensa = compuStore.getAssemblyid(descrip.getText().toString());
+            //Agregar cada producto del ensamble con cantidades
+
+
+            Toast.makeText(ModificarEnsamble.this, "Ensamble modificado", Toast.LENGTH_SHORT).show();
             finish();
         }
 

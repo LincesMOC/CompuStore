@@ -1,5 +1,6 @@
 package com.fiuady.android.compustore;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,9 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fiuady.db.Assembly;
+import com.fiuady.db.Client;
 import com.fiuady.db.CompuStore;
 
 import java.util.List;
@@ -21,6 +25,8 @@ public class AgregarOrdenes extends AppCompatActivity {
     private RecyclerView assemblyRV;
     private AssemblyAdapter A_adapter;
     private CompuStore compuStore;
+    private Spinner AO_clientsSpinner;
+
 
     private class AssemblyHolder extends RecyclerView.ViewHolder {
 
@@ -37,6 +43,32 @@ public class AgregarOrdenes extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //CUANDO DAS CLICK A UN ASSEMBLY
+
+                    final PopupMenu popup = new PopupMenu(AgregarOrdenes.this, txtDescription);
+                    popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
+
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+
+                            if ((item.getTitle().toString()).equalsIgnoreCase("Modificar")){
+
+                                AlertDialog.Builder build = new AlertDialog.Builder(AgregarOrdenes.this);
+                                build.setCancelable(false);
+                                final View view = getLayoutInflater().inflate(R.layout.dialog_add_assemblyfororder,null);
+                                build.setTitle("Cantidad de ensambles");
+
+                                final Spinner spin_assemblyQty = (Spinner)view.findViewById(R.id.add_assemblyQty);
+                                ArrayAdapter<String> AQ_adapter= new ArrayAdapter<String>(AgregarOrdenes.this,android.R.layout.simple_spinner_dropdown_item);
+
+                                //funcion para agregar al adapter numeros arriba del valor de stock actual
+                            }
+
+                            return true;
+                        }
+                    });
+
                 }
             });
 
@@ -73,8 +105,17 @@ public class AgregarOrdenes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_ordenes);
-
         compuStore = new CompuStore(this);
+
+        //SPINNER DE CLIENTES
+        AO_clientsSpinner = (Spinner)findViewById(R.id.AO_client_spinner);
+        ArrayAdapter<String> AO_cs_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
+        AO_clientsSpinner.setAdapter(AO_cs_adapter);
+
+        AO_cs_adapter.add("Todos");
+        List<Client> clients = compuStore.getAllClients();
+        for(Client client :clients){
+            AO_cs_adapter.add(client.getFirstName() + " " + client.getLastName());}
 
         assemblyRV = (RecyclerView)findViewById(R.id.addOrder_assemblies_RV);
         assemblyRV.setLayoutManager(new LinearLayoutManager(this));

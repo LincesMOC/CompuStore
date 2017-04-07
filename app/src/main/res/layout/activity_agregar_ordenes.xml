@@ -27,7 +27,7 @@
             android:textSize="18dp" />
 
         <Spinner
-            android:id="@+id/client_spinner"
+            android:id="@+id/AO_client_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/client_TAG"></Spinner>
@@ -39,8 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/client_TAG"
-        android:text="ENSAMBLES DISPONIBLES"
-        android:paddingLeft="40dp"
+        android:text="ENSAMBLES A ORDENAR"
+        android:paddingLeft="50dp"
         android:paddingTop="10dp"
         android:textSize="18dp"
         android:textStyle="bold" />

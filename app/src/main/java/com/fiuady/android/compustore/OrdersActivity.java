@@ -1,5 +1,6 @@
 package com.fiuady.android.compustore;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -118,6 +119,8 @@ public class OrdersActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i = new Intent(OrdersActivity.this,AgregarOrdenes.class);
+        startActivity(i);
         return super.onOptionsItemSelected(item);
     }
 

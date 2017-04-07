@@ -41,30 +41,33 @@ public class CategoriesActivity extends AppCompatActivity {
 
         public void bindCategory(final Category category) {
 
-            txtDescription.setOnClickListener(new View.OnClickListener() {
+            txtDescription.setOnClickListener(new View.OnClickListener() {  //////////////////////////////
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v) { ////////////////////////////////////////////////////////////
 
-                    final PopupMenu popup = new PopupMenu(CategoriesActivity.this, txtDescription);
-                    popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
+                    final PopupMenu popup = new PopupMenu(CategoriesActivity.this, txtDescription);///////
+                    popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());///////////////
 
                     if (compuStore.deleteCategory(category.getId(), false)) {
                         popup.getMenu().removeItem(R.id.menu_item2);
                     }
 
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {//////////
                         @Override
-                        public boolean onMenuItemClick(MenuItem item) {
+                        public boolean onMenuItemClick(MenuItem item) {   ////////////////////////////
 
                             if (item.getTitle().equals(popup.getMenu().getItem(0).getTitle())) {
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(CategoriesActivity.this);
                                 final View view = getLayoutInflater().inflate(R.layout.dialog_add, null);
+
                                 TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
                                 final EditText txtAdd = (EditText) view.findViewById(R.id.add_text);
 
                                 txtTitle.setText(R.string.category_update);
 
                                 builder.setCancelable(false);
+
                                 builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.dismiss();
@@ -125,12 +128,10 @@ public class CategoriesActivity extends AppCompatActivity {
                         }
                     });
                     popup.show();
-
-
                 }
             });
 
-            txtDescription.setText(category.getDescription());
+            txtDescription.setText(category.getDescription()); ////////////////////////////
         }
     }
 

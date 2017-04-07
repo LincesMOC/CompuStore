@@ -14,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fiuady.db.Assembly;
 import com.fiuady.db.Client;
 import com.fiuady.db.CompuStore;
+import com.fiuady.db.OrderAssembly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +106,7 @@ public class AgregarOrdenes extends AppCompatActivity {
     }
 
     private ArrayList<Assembly> assemblies;
+    private ArrayList<OrderAssembly> order_assemblies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +150,46 @@ public class AgregarOrdenes extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == 3){
+            int assemblyId = data.getIntExtra("AssemblyId",-1);
+
+            Assembly assembly = compuStore.getAssemblyFromId(assemblyId);
+            boolean duplicado = false;
+
+            for (Assembly assembly1: assemblies){
+                if (assembly1.getId() == assembly.getId()){
+                    duplicado = true;
+                }
+            }
+            if (duplicado){
+                Toast.makeText(AgregarOrdenes.this, "El ensamble ya está en la orden",Toast.LENGTH_SHORT).show();
+            } else {
+                assemblies.add(assembly);
+                A_adapter = new AssemblyAdapter(assemblies);
+                assemblyRV.setAdapter(A_adapter);
+                Toast.makeText(AgregarOrdenes.this, "Agregado a la orden", Toast.LENGTH_SHORT).show();
+            }
+
+           //else {
+           //    product.setQuantity(1);
+           //    products.add(product);
+           //    adapter = new ProductAdapter(products);
+           //    productRV.setAdapter(adapter);
+           //    Toast.makeText(AgregarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();
+           //}
+
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void btnguardar (View v) {
+        Toast.makeText(AgregarOrdenes.this, "Orden agregada", Toast.LENGTH_SHORT).show();
+    }
+
+    public void btnCancelar (View v) {
+        finish();
+    }
+
 }

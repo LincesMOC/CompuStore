@@ -45,8 +45,8 @@ public class AgregarEnsambleParaOrden extends AppCompatActivity {
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getTitle().toString().equalsIgnoreCase("Agregar")) {
                                 Intent i = new Intent();
-                                i.putExtra("Assemblyid",assembly.getId());
-                                setResult(2,i);
+                                i.putExtra("AssemblyId",assembly.getId());
+                                setResult(3,i);
                                 finish();
                             }
                             return true;
@@ -87,7 +87,6 @@ public class AgregarEnsambleParaOrden extends AppCompatActivity {
     private CompuStore compuStore;
     private EditText texto;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,9 +97,13 @@ public class AgregarEnsambleParaOrden extends AppCompatActivity {
 
         assemblyRV = (RecyclerView) findViewById(R.id.assemblies_forOrder_RV);
         assemblyRV.setLayoutManager(new LinearLayoutManager(this));
-        A_adapter = new AgregarEnsambleParaOrden.AssemblyAdapter(new ArrayList<Assembly>());
+
+            A_adapter = new AgregarEnsambleParaOrden.AssemblyAdapter(new ArrayList<Assembly>());
+            assemblyRV.setAdapter(A_adapter);
+    }
+
+    public void onSearchClick(View v){
+        A_adapter = new AgregarEnsambleParaOrden.AssemblyAdapter(compuStore.filterAssemblies(texto.getText().toString()));
         assemblyRV.setAdapter(A_adapter);
-
-
     }
 }

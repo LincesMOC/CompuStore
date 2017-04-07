@@ -24,4 +24,16 @@ public class OrderAssembly {
     public int getQty() {
         return qty;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setAssembly_id(int assembly_id) {
+        this.assembly_id = assembly_id;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
 }

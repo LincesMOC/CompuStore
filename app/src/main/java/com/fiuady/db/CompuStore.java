@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.fiuady.db.CompuStoreDbSchema.*;
 
@@ -33,6 +37,17 @@ class ProductCursor extends CursorWrapper {
         return new Product(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.ProductsTable.Columns.ID)),cursor.getInt(cursor.getColumnIndex(ProductsTable.Columns.CATEGORY_ID)),
                 cursor.getString(cursor.getColumnIndex(CompuStoreDbSchema.ProductsTable.Columns.DESCRIPTION)), cursor.getInt(cursor.getColumnIndex(ProductsTable.Columns.PRICE)),
                 cursor.getInt(cursor.getColumnIndex(ProductsTable.Columns.QUANTITY)));
+    }
+}
+
+class AssemblyCursor extends CursorWrapper {
+    public AssemblyCursor(Cursor cursor) {
+        super(cursor);
+    }
+
+    public Assembly getAssembly(){
+        Cursor cursor = getWrappedCursor();
+        return new Assembly(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.AssembliesTable.Columns.ID)),cursor.getString(cursor.getColumnIndex(CompuStoreDbSchema.AssembliesTable.Columns.DESCRIPTION)));
     }
 }
 
@@ -61,6 +76,31 @@ class ClientCursor extends CursorWrapper {
     }
 }
 
+class OrderCursor extends CursorWrapper {
+    public OrderCursor(Cursor cursor) {
+        super(cursor);
+    }
+
+    public Order getOrder(){
+        Cursor cursor = getWrappedCursor();
+        return new Order(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.OrdersTable.Columns.ID)),cursor.getInt(cursor.getColumnIndex(OrdersTable.Columns.STATUS_ID)),
+                cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.OrdersTable.Columns.CUSTOMER_ID)),cursor.getString(cursor.getColumnIndex(OrdersTable.Columns.DATE)),
+                cursor.getString(cursor.getColumnIndex(OrdersTable.Columns.CHANGE_LOG)));
+    }
+}
+
+class OrderAssembliesCursor extends CursorWrapper {
+    public OrderAssembliesCursor(Cursor cursor) {
+        super(cursor);
+    }
+
+    public OrderAssembly getOrderAssembly(){
+        Cursor cursor = getWrappedCursor();
+        return new OrderAssembly(cursor.getInt(cursor.getColumnIndex(CompuStoreDbSchema.OrderAssembliesTable.Columns.ID)),cursor.getInt(cursor.getColumnIndex(OrderAssembliesTable.Columns.ASSEMBLY_ID)),
+                cursor.getInt(cursor.getColumnIndex(OrderAssembliesTable.Columns.QUANTITY)));
+    }
+}
+
 class MissingProductCursor extends CursorWrapper {
     public MissingProductCursor(Cursor cursor) { super(cursor);}
 
@@ -72,7 +112,6 @@ class MissingProductCursor extends CursorWrapper {
     }
 
 }
-
 public final class CompuStore {
     private CompuStoreHelper compuStoreHelper;
     private SQLiteDatabase db;
@@ -88,6 +127,18 @@ public final class CompuStore {
     // ------------------------------------------------------ CATEGORIES --------------------------------------------------------
 
     public List<Category> getAllCategories() {
+        ArrayList<Category> list = new ArrayList<>();
+
+        CategoryCursor cursor = new CategoryCursor(db.rawQuery("SELECT * FROM product_categories ORDER BY id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getCategory());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public List<Category> getAllCategoriesid() {
         ArrayList<Category> list = new ArrayList<>();
 
         CategoryCursor cursor = new CategoryCursor(db.rawQuery("SELECT * FROM product_categories ORDER BY id", null));
@@ -143,7 +194,7 @@ public final class CompuStore {
         }
 
         if (b) {
-            Category c = a.get(a.size()-1);
+//            Category c = a.get(a.size()-1);
 
             values.put(CategoriesTable.Columns.DESCRIPTION, text);
 
@@ -190,7 +241,7 @@ public final class CompuStore {
     public List<Product> getAllProducts() {
         ArrayList<Product> list = new ArrayList<>();
 
-        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY id", null));
+        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY description", null));
         while(cursor.moveToNext()) {
             list.add(cursor.getProduct());
         }
@@ -229,7 +280,23 @@ public final class CompuStore {
         return b;
     }
 
-    public boolean insertProduct(String text, int id, int category_id, int precio, int qty) {
+    public boolean updateProductstock(String des, int id, int category_id, int precio, int qty){
+
+            ContentValues values = new ContentValues();
+            values.put(ProductsTable.Columns.DESCRIPTION, des);
+            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+            values.put(ProductsTable.Columns.PRICE, precio);
+            values.put(ProductsTable.Columns.QUANTITY, qty);
+
+            db.update(ProductsTable.NAME,
+                    values,
+                    ProductsTable.Columns.ID+ "= ?",
+                    new String[] {Integer.toString(id)});
+
+        return true;
+    }
+
+    public boolean insertProduct(String text, int category_id, int precio, int qty) {
         boolean b = true;
         List<Product> a = getAllProducts();
         ContentValues values = new ContentValues();
@@ -247,12 +314,12 @@ public final class CompuStore {
         if (b) {
             Product c = a.get(a.size()-1);
 
-            values.put(CategoriesTable.Columns.DESCRIPTION, text);
+            values.put(ProductsTable.Columns.DESCRIPTION, text);
             values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
             values.put(ProductsTable.Columns.PRICE, precio);
             values.put(ProductsTable.Columns.QUANTITY, qty);
 
-            db.insert(CategoriesTable.NAME, null, values);
+            db.insert(ProductsTable.NAME, null, values);
         }
 
         return b;
@@ -290,8 +357,200 @@ public final class CompuStore {
         return  c;
     }
 
-    // ----------------------------------------------- AssemblyProducts --------------------------------------------------------
+    public List<Product> filterProducts(int categoryid, String texto){
+        ArrayList<Product> products = new ArrayList<>();
+        if(texto.isEmpty()){
+            if(categoryid == -1){ //texto nada categ todas
 
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+
+            }else{//texto nada categ algo
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products WHERE category_id = "+Integer.toString(categoryid) +" ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+            }
+
+        }else{
+            if(categoryid == -1){ //texto algo categ todas
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like '%"+texto.toString()+"%' ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+
+            }else{ //texto algo categorias algo
+
+                ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where description like '%"+texto.toString()+"%' group by description having category_id = "+Integer.toString(categoryid)+" ORDER BY description", null));
+                while(cursor.moveToNext()) {
+                    products.add(cursor.getProduct());
+                }
+                cursor.close();
+            }
+        }
+
+        //casos categoria todas texto nada, categoria algo texto nada
+        //categoria todas texto algo, categoria algo texto algo
+
+        return products;
+    }
+
+    public int getProductStock(int id){
+        int stock = 0;
+        ArrayList<Product> products = new ArrayList<>();
+
+        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where id like "+Integer.toString(id),null));
+        while(cursor.moveToNext()) {
+            products.add(cursor.getProduct());
+        }
+        cursor.close();
+
+        stock = products.get(0).getQuantity();
+
+        return stock;
+    }
+
+    public Product getProductfromid(int id){
+        Product product;
+        ArrayList<Product> products = new ArrayList<>();
+
+        ProductCursor cursor = new ProductCursor(db.rawQuery("SELECT * FROM products where id = "+Integer.toString(id),null));
+        while(cursor.moveToNext()) {
+            products.add(cursor.getProduct());
+        }
+        cursor.close();
+
+        product = products.get(0);
+
+        return product;
+    }
+
+    // -------------------------------------------------------- ASSEMBLIES --------------------------------------------------------
+
+
+    public List<Assembly> getAllAssemblies() {
+        ArrayList<Assembly> list = new ArrayList<>();
+
+        AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies ORDER BY description", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getAssembly());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public boolean updateAssembly(String des, int id) {
+        boolean b = true;
+        List<Assembly> a = getAllAssemblies();
+
+        if (des.isEmpty()) {
+            b = false;
+        }
+
+        for(Assembly assembly : a) {
+            if (assembly.getDescription().toUpperCase().equals(des.toUpperCase())) {
+                b = false;
+            }
+        }
+
+        if (b) {
+            ContentValues values = new ContentValues();
+            values.put(AssembliesTable.Columns.DESCRIPTION, des);
+
+            db.update(AssembliesTable.NAME,
+                    values,
+                    AssembliesTable.Columns.ID+ "= ?",
+                    new String[] {Integer.toString(id)});
+        }
+
+        return b;
+    }
+
+    public boolean insertAssembly(String text) {
+        boolean b = true;
+        List<Assembly> a = getAllAssemblies();
+        ContentValues values = new ContentValues();
+
+        if (text.isEmpty()) {
+            b = false;
+        }
+
+        for(Assembly assembly : a) {
+            if (assembly.getDescription().toUpperCase().equals(text.toUpperCase())) {
+
+                b = false;
+            }
+        }
+
+        if (b) {
+//            Assembly c = a.get(a.size()-1);
+
+            values.put(AssembliesTable.Columns.DESCRIPTION, text);
+
+            db.insert(AssembliesTable.NAME, null, values);
+        }
+
+        return b;
+    }
+
+    public boolean deleteAssembly(int id, boolean dlt) {
+        boolean c = false;
+        boolean d = true;
+        boolean e = true;
+        List<Assembly> a = getAllAssemblies();
+        List<OrderAssembly> b = getAllOrderAssemblies();
+
+        for(Assembly assembly : a) {
+            if (e) {
+                if (assembly.getId() == id) {  // Condicion si la categoria ya exite en categorias
+                    e = false;
+                    if (d) {
+                        for(OrderAssembly orderAssembly : b) {
+                            if (orderAssembly.getAssembly_id() == id) {  // Condicion si algún cliente tiene asignado una orden
+                                c = true;
+                                d = false;
+                            }
+                            else {
+                                if (dlt){  // Quiero elimanrlo?
+                                    db.delete(AssembliesTable.NAME, AssembliesTable.Columns.ID + "= ?",
+                                            new String[] {Integer.toString(id)});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return  c;
+    }
+
+    public List<Assembly> filterAssemblies(String texto){
+        ArrayList<Assembly> assemblies = new ArrayList<>();
+
+        if (texto.isEmpty()){
+            AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("SELECT * FROM assemblies ORDER BY description", null));
+            while(cursor.moveToNext()) {
+                assemblies.add(cursor.getAssembly());
+            }
+            cursor.close();
+        }
+
+
+        return null;
+
+    }
+
+
+    // ----------------------------------------------- ASSEMBLY PRODUCTS--------------------------------------------------------
     public List<AssemblyProduct> getAllAssemblyProducts(){
         ArrayList<AssemblyProduct> list = new ArrayList<>();
 
@@ -304,18 +563,77 @@ public final class CompuStore {
         return list;
     }
 
+//    public boolean insertAssemblyproducts(int id, int productid, int qty) {
+//        boolean b = true;
+//        List<Product> a = getAllProducts();
+//        ContentValues values = new ContentValues();
+//
+//        if (text.isEmpty()) {
+//            b = false;
+//        }
+//
+//        for(Product product : a) {
+//            if (product.getDescription().toUpperCase().equals(text.toUpperCase())) {
+//                b = false;
+//            }
+//        }
+//
+//        if (b) {
+//            Product c = a.get(a.size()-1);
+//
+//            values.put(ProductsTable.Columns.DESCRIPTION, text);
+//            values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
+//            values.put(ProductsTable.Columns.PRICE, precio);
+//            values.put(ProductsTable.Columns.QUANTITY, qty);
+//
+//            db.insert(ProductsTable.NAME, null, values);
+//        }
+//
+//        return b;
+//    }
+
+
     // -------------------------------------------------------- CLIENTS --------------------------------------------------------
 
     public List<Client> getAllClients() {
         ArrayList<Client> list = new ArrayList<>();
 
-        ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers ORDER BY id", null));
+        ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers ORDER BY last_name", null));
         while(cursor.moveToNext()){
             list.add(cursor.getClient());
         }
         cursor.close();
 
         return list;
+    }
+
+    public boolean updateClient(String firstName, String lastName, String address, String email, String phone1,
+                                String phone2, String phone3,int id) {
+        boolean b = true;
+        List<Client> a = getAllClients();
+
+        if (firstName.isEmpty()||lastName.isEmpty()||address.isEmpty()) {
+            b = false;
+        }
+
+        if (b) {
+            ContentValues values = new ContentValues();
+
+            values.put(CustomersTable.Columns.FIRST_NAME, firstName);
+            values.put(CustomersTable.Columns.LAST_NAME, lastName);
+            values.put(CustomersTable.Columns.ADDRESS,address);
+            values.put(CustomersTable.Columns.E_MAIL, email);
+            values.put(CustomersTable.Columns.PHONE1, phone1);
+            values.put(CustomersTable.Columns.PHONE2,phone2);
+            values.put(CustomersTable.Columns.PHONE3,phone3);
+
+            db.update(CustomersTable.NAME,
+                    values,
+                    CustomersTable.Columns.ID+ "= ?",
+                    new String[] {Integer.toString(id)});
+        }
+
+        return b;
     }
 
     public boolean insertClient(String firstName, String lastName, String address, String email, String phone1,
@@ -352,6 +670,93 @@ public final class CompuStore {
         }
 
         return b;
+    }
+
+    public boolean deleteClient(int id, boolean dlt) {
+        boolean c = false;
+        boolean d = true;
+        boolean e = true;
+
+        List<Client> a = getAllClients();
+        List<Order> b = getAllOrders();
+
+        for(Client client : a) {
+            if (e) {
+                if (client.getId() == id) {  // Condición si la categoría ya existe en categorias
+                    e = false;
+                    if (d) {
+                        for(Order order : b) {
+                            if (order.getCustomer_id() == id) {  // Condicion si algún cliente tiene asignado una orden
+                                c = true;
+                                d = false;
+                            }
+                            else {
+                                if (dlt){  // Quiero elimanrlo?
+                                    db.delete(CustomersTable.NAME, CustomersTable.Columns.ID + "= ?",
+                                            new String[] {Integer.toString(id)});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return  c;
+    }
+
+
+    // -------------------------------------------------------- ORDERS --------------------------------------------------------
+
+    public List<Order> getAllOrders() {
+        ArrayList<Order> list = new ArrayList<>();
+
+        OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders ORDER BY id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getOrder());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public String getCustomer(int id){
+        //List<Client> clients = getAllClients();
+        String clientName = null;
+
+        //for (Client client : clients) {
+            //if (client.getId() == id){
+              //  clientName = client.getFirstName() + " " + client.getLastName();
+            //}
+            //else {clientName = null;}
+        //}
+        //return clientName;
+
+        ArrayList<Client> list = new ArrayList<>();
+
+        ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers WHERE id LIKE "+Integer.toString(id), null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getClient());
+        }
+        cursor.close();
+
+        for (Client client : list){
+            clientName = client.getFirstName() +" "+ client.getLastName();
+        }
+
+        return clientName;
+    }
+
+    // -------------------------------------------------------- ORDER ASSEMBLIES --------------------------------------------------------
+
+    public List<OrderAssembly> getAllOrderAssemblies() {
+        ArrayList<OrderAssembly> list = new ArrayList<>();
+
+        OrderAssembliesCursor cursor = new OrderAssembliesCursor(db.rawQuery("SELECT * FROM order_assemblies ORDER BY id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getOrderAssembly());
+        }
+        cursor.close();
+        return list;
     }
 
     // -------------------------------------------------------- REPORTS --------------------------------------------------------

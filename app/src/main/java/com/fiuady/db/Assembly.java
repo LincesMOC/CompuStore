@@ -2,22 +2,22 @@ package com.fiuady.db;
 
 public class Assembly {
     private int id;
-    private String descripcion;
+    private String description;
 
-    public Assembly(int id, String descripcion){
+    public Assembly(int id, String description){
         this.id = id;
-        this.descripcion=descripcion;
+        this.description=description;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setDescription(String descripcion) {
+        this.description = description;
     }
 }

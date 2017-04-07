@@ -47,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void onImageClickensambles (View v){
+        Intent i = new Intent(this, AssembliesActivity.class);
+        startActivity(i);
+    }
+
+    public void onImageClickordenes (View view) {
+        Intent i = new Intent(this, OrdersActivity.class);
+        startActivity(i);
+    }
     public void onImageClickreportes (View v) {
         Intent i = new Intent(MainActivity.this, ReportsActivity.class);
         startActivity(i);

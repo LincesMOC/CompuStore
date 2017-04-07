@@ -19,18 +19,23 @@
         <activity
             android:name=".CategoriesActivity"
             android:label="@string/categories_title" />
-        <activity android:name=".ProductsActivity"
-            android:label="Productos"
-            ></activity>
-        <activity android:name=".ClientsActivity"></activity>
-
+        <activity
+            android:name=".ProductsActivity"
+            android:label="Productos" />
+        <activity android:name=".ClientsActivity" />
+        <activity android:name=".AssembliesActivity" />
+        <activity android:name=".OrdersActivity" />
+        <activity android:name=".AgregarEnsamble" />
+        <activity android:name=".AgregarProductoparaEnsamble" />
+        <activity android:name=".AgregarOrdenes" />
+        <activity android:name=".AgregarEnsambleParaOrden">
         <activity android:name=".ReportsActivity"
-            android:label="@string/reports_title"
-            ></activity>
+                android:label="@string/reports_title"
+                />
+            <activity android:name=".MisssingProductsActivity"
+                android:label="@string/reports_title"
+                ></activity>
 
-        <activity android:name=".MisssingProductsActivity"
-            android:label="@string/reports_title"
-            ></activity>
     </application>
 
 </manifest>

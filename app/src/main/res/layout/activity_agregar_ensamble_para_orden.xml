@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.fiuady.android.compustore.AgregarEnsambleParaOrden">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.fiuady.android.compustore.AssembliesActivity">
+
+            <TextView
+                android:id="@+id/textviewdescripcion"
+                android:layout_width="wrap_content"
+                android:text="Buscar: "
+                android:textSize="16dp"
+                android:padding="5dp"
+                android:textColor="@android:color/black"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true" />
+
+            <EditText
+                android:id="@+id/edittextdescripcion"
+                android:layout_width="200dp"
+                android:hint="Busqueda por texto.."
+                android:textSize="16dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true" />
+
+            <ImageButton
+                android:layout_width="30dp"
+                android:id="@+id/btnbuscar"
+                android:layout_toRightOf="@id/edittextdescripcion"
+                android:layout_alignParentEnd="true"
+                android:src="@android:drawable/ic_search_category_default"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:onClick="onSearchClick"
+                android:layout_height="30dp" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/assemblies_forOrder_RV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -40,5 +40,4 @@ public class Client {
 
     public String getPhone3() {return phone3;}
 
-
 }

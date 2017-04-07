@@ -8,17 +8,28 @@
     <string name="reports_title">Reportes</string>
 
     <string name="category_add">Agregar una nueva categoría</string>
+    <string name="product_add">Agregar un nuevo producto</string>
     <string name="client_add">Agregar un nuevo cliente</string>
-
+    <string name="assembly_add">Agregar un nuevo cliente</string>
 
     <string name="category_update">Modificar una categoría</string>
+    <string name="product_update">Modificar un cliente</string>
+    <string name="client_update">Modificar un cliente</string>
+    <string name="assembly_update">Modificar un cliente</string>
+
 
     <string name="category_delete">Eliminar una categoría</string>
+    <string name="product_delete">Eliminar una categoría</string>
+    <string name="client_delete">Eliminar un cliente</string>
+    <string name="assembly_delete">Eliminar un cliente</string>
 
 
     <string name="add_msg">Se ha guardado la selección</string>
+    <string name="dlt_msg">Se ha borrado la selección</string>
     <string name="add_msg_test">PRUEBA</string>
     <string name="error_msg">No se ha guardado la selección</string>
+    <string name="error_msg1">El precio no es aceptable</string>
+    <string name="error_msg2">Las descripciones deben ser distintas</string>
 
     <string name="dummy_title">Titulo</string>
     <string name="write_hint">Escribe ...</string>
@@ -36,4 +47,13 @@
     <string name="modify_text">Modificar</string>
     <string name="delete_text">Eliminar</string>
     <string name="sure_text">¿Está seguro?</string>
+
+    <string-array name="client_filter_array">
+        <item>Nombre</item>
+        <item>Apellido</item>
+        <item>Dirección</item>
+        <item>Teléfono</item>
+        <item>Email</item>
+    </string-array>
+
 </resources>

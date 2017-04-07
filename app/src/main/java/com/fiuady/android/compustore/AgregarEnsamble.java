@@ -200,4 +200,13 @@ public class AgregarEnsamble extends AppCompatActivity {
             }
         }
     }
+
+    public void btnguardar (View v) {
+
+        Toast.makeText(AgregarEnsamble.this, "Ensamble agregado", Toast.LENGTH_SHORT).show();
+
+    }
+    public void btnCancelar (View v) {
+        finish();
+    }
 }

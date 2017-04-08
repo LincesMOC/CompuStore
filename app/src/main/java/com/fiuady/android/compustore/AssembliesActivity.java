@@ -69,6 +69,7 @@ public class AssembliesActivity extends AppCompatActivity {
                                }).setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
                                    public void onClick(DialogInterface dialog, int id) {
                                        Toast.makeText(AssembliesActivity.this, "Se ha eliminado el ensamble", Toast.LENGTH_SHORT).show();
+                                       compuStore.deleteAssemblyproducts(assembly.getId());
                                        compuStore.deleteAssembly(assembly.getId(), true);
                                        A_adapter = new AssembliesActivity.AssemblyAdapter(compuStore.getAllAssemblies());
                                        assemblyRV.setAdapter(A_adapter);

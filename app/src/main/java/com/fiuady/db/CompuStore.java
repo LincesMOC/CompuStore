@@ -641,8 +641,9 @@ public final class CompuStore {
         values.put(AssemblyProductsTable.Columns.QUANTITY,qty);
 
 
-        db.update(AssemblyProductsTable.NAME, values, AssemblyProductsTable.Columns.ID+ "= ?",
-                new String[] {Integer.toString(idensammble)});
+//        db.update(AssemblyProductsTable.NAME, values, AssemblyProductsTable.Columns.ID+ "= ?",
+//                new String[] {Integer.toString(idensammble)});
+
     }
 
     public void deleteAssemblyproducts(int idensammble){

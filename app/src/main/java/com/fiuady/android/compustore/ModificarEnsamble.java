@@ -221,17 +221,15 @@ public class ModificarEnsamble extends AppCompatActivity {
         if(descrip.getText().toString().isEmpty()){
             Toast.makeText(ModificarEnsamble.this, "Agrega una descripcion", Toast.LENGTH_SHORT).show();
         }else {
+            compuStore.deleteAssemblyproducts(paso);
+            compuStore.deleteAssembly(paso, true);
             //Agregar ensamble
             compuStore.insertAssembly(descrip.getText().toString());
-            if(compuStore.updateAssembly(descrip.getText().toString(),paso)){
-                for(Product p :products){
-                    //compuStore.insertAssemblyproducts(idensa,p.getId(),p.getQuantity());
-                }
-            }
-
-//            int idensa = compuStore.getAssemblyid(descrip.getText().toString());
+            int idensa = compuStore.getAssemblyid(descrip.getText().toString());
             //Agregar cada producto del ensamble con cantidades
-
+            for(Product p :products){
+                compuStore.insertAssemblyproducts(idensa,p.getId(),p.getQuantity());
+            }
 
             Toast.makeText(ModificarEnsamble.this, "Ensamble modificado", Toast.LENGTH_SHORT).show();
             finish();

@@ -96,8 +96,8 @@ public class ModificarEnsamble extends AppCompatActivity {
                                     }
                                 }).setPositiveButton(R.string.delete_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        products.remove(product);
-                                        adapter = new ProductAdapter(products);
+                                        products2.remove(product);
+                                        adapter = new ProductAdapter(products2);
                                         productRV.setAdapter(adapter);
                                         Toast.makeText(ModificarEnsamble.this, "Eliminado de ensamble", Toast.LENGTH_SHORT).show();
                                     }
@@ -138,7 +138,9 @@ public class ModificarEnsamble extends AppCompatActivity {
         }
     }
 
-    private ArrayList<Product> products;
+//    private ArrayList<Product> products;
+    ArrayList<Product> products2;
+    int paso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,21 +152,23 @@ public class ModificarEnsamble extends AppCompatActivity {
         productRV.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ProductAdapter(new ArrayList<Product>());
 
-        int paso = getIntent().getExtras().getInt("assemblyid");
+        paso = getIntent().getExtras().getInt("assemblyid");
 
         ArrayList<AssemblyProduct> ap = compuStore.getEspecificAssemblyProducts(paso);
-        ArrayList<Product> products2 = new ArrayList<>();
+         products2 = new ArrayList<>();
 
         for(AssemblyProduct apr : ap){
 
             for(Product p:compuStore.getAllProducts()) {
 
                 if(apr.getProduct_id() == p.getId()){
-                    products2.add(p);
+                    Product produc = p;
+                    produc.setQuantity(apr.getQty());
+                    products2.add(produc);
                 }
             }
         }
-        products = new ArrayList<>();
+//        products = new ArrayList<>();
         adapter = new ProductAdapter(products2);
         productRV.setAdapter(adapter);
         descrip = (EditText)findViewById(R.id.edittextdescripcion);
@@ -188,27 +192,27 @@ public class ModificarEnsamble extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 2){
-            int productid = data.getIntExtra("Productid",-1);
-            //TextView labelprueba = (TextView)findViewById(R.id.labelprueba);
-            //labelprueba.setText(Integer.toString(productid));
-            //products.add() Hacer funcion que regrese un producto de la base de datos
-            //products.add(compuStore.getProductfromid(productid));
-            Product product = compuStore.getProductfromid(productid);
-            boolean duplicado = false;
-            for(Product product1: products){
-                if(product1.getId() == product.getId()){
-                    duplicado = true;
+        if(resultCode == 0){
+            Toast.makeText(ModificarEnsamble.this, "Sali sin modificar", Toast.LENGTH_SHORT).show();
+        }else {
+            if (requestCode == 2) {
+                int productid = data.getIntExtra("Productid", -1);
+                Product product = compuStore.getProductfromid(productid);
+                boolean duplicado = false;
+                for (Product product1 : products2) {
+                    if (product1.getId() == product.getId()) {
+                        duplicado = true;
+                    }
                 }
-            }
-            if(duplicado){
-                Toast.makeText(ModificarEnsamble.this, "El producto ya esta en el ensamble", Toast.LENGTH_SHORT).show();
-            }else {
-                product.setQuantity(1);
-                products.add(product);
-                adapter = new ProductAdapter(products);
-                productRV.setAdapter(adapter);
-                Toast.makeText(ModificarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();
+                if (duplicado) {
+                    Toast.makeText(ModificarEnsamble.this, "El producto ya esta en el ensamble", Toast.LENGTH_SHORT).show();
+                } else {
+                    product.setQuantity(1);
+                    products2.add(product);
+                    adapter = new ProductAdapter(products2);
+                    productRV.setAdapter(adapter);
+                    Toast.makeText(ModificarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -220,15 +224,17 @@ public class ModificarEnsamble extends AppCompatActivity {
         if(descrip.getText().toString().isEmpty()){
             Toast.makeText(ModificarEnsamble.this, "Agrega una descripcion", Toast.LENGTH_SHORT).show();
         }else {
+            compuStore.deleteAssemblyproducts(paso);
+            compuStore.deleteAssembly(paso, true);
             //Agregar ensamble
             compuStore.insertAssembly(descrip.getText().toString());
             int idensa = compuStore.getAssemblyid(descrip.getText().toString());
             //Agregar cada producto del ensamble con cantidades
-            for(Product p :products){
+            for(Product p :products2){
                 compuStore.insertAssemblyproducts(idensa,p.getId(),p.getQuantity());
             }
 
-            Toast.makeText(ModificarEnsamble.this, "Ensamble agregado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ModificarEnsamble.this, "Ensamble modificado", Toast.LENGTH_SHORT).show();
             finish();
         }
 

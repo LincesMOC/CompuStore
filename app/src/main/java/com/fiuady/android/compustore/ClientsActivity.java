@@ -31,7 +31,7 @@ public class ClientsActivity extends AppCompatActivity {
     private ClientAdapter C_adapter;
     private CompuStore compuStore;
     private MultiSpinner spinner;
-    private EditText LISTA;
+    private EditText texto;
 
     private class ClientHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -198,6 +198,8 @@ public class ClientsActivity extends AppCompatActivity {
         public int getItemCount() {return clients.size();}
     }
 
+    boolean[] selected1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -207,7 +209,7 @@ public class ClientsActivity extends AppCompatActivity {
         spinner = (MultiSpinner) findViewById(R.id.client_filter_spinner);
 
 
-        LISTA = (EditText)findViewById(R.id.edittextdescripcion);
+        texto = (EditText)findViewById(R.id.edittextdescripcion);
 
         final List<String> list = new ArrayList<>();
         list.add("Nombre");
@@ -217,6 +219,7 @@ public class ClientsActivity extends AppCompatActivity {
         list.add("Email");
 
         spinner.setItems(list, "Todos", new MultiSpinner.MultiSpinnerListener() {
+
             @Override
             public void onItemsSelected(boolean[] selected) {
 
@@ -228,6 +231,8 @@ public class ClientsActivity extends AppCompatActivity {
                     }
                     i++;
                 }
+
+                selected1 = selected;
             }
         });
 
@@ -311,6 +316,11 @@ public class ClientsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+   public void onSearchClick(View v){
+       C_adapter = new  ClientsActivity.ClientAdapter(compuStore.filterClients(selected1,texto.getText().toString()));
+       clientRV.setAdapter(C_adapter);
+   }
 }
 
 

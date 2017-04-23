@@ -2,9 +2,11 @@ package com.fiuady.android.compustore;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -122,7 +124,16 @@ public class AssembliesActivity extends AppCompatActivity {
         compuStore = new CompuStore(this);
 
         assemblyRV = (RecyclerView)findViewById(R.id.activity_assemblies);
-        assemblyRV.setLayoutManager(new LinearLayoutManager(this));
+//        assemblyRV.setLayoutManager(new LinearLayoutManager(this));
+//        AssembliesActivity.this.getResources().getConfiguration().orientation
+
+        if (AssembliesActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            assemblyRV.setLayoutManager(new GridLayoutManager(this,2));
+            //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (AssembliesActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            assemblyRV.setLayoutManager(new LinearLayoutManager(this));
+            //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
 
         A_adapter = new AssemblyAdapter(compuStore.getAllAssemblies());
         assemblyRV.setAdapter(A_adapter);
@@ -146,5 +157,18 @@ public class AssembliesActivity extends AppCompatActivity {
         super.onResume();
         A_adapter = new AssemblyAdapter(compuStore.getAllAssemblies());
         assemblyRV.setAdapter(A_adapter);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            assemblyRV.setLayoutManager(new GridLayoutManager(this,2));
+            //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            assemblyRV.setLayoutManager(new LinearLayoutManager(this));
+            //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
     }
 }

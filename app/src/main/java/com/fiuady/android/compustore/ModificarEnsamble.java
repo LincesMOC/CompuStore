@@ -245,7 +245,6 @@ public class ModificarEnsamble extends AppCompatActivity {
             Toast.makeText(ModificarEnsamble.this, "Ensamble modificado", Toast.LENGTH_SHORT).show();
             finish();
         }
-
     }
     public void btnCancelar (View v) {
         finish();

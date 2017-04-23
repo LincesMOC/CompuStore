@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -88,6 +89,10 @@ public class OrdersActivity extends AppCompatActivity {
         public int getItemCount() {return orders.size();}
     }
 
+    boolean[] selected1;
+    String textClient;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +105,25 @@ public class OrdersActivity extends AppCompatActivity {
         clientsSpinner.setAdapter(cs_adapter);
 
         cs_adapter.add("Todos");
+
         List<Client> clients = compuStore.getAllClients();
         for(Client client :clients){
         cs_adapter.add(client.getFirstName() + " " + client.getLastName());}
+
+
+        clientsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                textClient = clientsSpinner.getSelectedItem().toString();
+                Toast.makeText(OrdersActivity.this,"Seleccionado: "+textClient, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         //SPINNER DE ESTADO DE ORDEN
         LISTA = (EditText)findViewById(R.id.edittextdescripcion);
@@ -114,6 +135,8 @@ public class OrdersActivity extends AppCompatActivity {
         list.add("Confirmado");
         list.add("En tránsito");
         list.add("Finalizado");
+
+        //String textStatus = orderStateSpinner.getSelectedItem().toString();
 
         orderStateSpinner.setItems(list, "Todos", new MultiSpinner.MultiSpinnerListener() {
             @Override
@@ -127,6 +150,11 @@ public class OrdersActivity extends AppCompatActivity {
                     }
                     i++;
                 }
+
+                selected1 = selected;
+
+                O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByStatus(selected1,textClient));
+                orderRV.setAdapter(O_adapter);
             }
         });
 
@@ -175,4 +203,5 @@ public class OrdersActivity extends AppCompatActivity {
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
+
 }

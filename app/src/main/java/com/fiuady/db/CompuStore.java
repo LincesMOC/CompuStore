@@ -763,6 +763,64 @@ public final class CompuStore {
         return  c;
     }
 
+    public List<Client> filterClients (boolean [] selected, String text){
+
+        ArrayList<Client> clients = new ArrayList<>();
+        if(text.isEmpty()){
+            ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers ORDER BY last_name", null));
+            while(cursor.moveToNext()){
+                clients.add(cursor.getClient());
+            }
+            cursor.close();
+        }else{
+            if(selected[0]==true){
+                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where first_name like '%"+text.toString()+"%' ORDER BY last_name", null));
+                while(cursor.moveToNext()){
+                    clients.add(cursor.getClient());
+                }
+                cursor.close();
+            }
+
+            if(selected[1]==true){
+                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where last_name like '%"+text.toString()+"%' ORDER BY last_name", null));
+                while(cursor.moveToNext()){
+                    clients.add(cursor.getClient());
+                }
+                cursor.close();
+            }
+
+            if(selected[2]==true){
+                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where address like '%"+text.toString()+"%' ORDER BY last_name", null));
+                while(cursor.moveToNext()){
+                    clients.add(cursor.getClient());
+                }
+                cursor.close();
+            }
+
+            if(selected[3]==true){
+                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where phone1 like '%"+text.toString()+"%' or phone2 like '%"+text.toString()+"%' " +
+                        " or phone3 like '%"+text.toString()+"%'ORDER BY last_name", null));
+                while(cursor.moveToNext()){
+                    clients.add(cursor.getClient());
+                }
+                cursor.close();
+            }
+
+            if(selected[4]==true){
+                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where e_mail like '%"+text.toString()+"%' ORDER BY last_name", null));
+                while(cursor.moveToNext()){
+                    clients.add(cursor.getClient());
+                }
+                cursor.close();
+            }
+
+        }
+
+        //Si no se especifica un texto válido se considera que no hay filtro de texto???
+
+        return clients;
+    }
+
 
     // -------------------------------------------------------- ORDERS --------------------------------------------------------
 
@@ -869,6 +927,8 @@ public final class CompuStore {
         return list;
     }
 
+
+
     public boolean insertOrderAssembly(int assembly_id, int qty) {
         boolean b = true;
         List<OrderAssembly> a = getAllOrderAssemblies();
@@ -882,6 +942,139 @@ public final class CompuStore {
             db.insert(OrderAssembliesTable.NAME, null, values);
 
         return b;
+    }
+
+    public List<Order> filterOrdersByStatus (boolean [] selected,String textClient){
+
+        ArrayList<Order> orders = new ArrayList<>();
+
+        if (textClient == "Todos") {
+
+            if (selected[0] == true) {
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 0", null)); //ORDENAE POR FECHA
+                while (cursor.moveToNext()) {
+                    orders.add(cursor.getOrder());
+                }
+                cursor.close();
+            }
+
+            if (selected[1] == true) {
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 1", null)); //ORDENAE POR FECHA
+                while (cursor.moveToNext()) {
+                    orders.add(cursor.getOrder());
+                }
+                cursor.close();
+            }
+
+            if (selected[2] == true) {
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 2", null)); //ORDENAE POR FECHA
+                while (cursor.moveToNext()) {
+                    orders.add(cursor.getOrder());
+                }
+                cursor.close();
+            }
+
+            if (selected[3] == true) {
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 3", null)); //ORDENAE POR FECHA
+                while (cursor.moveToNext()) {
+                    orders.add(cursor.getOrder());
+                }
+                cursor.close();
+            }
+
+            if (selected[4] == true) {
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 4", null)); //ORDENAE POR FECHA
+                while (cursor.moveToNext()) {
+                    orders.add(cursor.getOrder());
+                }
+                cursor.close();
+            }
+            }else {
+                if (selected[0] == true) {
+                    OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
+                            "from orders o " +
+                            "inner join customers c on (o.customer_id = c.id) " +
+                            "where o.status_id = 0 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                    while (cursor.moveToNext()) {
+                        orders.add(cursor.getOrder());
+                    }
+                    cursor.close();
+                }
+
+                if (selected[1] == true) {
+                    OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
+                            "from orders o " +
+                            "inner join customers c on (o.customer_id = c.id) " +
+                            "where o.status_id = 1 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                  while (cursor.moveToNext()) {
+                      orders.add(cursor.getOrder());
+                  }
+                  cursor.close();
+              }
+
+              if (selected[2] == true) {
+                  OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
+                          "from orders o " +
+                          "inner join customers c on (o.customer_id = c.id) " +
+                          "where o.status_id = 2 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                  while (cursor.moveToNext()) {
+                      orders.add(cursor.getOrder());
+                  }
+                  cursor.close();
+              }
+
+              if (selected[3] == true) {
+                  OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
+                          "from orders o " +
+                          "inner join customers c on (o.customer_id = c.id) " +
+                          "where o.status_id = 3 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                  while (cursor.moveToNext()) {
+                      orders.add(cursor.getOrder());
+                  }
+                  cursor.close();
+              }
+
+              if (selected[4] == true) {
+                  OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
+                          "from orders o " +
+                          "inner join customers c on (o.customer_id = c.id) " +
+                          "where o.status_id = 4 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                  while (cursor.moveToNext()) {
+                      orders.add(cursor.getOrder());
+                  }
+                  cursor.close();
+              }
+        }
+
+        //Si no se especifica un texto válido se considera que no hay filtro de texto???
+
+        return orders;
+    }
+
+    public List<Order> filterOrdersByClient (int customer_id){
+
+        ArrayList<Order> orders = new ArrayList<>();
+
+        if(customer_id == -1){ //Todos los clientes
+
+            OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders", null));
+            while(cursor.moveToNext()) {
+                orders.add(cursor.getOrder());
+            }
+            cursor.close();
+
+        }else{
+
+            OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders WHERE customer_id = "+Integer.toString(customer_id) +"", null));
+            while(cursor.moveToNext()) {
+                orders.add(cursor.getOrder());
+            }
+            cursor.close();
+        }
+
+        //Si no se especifica un texto válido se considera que no hay filtro de texto???
+
+        return orders;
     }
 
 

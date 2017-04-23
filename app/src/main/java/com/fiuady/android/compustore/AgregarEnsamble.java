@@ -1,13 +1,17 @@
 package com.fiuady.android.compustore;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -152,11 +156,19 @@ public class AgregarEnsamble extends AppCompatActivity {
 
         compuStore= new CompuStore(AgregarEnsamble.this);
         productRV = (RecyclerView) findViewById(R.id.recyclerviewproductos);
-        productRV.setLayoutManager(new LinearLayoutManager(this));
+//        productRV.setLayoutManager(new LinearLayoutManager(this));
+//        //productRV.setLayoutManager(new GridLayoutManager(this,2));
+
+        if (AgregarEnsamble.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            productRV.setLayoutManager(new GridLayoutManager(this,2));
+            //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (AgregarEnsamble.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            productRV.setLayoutManager(new LinearLayoutManager(this));
+            //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
         adapter = new ProductAdapter(new ArrayList<Product>());
         productRV.setAdapter(adapter);
         products = new ArrayList<Product>();
-
     }
 
     @Override
@@ -223,5 +235,18 @@ public class AgregarEnsamble extends AppCompatActivity {
     }
     public void btnCancelar (View v) {
         finish();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            productRV.setLayoutManager(new GridLayoutManager(this,2));
+            //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            productRV.setLayoutManager(new LinearLayoutManager(this));
+            //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

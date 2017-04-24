@@ -136,6 +136,8 @@ public class OrdersActivity extends AppCompatActivity {
             }
         });
 
+
+
         //SPINNER DE CLIENTES
         clientsSpinner = (Spinner)findViewById(R.id.client_spinner);
         ArrayAdapter<String> cs_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);

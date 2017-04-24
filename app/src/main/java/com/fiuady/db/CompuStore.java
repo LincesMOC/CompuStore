@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -436,6 +437,7 @@ public final class CompuStore {
     // -------------------------------------------------------- ASSEMBLIES --------------------------------------------------------
 
 
+
     public List<Assembly> getAllAssemblies() {
         ArrayList<Assembly> list = new ArrayList<>();
 
@@ -827,7 +829,7 @@ public final class CompuStore {
     public List<Order> getAllOrders() {
         ArrayList<Order> list = new ArrayList<>();
 
-        OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders ORDER BY id", null));
+        OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders order by date(date) desc", null));
         while(cursor.moveToNext()){
             list.add(cursor.getOrder());
         }
@@ -950,16 +952,8 @@ public final class CompuStore {
 
         if (textClient == "Todos") {
 
-            //if (textStatus == "Todos") { //TODOS LOS ESTATUS
-            //    OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders", null)); //ORDENAE POR FECHA
-            //    while (cursor.moveToNext()) {
-            //        orders.add(cursor.getOrder());
-            //    }
-            //    cursor.close();
-            //}
-
             if (selected[0] == true) {
-                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 0", null)); //ORDENAE POR FECHA
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 0 order by date(date) desc", null)); //ORDENAE POR FECHA
                 while (cursor.moveToNext()) {
                     orders.add(cursor.getOrder());
                 }
@@ -967,7 +961,7 @@ public final class CompuStore {
             }
 
             if (selected[1] == true) {
-                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 1", null)); //ORDENAE POR FECHA
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 1 order by date(date) desc", null)); //ORDENAE POR FECHA
                 while (cursor.moveToNext()) {
                     orders.add(cursor.getOrder());
                 }
@@ -975,7 +969,7 @@ public final class CompuStore {
             }
 
             if (selected[2] == true) {
-                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 2", null)); //ORDENAE POR FECHA
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 2 order by date(date) desc", null)); //ORDENAE POR FECHA
                 while (cursor.moveToNext()) {
                     orders.add(cursor.getOrder());
                 }
@@ -983,7 +977,7 @@ public final class CompuStore {
             }
 
             if (selected[3] == true) {
-                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 3", null)); //ORDENAE POR FECHA
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 3 order by date(date) desc", null)); //ORDENAE POR FECHA
                 while (cursor.moveToNext()) {
                     orders.add(cursor.getOrder());
                 }
@@ -991,7 +985,7 @@ public final class CompuStore {
             }
 
             if (selected[4] == true) {
-                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 4", null)); //ORDENAE POR FECHA
+                OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 4 order by date(date) desc", null)); //ORDENAE POR FECHA
                 while (cursor.moveToNext()) {
                     orders.add(cursor.getOrder());
                 }
@@ -999,21 +993,11 @@ public final class CompuStore {
             }
             }else {
 
-            //if (textStatus == "Todos") { //TODOS LOS ESTATUS
-            //    OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
-            //            "from orders o " +
-            //            "inner join customers c on (o.customer_id = c.id) " +
-            //            "where c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
-            //    while (cursor.moveToNext()) {
-            //        orders.add(cursor.getOrder());
-            //    }
-            //    cursor.close();
-            //}
                 if (selected[0] == true) {
                     OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
                             "from orders o " +
                             "inner join customers c on (o.customer_id = c.id) " +
-                            "where o.status_id = 0 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                            "where o.status_id = 0 and c.first_name || ' ' || c.last_name like '"+textClient+"' order by date(date) desc", null)); //ORDENAE POR FECHA
                     while (cursor.moveToNext()) {
                         orders.add(cursor.getOrder());
                     }
@@ -1024,7 +1008,7 @@ public final class CompuStore {
                     OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
                             "from orders o " +
                             "inner join customers c on (o.customer_id = c.id) " +
-                            "where o.status_id = 1 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                            "where o.status_id = 1 and c.first_name || ' ' || c.last_name like '"+textClient+"' order by date(date) desc", null)); //ORDENAE POR FECHA
                   while (cursor.moveToNext()) {
                       orders.add(cursor.getOrder());
                   }
@@ -1035,7 +1019,7 @@ public final class CompuStore {
                   OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
                           "from orders o " +
                           "inner join customers c on (o.customer_id = c.id) " +
-                          "where o.status_id = 2 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                          "where o.status_id = 2 and c.first_name || ' ' || c.last_name like '"+textClient+"' order by date(date) desc", null)); //ORDENAE POR FECHA
                   while (cursor.moveToNext()) {
                       orders.add(cursor.getOrder());
                   }
@@ -1046,7 +1030,7 @@ public final class CompuStore {
                   OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
                           "from orders o " +
                           "inner join customers c on (o.customer_id = c.id) " +
-                          "where o.status_id = 3 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                          "where o.status_id = 3 and c.first_name || ' ' || c.last_name like '"+textClient+"' order by date(date) desc", null)); //ORDENAE POR FECHA
                   while (cursor.moveToNext()) {
                       orders.add(cursor.getOrder());
                   }
@@ -1057,7 +1041,7 @@ public final class CompuStore {
                   OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
                           "from orders o " +
                           "inner join customers c on (o.customer_id = c.id) " +
-                          "where o.status_id = 4 and c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+                          "where o.status_id = 4 and c.first_name || ' ' || c.last_name like '"+textClient+"' order by date(date) desc", null)); //ORDENAE POR FECHA
                   while (cursor.moveToNext()) {
                       orders.add(cursor.getOrder());
                   }

@@ -90,7 +90,8 @@ public class OrdersActivity extends AppCompatActivity {
     }
 
     boolean[] selected1;
-    String textClient;
+    String textClient = "Todos";
+    String textStatus = "Todos";
 
 
     @Override
@@ -98,32 +99,6 @@ public class OrdersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
         compuStore = new CompuStore(this);
-
-        //SPINNER DE CLIENTES
-        clientsSpinner = (Spinner)findViewById(R.id.client_spinner);
-        ArrayAdapter<String> cs_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
-        clientsSpinner.setAdapter(cs_adapter);
-
-        cs_adapter.add("Todos");
-
-        List<Client> clients = compuStore.getAllClients();
-        for(Client client :clients){
-        cs_adapter.add(client.getFirstName() + " " + client.getLastName());}
-
-
-        clientsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                textClient = clientsSpinner.getSelectedItem().toString();
-                Toast.makeText(OrdersActivity.this,"Seleccionado: "+textClient, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
 
         //SPINNER DE ESTADO DE ORDEN
         LISTA = (EditText)findViewById(R.id.edittextdescripcion);
@@ -142,6 +117,9 @@ public class OrdersActivity extends AppCompatActivity {
             @Override
             public void onItemsSelected(boolean[] selected) {
 
+                textStatus = orderStateSpinner.getSelectedItem().toString();
+                Toast.makeText(OrdersActivity.this,"Seleccionado: "+textStatus, Toast.LENGTH_SHORT).show();
+
                 int i=0;
 
                 for (Boolean b : selected){
@@ -153,8 +131,40 @@ public class OrdersActivity extends AppCompatActivity {
 
                 selected1 = selected;
 
-                O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByStatus(selected1,textClient));
+                O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByStatus(selected1,textClient,textStatus));
                 orderRV.setAdapter(O_adapter);
+            }
+        });
+
+        //SPINNER DE CLIENTES
+        clientsSpinner = (Spinner)findViewById(R.id.client_spinner);
+        ArrayAdapter<String> cs_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
+        clientsSpinner.setAdapter(cs_adapter);
+
+        cs_adapter.add("Todos");
+
+        List<Client> clients = compuStore.getAllClients();
+        for(Client client :clients){
+            cs_adapter.add(client.getFirstName() + " " + client.getLastName());}
+
+
+        clientsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                textClient = clientsSpinner.getSelectedItem().toString();
+                Toast.makeText(OrdersActivity.this,"Seleccionado: "+textClient, Toast.LENGTH_SHORT).show();
+
+                if(orderStateSpinner.getSelectedItem().toString() == "Todos"){
+
+                }else {
+                    O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByStatus(selected1,textClient,textStatus));
+                    orderRV.setAdapter(O_adapter);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 

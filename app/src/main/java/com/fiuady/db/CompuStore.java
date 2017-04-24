@@ -944,11 +944,19 @@ public final class CompuStore {
         return b;
     }
 
-    public List<Order> filterOrdersByStatus (boolean [] selected,String textClient){
+    public List<Order> filterOrdersByStatus (boolean [] selected,String textClient, String textStatus){
 
         ArrayList<Order> orders = new ArrayList<>();
 
         if (textClient == "Todos") {
+
+            //if (textStatus == "Todos") { //TODOS LOS ESTATUS
+            //    OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders", null)); //ORDENAE POR FECHA
+            //    while (cursor.moveToNext()) {
+            //        orders.add(cursor.getOrder());
+            //    }
+            //    cursor.close();
+            //}
 
             if (selected[0] == true) {
                 OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders where status_id = 0", null)); //ORDENAE POR FECHA
@@ -990,6 +998,17 @@ public final class CompuStore {
                 cursor.close();
             }
             }else {
+
+            //if (textStatus == "Todos") { //TODOS LOS ESTATUS
+            //    OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
+            //            "from orders o " +
+            //            "inner join customers c on (o.customer_id = c.id) " +
+            //            "where c.first_name || ' ' || c.last_name like '"+textClient+"'", null)); //ORDENAE POR FECHA
+            //    while (cursor.moveToNext()) {
+            //        orders.add(cursor.getOrder());
+            //    }
+            //    cursor.close();
+            //}
                 if (selected[0] == true) {
                     OrderCursor cursor = new OrderCursor(db.rawQuery("select o.id,o.status_id,o.customer_id, o.date,o.change_log " +
                             "from orders o " +
@@ -1051,28 +1070,17 @@ public final class CompuStore {
         return orders;
     }
 
-    public List<Order> filterOrdersByClient (int customer_id){
+    public List<Order> filterOrdersByClient (boolean [] selected,String textClient){
 
         ArrayList<Order> orders = new ArrayList<>();
 
-        if(customer_id == -1){ //Todos los clientes
-
-            OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders", null));
-            while(cursor.moveToNext()) {
-                orders.add(cursor.getOrder());
-            }
-            cursor.close();
-
-        }else{
-
-            OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders WHERE customer_id = "+Integer.toString(customer_id) +"", null));
-            while(cursor.moveToNext()) {
+        if (textClient == "Todos") {
+            OrderCursor cursor = new OrderCursor(db.rawQuery("SELECT * FROM orders", null)); //ORDENAE POR FECHA
+            while (cursor.moveToNext()) {
                 orders.add(cursor.getOrder());
             }
             cursor.close();
         }
-
-        //Si no se especifica un texto válido se considera que no hay filtro de texto???
 
         return orders;
     }

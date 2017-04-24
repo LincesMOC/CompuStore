@@ -188,27 +188,32 @@ public class AgregarEnsamble extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 2){
-            int productid = data.getIntExtra("Productid",-1);
-            //TextView labelprueba = (TextView)findViewById(R.id.labelprueba);
-            //labelprueba.setText(Integer.toString(productid));
-            //products.add() Hacer funcion que regrese un producto de la base de datos
-            //products.add(compuStore.getProductfromid(productid));
-            Product product = compuStore.getProductfromid(productid);
-            boolean duplicado = false;
-            for(Product product1: products){
-                if(product1.getId() == product.getId()){
-                    duplicado = true;
+        if(resultCode == 0){
+            //Toast.makeText(ModificarEnsamble.this, "Sali sin modificar", Toast.LENGTH_SHORT).show();
+        }else {
+
+            if (requestCode == 2) {
+                int productid = data.getIntExtra("Productid", -1);
+                //TextView labelprueba = (TextView)findViewById(R.id.labelprueba);
+                //labelprueba.setText(Integer.toString(productid));
+                //products.add() Hacer funcion que regrese un producto de la base de datos
+                //products.add(compuStore.getProductfromid(productid));
+                Product product = compuStore.getProductfromid(productid);
+                boolean duplicado = false;
+                for (Product product1 : products) {
+                    if (product1.getId() == product.getId()) {
+                        duplicado = true;
+                    }
                 }
-            }
-            if(duplicado){
-                Toast.makeText(AgregarEnsamble.this, "El producto ya esta en el ensamble", Toast.LENGTH_SHORT).show();
-            }else {
-                product.setQuantity(1);
-                products.add(product);
-                adapter = new ProductAdapter(products);
-                productRV.setAdapter(adapter);
-                Toast.makeText(AgregarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();
+                if (duplicado) {
+                    Toast.makeText(AgregarEnsamble.this, "El producto ya esta en el ensamble", Toast.LENGTH_SHORT).show();
+                } else {
+                    product.setQuantity(1);
+                    products.add(product);
+                    adapter = new ProductAdapter(products);
+                    productRV.setAdapter(adapter);
+                    Toast.makeText(AgregarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

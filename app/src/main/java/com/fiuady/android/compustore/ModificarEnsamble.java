@@ -201,7 +201,7 @@ public class ModificarEnsamble extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == 0){
-            Toast.makeText(ModificarEnsamble.this, "Sali sin modificar", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(ModificarEnsamble.this, "Sali sin modificar", Toast.LENGTH_SHORT).show();
         }else {
             if (requestCode == 2) {
                 int productid = data.getIntExtra("Productid", -1);

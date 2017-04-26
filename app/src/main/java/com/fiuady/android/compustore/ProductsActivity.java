@@ -29,6 +29,13 @@ import java.util.List;
 
 public class ProductsActivity extends AppCompatActivity {
 
+    //Variables para landscape..
+    private final String BUSCARPRESSED = "buscarpressed";
+    private final String INDEXDESPINNER = "indexdespinner";
+    private final String STRINGTEXTO = "stringtexto";
+    private final String STRINGACTUAL = "stringactual";
+    private boolean buscarpressed;
+
     private class ProductHolder extends RecyclerView.ViewHolder {
 
         private TextView txtDescription;
@@ -213,6 +220,9 @@ public class ProductsActivity extends AppCompatActivity {
     private CompuStore compuStore;
     private List<Category> categories;
     private EditText texto;
+    private String stringquesebusco = "";
+    private String textoactual;
+    private int indice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,16 +239,34 @@ public class ProductsActivity extends AppCompatActivity {
         adapter = new ProductAdapter(new ArrayList<Product>());
         productRV.setAdapter(adapter);
 
-
-        ArrayAdapter<String> adapter= new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter1= new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
         //ArrayAdapter<String> adapter1= new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
-        categorispinner.setAdapter(adapter);
+        categorispinner.setAdapter(adapter1);
         //txtcateg.setAdapter(adapter);
 
-        adapter.add("Todos");
+        adapter1.add("Todos");
         categories = compuStore.getAllCategoriesid();
         for(Category category :categories){
-            adapter.add(category.getDescription());
+            adapter1.add(category.getDescription());
+        }
+
+        if(savedInstanceState != null){
+            buscarpressed = savedInstanceState.getBoolean(BUSCARPRESSED);
+            textoactual = savedInstanceState.getString(STRINGACTUAL);
+            indice = savedInstanceState.getInt(INDEXDESPINNER);
+            stringquesebusco = savedInstanceState.getString(STRINGTEXTO);
+
+            categorispinner.setSelection(indice);
+            texto.setText(textoactual);
+
+            if(buscarpressed){
+                //Llenar lista si se presiono buscar..
+                adapter = new ProductsActivity.ProductAdapter(compuStore.filterProducts(categorispinner.getSelectedItemPosition()-1,texto.getText().toString()));
+                buscarpressed = true;
+                stringquesebusco = texto.getText().toString();
+                productRV.setAdapter(adapter);
+                //Toast.makeText(this, "Se habia presionado falta llenar rv", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -325,6 +353,17 @@ public class ProductsActivity extends AppCompatActivity {
 
     public void onSearchClick(View v){
         adapter = new ProductsActivity.ProductAdapter(compuStore.filterProducts(categorispinner.getSelectedItemPosition()-1,texto.getText().toString()));
+        buscarpressed = true;
+        stringquesebusco = texto.getText().toString();
         productRV.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(INDEXDESPINNER,categorispinner.getSelectedItemPosition());//
+        outState.putString(STRINGACTUAL,texto.getText().toString()); //
+        outState.putString(STRINGTEXTO,stringquesebusco);
+        outState.putBoolean(BUSCARPRESSED,buscarpressed);
     }
 }

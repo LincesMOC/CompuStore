@@ -32,9 +32,11 @@ public class ModificarEnsamble extends AppCompatActivity {
     private RecyclerView productRV;
     private ProductAdapter adapter;
     private CompuStore compuStore;
-    private List<Category> categories;
-    private EditText texto;
+    private Boolean Llenarconensambleid = true ;
 
+
+    private final String KEY_Recyclerprods1="recyclersprods1";
+    private ArrayList<Integer> productsids;
 
     private class ProductHolder extends RecyclerView.ViewHolder {
 
@@ -142,6 +144,7 @@ public class ModificarEnsamble extends AppCompatActivity {
 
 //    private ArrayList<Product> products;
     ArrayList<Product> products2;
+
     int paso;
 
     @Override
@@ -163,17 +166,35 @@ public class ModificarEnsamble extends AppCompatActivity {
         paso = getIntent().getExtras().getInt("assemblyid");
 
         ArrayList<AssemblyProduct> ap = compuStore.getEspecificAssemblyProducts(paso);
-         products2 = new ArrayList<>();
+         products2 = new ArrayList<Product>();
+         productsids=new ArrayList<Integer>();
 
-        for(AssemblyProduct apr : ap){
+        if(Llenarconensambleid) {
+            for (AssemblyProduct apr : ap) {
 
-            for(Product p:compuStore.getAllProducts()) {
+                for (Product p : compuStore.getAllProducts()) {
 
-                if(apr.getProduct_id() == p.getId()){
-                    Product produc = p;
-                    produc.setQuantity(apr.getQty());
-                    products2.add(produc);
+                    if (apr.getProduct_id() == p.getId()) {
+                        p.setQuantity(apr.getQty());
+                        products2.add(p);
+                    }
                 }
+            }
+            Llenarconensambleid =false;
+        }
+        else{
+            if(savedInstanceState != null){
+                for (int i=0;i<products2.size();i++) {
+                    products2.remove(i);
+                }
+                productsids = savedInstanceState.getIntegerArrayList(KEY_Recyclerprods1);
+
+                for (Integer i:productsids) {
+                    Product p = compuStore.getProductfromid(i);
+                    products2.add(p);
+                }
+//            adapter = new ProductAdapter(products2);
+//            productRV.setAdapter(adapter);
             }
         }
 //        products = new ArrayList<>();
@@ -201,7 +222,8 @@ public class ModificarEnsamble extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == 0){
-            Toast.makeText(ModificarEnsamble.this, "Sali sin modificar", Toast.LENGTH_SHORT).show();
+            Llenarconensambleid=false;
+            //Toast.makeText(ModificarEnsamble.this, "Sali sin modificar", Toast.LENGTH_SHORT).show();
         }else {
             if (requestCode == 2) {
                 int productid = data.getIntExtra("Productid", -1);
@@ -221,6 +243,7 @@ public class ModificarEnsamble extends AppCompatActivity {
                     productRV.setAdapter(adapter);
                     Toast.makeText(ModificarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();
                 }
+                Llenarconensambleid=false;
             }
         }
     }
@@ -261,5 +284,24 @@ public class ModificarEnsamble extends AppCompatActivity {
             //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        for (int i=0;i<productsids.size();i++) {
+            productsids.remove(i);
+        }
+        for (Product p:products2) {
+            productsids.add(p.getId());
+        }
+        Llenarconensambleid=false;
+        outState.putIntegerArrayList(KEY_Recyclerprods1,productsids);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Llenarconensambleid=false;
     }
 }

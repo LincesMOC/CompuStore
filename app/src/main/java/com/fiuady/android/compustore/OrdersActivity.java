@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -24,8 +25,10 @@ import com.fiuady.db.Client;
 import com.fiuady.db.CompuStore;
 import com.fiuady.db.Order;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class OrdersActivity extends AppCompatActivity {
@@ -65,6 +68,9 @@ public class OrdersActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Toast.makeText(OrdersActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
+
+
+
         }
     }
 
@@ -92,6 +98,10 @@ public class OrdersActivity extends AppCompatActivity {
     boolean[] selected1;
     String textClient = "Todos";
     String textStatus = "Todos";
+    private CheckBox chkDate1;
+    private CheckBox chkDate2;
+    String textDate1;
+    String textDate2;
 
 
     @Override
@@ -99,6 +109,9 @@ public class OrdersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
         compuStore = new CompuStore(this);
+        chkDate1=(CheckBox)findViewById(R.id.checkBox1);
+        chkDate2 = (CheckBox)findViewById(R.id.checkBox2);
+
 
         //SPINNER DE ESTADO DE ORDEN
         LISTA = (EditText)findViewById(R.id.edittextdescripcion);
@@ -111,7 +124,6 @@ public class OrdersActivity extends AppCompatActivity {
         list.add("En tránsito");
         list.add("Finalizado");
 
-        //String textStatus = orderStateSpinner.getSelectedItem().toString();
 
         orderStateSpinner.setItems(list, "Todos", new MultiSpinner.MultiSpinnerListener() {
             @Override
@@ -122,20 +134,17 @@ public class OrdersActivity extends AppCompatActivity {
 
                 int i=0;
 
-                for (Boolean b : selected){
-                    if (b){
-                        Toast.makeText(OrdersActivity.this,"Seleccionado: "+Integer.toString(i), Toast.LENGTH_SHORT).show();
-                    }
-                    i++;
-                }
-
                 selected1 = selected;
 
-                O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByStatus(selected1,textClient,textStatus));
+                O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByEverything(selected1,textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked())); //BY EVERYTHING
+                //O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByStatus(selected1,textClient));
                 orderRV.setAdapter(O_adapter);
+
+                if (chkDate1.isChecked()){
+                    Toast.makeText(OrdersActivity.this,"Fecha inicial: "+textDate1, Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
 
 
         //SPINNER DE CLIENTES
@@ -149,7 +158,6 @@ public class OrdersActivity extends AppCompatActivity {
         for(Client client :clients){
             cs_adapter.add(client.getFirstName() + " " + client.getLastName());}
 
-
         clientsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -157,9 +165,10 @@ public class OrdersActivity extends AppCompatActivity {
                 Toast.makeText(OrdersActivity.this,"Seleccionado: "+textClient, Toast.LENGTH_SHORT).show();
 
                 if(orderStateSpinner.getSelectedItem().toString() == "Todos"){
-
+                    O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByClient(textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked()));
+                    orderRV.setAdapter(O_adapter);
                 }else {
-                    O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByStatus(selected1,textClient,textStatus));
+                    O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByEverything(selected1,textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked()));
                     orderRV.setAdapter(O_adapter);
                 }
             }
@@ -197,10 +206,31 @@ public class OrdersActivity extends AppCompatActivity {
         new DatePickerDialog(OrdersActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                InitialDate.setText("Fecha Inicial: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month) + "-" +
-                        Integer.toString(year) + "-");
+
+                if ((month + 1 < 9)&&(dayOfMonth < 9)){
+                    InitialDate.setText("Fecha Inicial: " + 0 + Integer.toString(dayOfMonth) + "-" + 0 + Integer.toString(month + 1) + "-" +
+                            Integer.toString(year));
+                    textDate1 = Integer.toString(year) + "-" + 0 + Integer.toString(month + 1) + "-" + 0 + Integer.toString(dayOfMonth);
+                } else
+                {
+                    if (month + 1 < 9){
+                        InitialDate.setText("Fecha Inicial: " + Integer.toString(dayOfMonth) + "-" + 0 + Integer.toString(month + 1) + "-" +
+                                Integer.toString(year));
+                        textDate1 = Integer.toString(year) + "-" + 0 + Integer.toString(month + 1) + "-" + Integer.toString(dayOfMonth);
+                    } else if (dayOfMonth < 9){
+                        InitialDate.setText("Fecha Inicial: " + 0 + Integer.toString(dayOfMonth) + "-" + Integer.toString(month + 1) + "-" +
+                                Integer.toString(year));
+                        textDate1 = Integer.toString(year) + "-" + Integer.toString(month + 1) + "-" + 0 + Integer.toString(dayOfMonth);
+                    }
+                    else {
+                        InitialDate.setText("Fecha Inicial: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month + 1) + "-" +
+                                Integer.toString(year));
+                        textDate1 = Integer.toString(year) + "-" + Integer.toString(month + 1) + "-" + Integer.toString(dayOfMonth);
+                    }
+                }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+
     }
 
     public void onFinishDateClick (View v) {
@@ -210,8 +240,28 @@ public class OrdersActivity extends AppCompatActivity {
         new DatePickerDialog(OrdersActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                FinalDate.setText("Fecha Final: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month) + "-" +
-                        Integer.toString(year) + "-");
+                if ((month + 1 < 9)&&(dayOfMonth < 9)){
+                    FinalDate.setText("Fecha Final: " + 0 + Integer.toString(dayOfMonth) + "-" + 0 + Integer.toString(month + 1) + "-" +
+                            Integer.toString(year));
+                    textDate2 = Integer.toString(year) + "-" + 0 + Integer.toString(month + 1) + "-" + 0 + Integer.toString(dayOfMonth);
+                } else
+                {
+                    if (month + 1 < 9){
+                        FinalDate.setText("Fecha Final: " + Integer.toString(dayOfMonth) + "-" + 0 + Integer.toString(month + 1) + "-" +
+                                Integer.toString(year));
+                        textDate2 = Integer.toString(year) + "-" + 0 + Integer.toString(month + 1) + "-" + Integer.toString(dayOfMonth);
+                    } else if (dayOfMonth < 9){
+                        FinalDate.setText("Fecha Final: " + 0 + Integer.toString(dayOfMonth) + "-" + Integer.toString(month + 1) + "-" +
+                                Integer.toString(year));
+                        textDate2 = Integer.toString(year) + "-" + Integer.toString(month + 1) + "-" + 0 + Integer.toString(dayOfMonth);
+                    }
+                    else
+                    {
+                        FinalDate.setText("Fecha Final: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month + 1) + "-" +
+                                Integer.toString(year));
+                        textDate2 = Integer.toString(year) + "-" + Integer.toString(month + 1) + "-" + Integer.toString(dayOfMonth);
+                    }
+                }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }

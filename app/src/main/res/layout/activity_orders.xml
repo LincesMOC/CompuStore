@@ -52,7 +52,7 @@
             android:layout_below="@id/status_order_spinner"></Spinner>
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/checkBox1"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -62,16 +62,16 @@
             android:padding="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/checkBox"
+            android:layout_toLeftOf="@id/checkBox1"
             android:textColor="@android:color/black"
             android:onClick="onInicialDateClick"
             android:text="Fecha Inicial: 00-00-0000"
             android:textSize="14sp" />
 
         <CheckBox
-            android:id="@+id/checkBox1"
+            android:id="@+id/checkBox2"
             android:layout_alignParentEnd="true"
-            android:layout_below="@id/checkBox"
+            android:layout_below="@id/checkBox1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

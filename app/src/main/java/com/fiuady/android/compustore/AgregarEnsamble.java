@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,9 +36,8 @@ public class AgregarEnsamble extends AppCompatActivity {
     private RecyclerView productRV;
     private ProductAdapter adapter;
     private CompuStore compuStore;
-    private List<Category> categories;
-    private EditText texto;
 
+    private final String KEY_Recyclerprods="recyclersprods";
 
     private class ProductHolder extends RecyclerView.ViewHolder {
 
@@ -148,6 +148,7 @@ public class AgregarEnsamble extends AppCompatActivity {
     }
 
     private ArrayList<Product> products;
+    private ArrayList<Integer> productsids;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,7 @@ public class AgregarEnsamble extends AppCompatActivity {
 
         compuStore= new CompuStore(AgregarEnsamble.this);
         productRV = (RecyclerView) findViewById(R.id.recyclerviewproductos);
+        descrip = (EditText)findViewById(R.id.edittextdescripcion);
 //        productRV.setLayoutManager(new LinearLayoutManager(this));
 //        //productRV.setLayoutManager(new GridLayoutManager(this,2));
 
@@ -169,6 +171,18 @@ public class AgregarEnsamble extends AppCompatActivity {
         adapter = new ProductAdapter(new ArrayList<Product>());
         productRV.setAdapter(adapter);
         products = new ArrayList<Product>();
+        productsids=new ArrayList<Integer>();
+
+        if(savedInstanceState != null){
+            productsids = savedInstanceState.getIntegerArrayList(KEY_Recyclerprods);
+
+            for (Integer i:productsids) {
+                Product p = compuStore.getProductfromid(i);
+                products.add(p);
+            }
+            adapter = new ProductAdapter(products);
+            productRV.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -219,9 +233,10 @@ public class AgregarEnsamble extends AppCompatActivity {
     }
 
     EditText descrip;
+
     public void btnguardar (View v) {
 
-        descrip = (EditText)findViewById(R.id.edittextdescripcion);
+        //descrip = (EditText)findViewById(R.id.edittextdescripcion);
         if(descrip.getText().toString().isEmpty()){
             Toast.makeText(AgregarEnsamble.this, "Agrega una descripcion", Toast.LENGTH_SHORT).show();
         }else {
@@ -253,5 +268,17 @@ public class AgregarEnsamble extends AppCompatActivity {
             //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        for (int i=0;i<productsids.size();i++) {
+            productsids.remove(i);
+        }
+        for (Product p:products) {
+            productsids.add(p.getId());
+        }
+        outState.putIntegerArrayList(KEY_Recyclerprods,productsids);
     }
 }

@@ -364,6 +364,6 @@ public class ProductsActivity extends AppCompatActivity {
         outState.putInt(INDEXDESPINNER,categorispinner.getSelectedItemPosition());//
         outState.putString(STRINGACTUAL,texto.getText().toString()); //
         outState.putString(STRINGTEXTO,stringquesebusco);
-        outState.putBoolean(BUSCARPRESSED,buscarpressed);  // hay que buscar pasar el adaptador
+        outState.putBoolean(BUSCARPRESSED,buscarpressed);
     }
 }

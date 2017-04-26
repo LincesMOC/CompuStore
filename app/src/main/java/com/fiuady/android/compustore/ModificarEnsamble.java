@@ -169,6 +169,22 @@ public class ModificarEnsamble extends AppCompatActivity {
          products2 = new ArrayList<Product>();
          productsids=new ArrayList<Integer>();
 
+        if(savedInstanceState != null){
+//            for (int i=0;i<products2.size();i++) {
+//                products2.remove(i);
+//            }
+            products2.clear();
+            productsids = savedInstanceState.getIntegerArrayList(KEY_Recyclerprods1);
+
+            for (Integer i:productsids) {
+                Product p = compuStore.getProductfromid(i);
+                products2.add(p);
+            }
+//            adapter = new ProductAdapter(products2);
+//            productRV.setAdapter(adapter);
+            Llenarconensambleid=false;
+        }
+
         if(Llenarconensambleid) {
             for (AssemblyProduct apr : ap) {
 
@@ -181,21 +197,6 @@ public class ModificarEnsamble extends AppCompatActivity {
                 }
             }
             Llenarconensambleid =false;
-        }
-        else{
-            if(savedInstanceState != null){
-                for (int i=0;i<products2.size();i++) {
-                    products2.remove(i);
-                }
-                productsids = savedInstanceState.getIntegerArrayList(KEY_Recyclerprods1);
-
-                for (Integer i:productsids) {
-                    Product p = compuStore.getProductfromid(i);
-                    products2.add(p);
-                }
-//            adapter = new ProductAdapter(products2);
-//            productRV.setAdapter(adapter);
-            }
         }
 //        products = new ArrayList<>();
         adapter = new ProductAdapter(products2);
@@ -289,9 +290,7 @@ public class ModificarEnsamble extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        for (int i=0;i<productsids.size();i++) {
-            productsids.remove(i);
-        }
+        productsids.clear();
         for (Product p:products2) {
             productsids.add(p.getId());
         }

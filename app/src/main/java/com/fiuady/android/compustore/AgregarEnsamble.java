@@ -273,9 +273,7 @@ public class AgregarEnsamble extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        for (int i=0;i<productsids.size();i++) {
-            productsids.remove(i);
-        }
+        productsids.clear();
         for (Product p:products) {
             productsids.add(p.getId());
         }

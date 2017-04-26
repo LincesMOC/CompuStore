@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,8 +70,34 @@ public class OrdersActivity extends AppCompatActivity {
         public void onClick(View v) {
             Toast.makeText(OrdersActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
 
+            int position=getAdapterPosition();
+            final Order order = orders.get(position);
 
+            final PopupMenu popup = new PopupMenu(OrdersActivity.this,itemView);
+            popup.getMenuInflater().inflate(R.menu.option4_menu, popup.getMenu());
 
+            if (order.getStatus_id()!=0){ //SOLO LOS PENDIENTES SE PUEDEN MODIFICAR!
+                popup.getMenu().removeItem(R.id.menu_item2);
+            }
+
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    if ((item.getTitle().toString()).equalsIgnoreCase("Modificar")) {
+                        Intent i = new Intent(OrdersActivity.this,ModificarOrden.class);
+                        i.putExtra("orderID",order.getId());
+                        i.putExtra("status_id",order.getStatus_id());
+                        i.putExtra("customer_id",order.getCustomer_id());
+                        i.putExtra("date",order.getDate());
+                        i.putExtra("change_log",order.getChange_log());
+                        startActivity(i);
+                    }
+
+                    return true;
+                }
+            });
+            popup.show();
         }
     }
 
@@ -103,7 +130,6 @@ public class OrdersActivity extends AppCompatActivity {
     String textDate1;
     String textDate2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +137,6 @@ public class OrdersActivity extends AppCompatActivity {
         compuStore = new CompuStore(this);
         chkDate1=(CheckBox)findViewById(R.id.checkBox1);
         chkDate2 = (CheckBox)findViewById(R.id.checkBox2);
-
 
         //SPINNER DE ESTADO DE ORDEN
         LISTA = (EditText)findViewById(R.id.edittextdescripcion);
@@ -123,7 +148,6 @@ public class OrdersActivity extends AppCompatActivity {
         list.add("Confirmado");
         list.add("En tránsito");
         list.add("Finalizado");
-
 
         orderStateSpinner.setItems(list, "Todos", new MultiSpinner.MultiSpinnerListener() {
             @Override
@@ -145,7 +169,6 @@ public class OrdersActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         //SPINNER DE CLIENTES
         clientsSpinner = (Spinner)findViewById(R.id.client_spinner);

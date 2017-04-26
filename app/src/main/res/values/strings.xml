@@ -46,6 +46,8 @@
     <string name="cancel_text">Cancelar</string>
     <string name="modify_text">Modificar</string>
     <string name="delete_text">Eliminar</string>
+    <string name="formward_text">Avanzar estado a...</string>
+    <string name="return_text">Regresar estado a...</string>
     <string name="sure_text">¿Está seguro?</string>
 
     <string-array name="client_filter_array">

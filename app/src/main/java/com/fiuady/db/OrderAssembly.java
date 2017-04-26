@@ -1,6 +1,5 @@
 package com.fiuady.db;
 
-
 public class OrderAssembly {
 
     private int id;
@@ -12,6 +11,7 @@ public class OrderAssembly {
         this.assembly_id = assembly_id;
         this.qty = qty;
     }
+
 
     public int getId() {
         return id;

@@ -36,7 +36,8 @@
         <activity
             android:name=".MisssingProductsActivity"
             android:label="@string/reports_title" />
-        <activity android:name=".ModificarEnsamble"></activity>
+        <activity android:name=".ModificarEnsamble" />
+        <activity android:name=".ModificarOrden"></activity>
     </application>
 
 </manifest>

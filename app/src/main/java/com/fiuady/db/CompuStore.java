@@ -740,11 +740,11 @@ public final class CompuStore {
 
         for(Client client : a) {
             if (e) {
-                if (client.getId() == id) {  // Condición si la categoría ya existe en categorias
+                if (client.getId() == id) {
                     e = false;
                     if (d) {
                         for(Order order : b) {
-                            if (order.getCustomer_id() == id) {  // Condicion si algún cliente tiene asignado una orden
+                            if (order.getCustomer_id() == id) {
                                 c = true;
                                 d = false;
                             }

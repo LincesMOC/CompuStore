@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.fiuady.db.Order;
 import com.fiuady.db.OrderAssembly;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ModificarOrden extends AppCompatActivity {
@@ -44,6 +47,8 @@ public class ModificarOrden extends AppCompatActivity {
     int customer_id;
     String date;
     String change_log;
+
+    ArrayList<OrderAssembly> oa;
 
     private class AssemblyHolder extends RecyclerView.ViewHolder {
 
@@ -73,7 +78,13 @@ public class ModificarOrden extends AppCompatActivity {
                                 final Spinner spinstock = (Spinner)view.findViewById(R.id.spinnerstock);
                                 ArrayAdapter<String> adapter2= new ArrayAdapter<String>(ModificarOrden.this,android.R.layout.simple_spinner_dropdown_item);
                                 //Llenado del adaptador con la cantidad de ensambles en la orden
-                                int assemblyQTY = (compuStore.getOrderAssembly(assembly.getId(),orderID)).getQty();
+                                int assemblyQTY=0;
+
+                                for (OrderAssembly o: oa) {
+                                    if (o.getAssembly_id() == assembly.getId()){
+                                        assemblyQTY = o.getQty();
+                                    }
+                                }
 
                                 for(int i=assemblyQTY;i<assemblyQTY+10;i++){
                                     adapter2.add(Integer.toString(i));
@@ -86,7 +97,11 @@ public class ModificarOrden extends AppCompatActivity {
                                     }
                                 }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        //product.setQuantity(Integer.parseInt(spinstock.getSelectedItem().toString()));
+                                        for (OrderAssembly o: oa) {
+                                            if (o.getAssembly_id() == assembly.getId()){
+                                                o.setQty(Integer.parseInt(spinstock.getSelectedItem().toString()));
+                                            }
+                                        }
                                         Toast.makeText(ModificarOrden.this,"El valor fue actualizado", Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -96,7 +111,33 @@ public class ModificarOrden extends AppCompatActivity {
                             }
                             if (item.getTitle().toString().equalsIgnoreCase("Eliminar")) {
                                 //ELIMINAR ESTE ENSAMBLE DE LA ORDEN
+                                AlertDialog.Builder build = new AlertDialog.Builder(ModificarOrden.this);
+                                build.setCancelable(false);
+                                build.setTitle("Eliminar ensamble de orden");
+                                build.setMessage(R.string.sure_text);
 
+                                build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                }).setPositiveButton(R.string.delete_text, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        assemblies2.remove(assembly);
+
+                                        Collections.sort(assemblies2, new Comparator<Assembly>() {
+                                            @Override
+                                            public int compare(Assembly o1, Assembly o2) {
+                                                return o1.getDescription().compareTo(o2.getDescription());
+                                            }
+                                        });
+
+                                        A_adapter = new AssemblyAdapter(assemblies2);
+                                        assemblyRV.setAdapter(A_adapter);
+                                        Toast.makeText(ModificarOrden.this, "Ensamble eliminado de orden", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                build.create().show();
                             }
                             return true;
                         }
@@ -129,7 +170,6 @@ public class ModificarOrden extends AppCompatActivity {
         public int getItemCount() {return assemblies.size();}
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,7 +191,7 @@ public class ModificarOrden extends AppCompatActivity {
         date = getIntent().getExtras().getString("date");
         change_log = getIntent().getExtras().getString("change_log");
 
-        ArrayList<OrderAssembly> oa = compuStore.getEspecificOrderAssembly(orderID); //Lista de ensambles por orden determinada!
+        oa = compuStore.getEspecificOrderAssembly(orderID); //Lista de ensambles por orden determinada!
 
         assemblies2 = new ArrayList<Assembly>(); //Lista de ensambles para el Recycler View
         AssembliesIDs=new ArrayList<Integer>(); //Lista de IDs de ensambles
@@ -160,7 +200,7 @@ public class ModificarOrden extends AppCompatActivity {
             for (OrderAssembly ora : oa) { //Para cada OrderAssembly en la lista de ensambles por orden determinada
                 for (Assembly a : compuStore.getAllAssemblies()) { //Para cada ensamble de la lista de ensambles
                     if (ora.getAssembly_id() == a.getId()) {
-                        //p.setQuantity(apr.getQty());
+                        compuStore.getOrderAssembly(a.getId(),orderID).setQty(ora.getQty());
                         assemblies2.add(a);
                     }
                 }
@@ -168,7 +208,7 @@ public class ModificarOrden extends AppCompatActivity {
             Llenarconensambleid =false; //Ya la llenaste
         }
         else{ //Cuando rotas pantalla y se corre de nuevo el On Create, ya esta en false, entra aquí
-            if(savedInstanceState != null){ //
+            if(savedInstanceState != null){
                 for (int i=0;i<assemblies2.size();i++) {
                     assemblies2.remove(i);
                 }
@@ -180,10 +220,34 @@ public class ModificarOrden extends AppCompatActivity {
             }
         }
 
+        Collections.sort(assemblies2, new Comparator<Assembly>() {
+            @Override
+            public int compare(Assembly o1, Assembly o2) {
+                return o1.getDescription().compareTo(o2.getDescription());
+            }
+        });
+
         A_adapter = new AssemblyAdapter(assemblies2);
         assemblyRV.setAdapter(A_adapter);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i = new Intent(ModificarOrden.this,AgregarEnsambleParaOrden.class);
+        startActivityForResult(i,2);
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     public void btnguardar (View v){
 
@@ -192,6 +256,5 @@ public class ModificarOrden extends AppCompatActivity {
     public void btnCancelar (View v) {
         finish();
     }
-
 
 }

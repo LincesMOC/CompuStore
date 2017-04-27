@@ -11,7 +11,7 @@
     tools:context="com.fiuady.android.compustore.MainActivity">
 
     <ImageButton
-        android:layout_width="180dp"
+        android:layout_width="160dp"
         android:layout_height="140dp"
         android:id="@+id/idImageButtonCategorias"
         android:src="@drawable/categorias"
@@ -19,7 +19,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:onClick="onImageClick" />
     <ImageButton
-        android:layout_width="180dp"
+        android:layout_width="160dp"
         android:layout_height="140dp"
         android:id="@+id/idImageButtonProductos"
         android:layout_toRightOf="@id/idImageButtonCategorias"
@@ -28,7 +28,7 @@
         android:src="@drawable/productos"
         android:onClick="onImageClickproductos" />
     <ImageButton
-        android:layout_width="180dp"
+        android:layout_width="160dp"
         android:layout_height="140dp"
         android:id="@+id/idImageButtonEnsambles"
         android:scaleType="fitCenter"
@@ -37,7 +37,7 @@
         android:src="@drawable/ensambles"
         android:onClick="onImageClickensambles" />
     <ImageButton
-        android:layout_width="180dp"
+        android:layout_width="160dp"
         android:layout_height="140dp"
         android:id="@+id/idImageButtonClientes"
         android:scaleType="fitCenter"
@@ -47,7 +47,7 @@
         android:src="@drawable/clientes"
         android:onClick="onImageClickclientes" />
     <ImageButton
-        android:layout_width="180dp"
+        android:layout_width="160dp"
         android:layout_height="140dp"
         android:id="@+id/idImageButtonOrdenes"
         android:layout_below="@id/idImageButtonEnsambles"
@@ -56,7 +56,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:onClick="onImageClickordenes" />
     <ImageButton
-        android:layout_width="180dp"
+        android:layout_width="160dp"
         android:layout_height="140dp"
         android:id="@+id/idImageButtonReportes"
         android:layout_toRightOf="@id/idImageButtonOrdenes"

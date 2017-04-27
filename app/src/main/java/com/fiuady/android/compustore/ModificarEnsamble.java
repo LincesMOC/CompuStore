@@ -26,6 +26,8 @@ import com.fiuady.db.CompuStore;
 import com.fiuady.db.Product;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ModificarEnsamble extends AppCompatActivity {
@@ -198,7 +200,14 @@ public class ModificarEnsamble extends AppCompatActivity {
             }
             Llenarconensambleid =false;
         }
-//        products = new ArrayList<>();
+
+        Collections.sort(products2, new Comparator<Product>() {
+            @Override
+            public int compare(Product o1, Product o2) {
+                return o1.getDescription().compareTo(o2.getDescription());
+            }
+        });
+
         adapter = new ProductAdapter(products2);
         productRV.setAdapter(adapter);
         descrip = (EditText)findViewById(R.id.edittextdescripcion);
@@ -240,6 +249,14 @@ public class ModificarEnsamble extends AppCompatActivity {
                 } else {
                     product.setQuantity(1);
                     products2.add(product);
+
+                    Collections.sort(products2, new Comparator<Product>() {
+                        @Override
+                        public int compare(Product o1, Product o2) {
+                            return o1.getDescription().compareTo(o2.getDescription());
+                        }
+                    });
+
                     adapter = new ProductAdapter(products2);
                     productRV.setAdapter(adapter);
                     Toast.makeText(ModificarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();

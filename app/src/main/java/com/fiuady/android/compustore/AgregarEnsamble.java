@@ -29,6 +29,8 @@ import com.fiuady.db.CompuStore;
 import com.fiuady.db.Product;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AgregarEnsamble extends AppCompatActivity {
@@ -180,6 +182,14 @@ public class AgregarEnsamble extends AppCompatActivity {
                 Product p = compuStore.getProductfromid(i);
                 products.add(p);
             }
+
+            Collections.sort(products, new Comparator<Product>() {
+                @Override
+                public int compare(Product o1, Product o2) {
+                    return o1.getDescription().compareTo(o2.getDescription());
+                }
+            });
+
             adapter = new ProductAdapter(products);
             productRV.setAdapter(adapter);
         }
@@ -224,6 +234,14 @@ public class AgregarEnsamble extends AppCompatActivity {
                 } else {
                     product.setQuantity(1);
                     products.add(product);
+
+                    Collections.sort(products, new Comparator<Product>() {
+                        @Override
+                        public int compare(Product o1, Product o2) {
+                            return o1.getDescription().compareTo(o2.getDescription());
+                        }
+                    });
+
                     adapter = new ProductAdapter(products);
                     productRV.setAdapter(adapter);
                     Toast.makeText(AgregarEnsamble.this, "Agregado al ensamble", Toast.LENGTH_SHORT).show();

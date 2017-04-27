@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.fiuady.db.Assembly;
 import com.fiuady.db.CompuStore;
+import com.fiuady.db.OrderAssembly;
 import com.fiuady.db.Product;
 
 import java.util.List;
@@ -47,6 +48,17 @@ public class AssembliesActivity extends AppCompatActivity {
 
                   final PopupMenu popup = new PopupMenu(AssembliesActivity.this, txtDescription);
                   popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
+
+                  //Verificar si el ensamble esta en orden
+                  Boolean noeliminar = false;
+                  for (OrderAssembly o:compuStore.getAllOrderAssemblies()) {
+                      if(o.getAssembly_id() == assembly.getId()){
+                          noeliminar = true;
+                      }
+                  }
+                  if(noeliminar){
+                      popup.getMenu().removeItem(R.id.menu_item2);
+                  }
 
                   popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                       @Override

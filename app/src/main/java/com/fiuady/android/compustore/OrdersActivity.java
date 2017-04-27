@@ -59,7 +59,7 @@ public class OrdersActivity extends AppCompatActivity {
             txtOrderStatus=(TextView)itemView.findViewById(R.id.txt_orderStatus);
         }
 
-        public void bindOrder(Order order){
+        public void bindOrder(final Order order){
 
             txtClientName.setText(compuStore.getCustomer(order.getCustomer_id()));
             txtOrderDate.setText(order.getDate());
@@ -134,6 +134,7 @@ public class OrdersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
+
         compuStore = new CompuStore(this);
         chkDate1=(CheckBox)findViewById(R.id.checkBox1);
         chkDate2 = (CheckBox)findViewById(R.id.checkBox2);

@@ -283,7 +283,6 @@ public class ModificarEnsamble extends AppCompatActivity {
             productRV.setLayoutManager(new LinearLayoutManager(this));
             //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override

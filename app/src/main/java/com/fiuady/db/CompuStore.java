@@ -932,6 +932,19 @@ public final class CompuStore {
         return  c;
     }
 
+    public OrderAssembly getOrderAssembly(int assembly_id, int order_id){ //Me devuelve el ensamble de orden dependiendo del id del ensamble.
+        OrderAssembly orderAssembly = null;
+
+        OrderAssemblyCursor cursor = new OrderAssemblyCursor(db.rawQuery("select * from order_assemblies " +
+                "where id = "+Integer.toString(order_id)+" and assembly_id = "+Integer.toString(assembly_id)+"", null));
+        while (cursor.moveToNext()) {
+            orderAssembly = cursor.getOrderAssembly();
+        }
+        cursor.close();
+
+        return orderAssembly;
+    }
+
 
     // -------------------------------------------------------- ORDER ASSEMBLIES --------------------------------------------------------
 
@@ -1535,6 +1548,37 @@ public final class CompuStore {
 
         //return b;
         return true;
+    }
+
+    public String getDescription(int order_assembly_id){
+
+        ArrayList<Assembly> assemblies = new ArrayList<>();
+
+        String description = null;
+
+        AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("select * from assemblies a" +
+                "inner join order_assemblies oa on (a.id = oa.assembly_id)" +
+                "where oa.assembly_id = "+Integer.toString(order_assembly_id)+" limit 1", null));
+        while (cursor.moveToNext()) {
+            assemblies.add(cursor.getAssembly());
+        }
+        cursor.close();
+
+        return assemblies.get(0).getDescription();
+    }
+
+    public Assembly getAssemblyById(int assembly_id){
+        ArrayList<Assembly> assemblies = new ArrayList<>();
+
+        AssemblyCursor cursor = new AssemblyCursor(db.rawQuery("select * from assemblies a" +
+                "inner join order_assemblies oa on (a.id = oa.assembly_id)" +
+                "where oa.assembly_id = "+Integer.toString(assembly_id)+" limit 1", null));
+        while (cursor.moveToNext()) {
+            assemblies.add(cursor.getAssembly());
+        }
+        cursor.close();
+
+        return assemblies.get(0); //PROBRA QUITANDO EL LIMIT 1
     }
 
 

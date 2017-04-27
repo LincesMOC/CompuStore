@@ -1,10 +1,13 @@
 package com.fiuady.db;
 
+import java.util.List;
+
 public class OrderAssembly {
 
     private int id;
     private int assembly_id;
     private int qty;
+    private CompuStore compuStore;
 
     public OrderAssembly(int id, int assembly_id, int qty) {
         this.id = id;
@@ -36,4 +39,10 @@ public class OrderAssembly {
     public void setQty(int qty) {
         this.qty = qty;
     }
+
+    public Assembly getAssemblyById(int assembly_id){
+        this.assembly_id = assembly_id;
+        return compuStore.getAssemblyById(assembly_id);
+    }
+
 }

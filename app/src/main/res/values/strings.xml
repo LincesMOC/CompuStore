@@ -49,6 +49,7 @@
     <string name="formward_text">Avanzar estado a...</string>
     <string name="return_text">Regresar estado a...</string>
     <string name="sure_text">¿Está seguro?</string>
+    <string name="add_change_log">Comentarios:</string>
 
     <string-array name="client_filter_array">
         <item>Nombre</item>

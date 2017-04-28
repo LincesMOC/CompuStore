@@ -1,6 +1,7 @@
 package com.fiuady.android.compustore;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -70,6 +71,10 @@ public class OrdersActivity extends AppCompatActivity {
         public void onClick(View v) {
             Toast.makeText(OrdersActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
 
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            final String current_date = df.format(c.getTime());
+
             int position=getAdapterPosition();
             final Order order = orders.get(position);
 
@@ -78,6 +83,20 @@ public class OrdersActivity extends AppCompatActivity {
 
             if (order.getStatus_id()!=0){ //SOLO LOS PENDIENTES SE PUEDEN MODIFICAR!
                 popup.getMenu().removeItem(R.id.menu_item2);
+            }
+
+            if (order.getStatus_id()==0) {
+                popup.getMenu().removeItem(R.id.menu_item1);
+                popup.getMenu().add("Avanzar estado a Confirmado");
+                popup.getMenu().add("Avanzar estado a Cancelado");
+            }
+
+            if (order.getStatus_id() == 2 || order.getStatus_id() == 3 || order.getStatus_id() == 4){ //Si está  pendiente, confirmada, en tránsito o finalizada
+                popup.getMenu().removeItem(R.id.menu_item1); //No se puede retroceder estado
+            }
+
+            if (order.getStatus_id() == 1 ||order.getStatus_id() == 4){ //Si está cancelada o finalizada
+                popup.getMenu().removeItem(R.id.menu_item0); //No puede avanzar
             }
 
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -94,6 +113,113 @@ public class OrdersActivity extends AppCompatActivity {
                         startActivity(i);
                     }
 
+                    if ((item.getTitle().toString()).equalsIgnoreCase("Avanzar estado a...")){
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OrdersActivity.this);
+                        final View view = getLayoutInflater().inflate(R.layout.dialog_add, null);
+                        TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
+                        final EditText txtAdd = (EditText) view.findViewById(R.id.add_text);
+                        txtTitle.setText(R.string.add_change_log);
+                        builder.setCancelable(false);
+
+                        builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() { //AQUI YA GUARDO COMENTARIOS Y MODIFICO
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                compuStore.updateOrder(order.getId(),order.getStatus_id()+1, "Fecha: "+current_date+", Comentarios: "+txtAdd);
+                                O_adapter = new OrderAdapter(compuStore.getAllOrders());
+                                orderRV.setAdapter(O_adapter);
+                            }
+                        });
+
+                        builder.setView(view);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+
+                    if ((item.getTitle().toString()).equalsIgnoreCase("Avanzar estado a Confirmado")){
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OrdersActivity.this);
+                        final View view = getLayoutInflater().inflate(R.layout.dialog_add, null);
+                        TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
+                        final EditText txtAdd = (EditText) view.findViewById(R.id.add_text);
+                        txtTitle.setText(R.string.add_change_log);
+                        builder.setCancelable(false);
+
+                        builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() { //AQUI YA GUARDO COMENTARIOS Y MODIFICO
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                compuStore.updateOrder(order.getId(),order.getStatus_id()+2, "Fecha: "+current_date+", Comentarios: "+txtAdd);
+                                O_adapter = new OrderAdapter(compuStore.getAllOrders());
+                                orderRV.setAdapter(O_adapter);
+                            }
+                        });
+
+                        builder.setView(view);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+
+                    if ((item.getTitle().toString()).equalsIgnoreCase("Avanzar estado a Cancelado")){
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OrdersActivity.this);
+                        final View view = getLayoutInflater().inflate(R.layout.dialog_add, null);
+                        TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
+                        final EditText txtAdd = (EditText) view.findViewById(R.id.add_text);
+                        txtTitle.setText(R.string.add_change_log);
+                        builder.setCancelable(false);
+
+                        builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() { //AQUI YA GUARDO COMENTARIOS Y MODIFICO
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                compuStore.updateOrder(order.getId(),order.getStatus_id()+1, "Fecha: "+current_date+", Comentarios: "+txtAdd);
+                                O_adapter = new OrderAdapter(compuStore.getAllOrders());
+                                orderRV.setAdapter(O_adapter);
+                            }
+                        });
+
+                        builder.setView(view);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+
+                    if ((item.getTitle().toString()).equalsIgnoreCase("Regresar estado a...")){
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OrdersActivity.this);
+                        final View view = getLayoutInflater().inflate(R.layout.dialog_add, null);
+                        TextView txtTitle = (TextView) view.findViewById(R.id.add_title);
+                        final EditText txtAdd = (EditText) view.findViewById(R.id.add_text);
+                        txtTitle.setText(R.string.add_change_log);
+                        builder.setCancelable(false);
+
+                        builder.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() { //AQUI YA GUARDO COMENTARIOS Y MODIFICO
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                compuStore.updateOrder(order.getId(),order.getStatus_id()-1,"Fecha: "+current_date+", Comentarios: "+txtAdd);
+                                O_adapter = new OrderAdapter(compuStore.getAllOrders());
+                                orderRV.setAdapter(O_adapter);
+                            }
+                        });
+
+                        builder.setView(view);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
                     return true;
                 }
             });

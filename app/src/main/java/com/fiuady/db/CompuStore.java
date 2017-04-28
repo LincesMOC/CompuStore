@@ -922,36 +922,26 @@ public final class CompuStore {
         db.insert(OrderAssembliesTable.NAME, null, values);
     }
 
-    public boolean deleteOrder(int id, boolean dlt) {
-        boolean c = false;
-        boolean d = true;
-        boolean e = true;
-        List<Assembly> a = getAllAssemblies();
-        List<OrderAssembly> b = getAllOrderAssemblies();
+    public boolean updateOrder(int id,int status_id,String change_log) {
+        boolean b = true;
+        List<Order> o = getAllOrders();
 
-        for(Assembly assembly : a) {
-            if (e) {
-                if (assembly.getId() == id) {
-                    e = false;
-                    if (d) {
-                        for(OrderAssembly orderAssembly : b) {
-                            if (orderAssembly.getAssembly_id() == id) {
-                                c = true;
-                                d = false;
-                            }
-                            else {
-                                if (dlt){  // Quiero elimanrlo?
-                                    db.delete(AssembliesTable.NAME, AssembliesTable.Columns.ID + "= ?",
-                                            new String[] {Integer.toString(id)});
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        if (change_log.isEmpty()) {
+            b = false;
         }
 
-        return  c;
+        if (b) {
+            ContentValues values = new ContentValues();
+            values.put(OrdersTable.Columns.STATUS_ID,status_id);
+            values.put(OrdersTable.Columns.CHANGE_LOG,change_log);
+
+            db.update(OrdersTable.NAME,
+                    values,
+                    CategoriesTable.Columns.ID + "= ?",
+                    new String[] {Integer.toString(id)});
+        }
+
+        return b;
     }
 
     public OrderAssembly getOrderAssembly(int assembly_id, int order_id){ //Me devuelve el ensamble de orden dependiendo del id del ensamble.

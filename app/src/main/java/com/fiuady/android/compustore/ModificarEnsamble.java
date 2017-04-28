@@ -269,10 +269,6 @@ public class ModificarEnsamble extends AppCompatActivity {
     EditText descrip;
     public void btnguardar (View v) {
 
-        descrip = (EditText)findViewById(R.id.edittextdescripcion);
-        if(descrip.getText().toString().isEmpty()){
-            Toast.makeText(ModificarEnsamble.this, "Agrega una descripcion", Toast.LENGTH_SHORT).show();
-        }else {
             compuStore.deleteAssemblyproducts(paso);
             compuStore.deleteAssembly(paso, true);
             //Agregar ensamble
@@ -285,7 +281,7 @@ public class ModificarEnsamble extends AppCompatActivity {
 
             Toast.makeText(ModificarEnsamble.this, "Ensamble modificado", Toast.LENGTH_SHORT).show();
             finish();
-        }
+
     }
     public void btnCancelar (View v) {
         finish();
@@ -301,7 +297,6 @@ public class ModificarEnsamble extends AppCompatActivity {
             productRV.setLayoutManager(new LinearLayoutManager(this));
             //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.fiuady.android.compustore;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.annotation.StyleRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,32 +21,36 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fiuady.db.Assembly;
-import com.fiuady.db.Client;
 import com.fiuady.db.CompuStore;
 import com.fiuady.db.Order;
 import com.fiuady.db.OrderAssembly;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class AgregarOrdenes extends AppCompatActivity {
+public class ModificarOrden extends AppCompatActivity {
 
-    private Spinner AO_clientsSpinner;
     private CompuStore compuStore;
     private RecyclerView assemblyRV;
     private AssemblyAdapter A_adapter;
-    ArrayList<OrderAssembly> oa;
+    private Assembly current_assembly;
+    private Integer current_assembly_qty;
+
     private Boolean Llenarconensambleid = true ;
     private ArrayList<Integer> AssembliesIDs;
+
     private final String KEY_RecyclerAssemblies1="recyclerAs1";
-    ArrayList<Assembly> assemblies;
-    OrderAssembly orderAssembly = null;
-    int MaxId;
-    ArrayList<OrderAssembly> orderAssemblies_TEMP = new ArrayList<>();
+
+    ArrayList<Assembly> assemblies2;
+    int orderID;
+    int status_id;
+    int customer_id;
+    String date;
+    String change_log;
+
+    ArrayList<OrderAssembly> oa;
 
     private class AssemblyHolder extends RecyclerView.ViewHolder {
 
@@ -53,15 +58,14 @@ public class AgregarOrdenes extends AppCompatActivity {
 
         public AssemblyHolder(View itemView) {
             super(itemView);
-            txtDescription = (TextView) itemView.findViewById(android.R.id.text1);
+            txtDescription = (TextView)itemView.findViewById(android.R.id.text1);
         }
 
         public void bindAssembly(final Assembly assembly) {
-
             txtDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final PopupMenu popup = new PopupMenu(AgregarOrdenes.this, txtDescription);
+                    final PopupMenu popup = new PopupMenu(ModificarOrden.this, txtDescription);
                     popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
 
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -69,24 +73,16 @@ public class AgregarOrdenes extends AppCompatActivity {
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getTitle().toString().equalsIgnoreCase("Modificar")) {
                                 //MODIFICAR CANTIDAD DE ESTE ENSAMBLE EN LA ORDEN
-                                AlertDialog.Builder build = new AlertDialog.Builder(AgregarOrdenes.this);
-                                build.setCancelable(false);
+                                AlertDialog.Builder build = new AlertDialog.Builder(ModificarOrden.this);
+                              build.setCancelable(false);
                                 final View view = getLayoutInflater().inflate(R.layout.dialog_addstock, null);
                                 build.setTitle("Cantidad para orden");
                                 final Spinner spinstock = (Spinner)view.findViewById(R.id.spinnerstock);
-                                ArrayAdapter<String> adapter2= new ArrayAdapter<String>(AgregarOrdenes.this,android.R.layout.simple_spinner_dropdown_item);
+                                ArrayAdapter<String> adapter2= new ArrayAdapter<String>(ModificarOrden.this,android.R.layout.simple_spinner_dropdown_item);
                                 //Llenado del adaptador con la cantidad de ensambles en la orden
-                                int assemblyQTY = 0;
+                                int assemblyQTY=0;
 
-                                //BUSCAR EN LISTA DE OA TEMPORAL el oa buscado, y modificarlo
-
-                                for (OrderAssembly o: orderAssemblies_TEMP) {
-                                    if (o.getAssembly_id() == assembly.getId()){
-                                        assemblyQTY = o.getQty();
-                                    }
-                                }
-
-                                for (OrderAssembly o: orderAssemblies_TEMP) {
+                                for (OrderAssembly o: oa) {
                                     if (o.getAssembly_id() == assembly.getId()){
                                         assemblyQTY = o.getQty();
                                     }
@@ -96,20 +92,22 @@ public class AgregarOrdenes extends AppCompatActivity {
                                     adapter2.add(Integer.toString(i));
                                 }
                                 spinstock.setAdapter(adapter2);
+
                                 build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
-                                    @Override
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.dismiss();
                                     }
                                 }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
-                                    @Override
                                     public void onClick(DialogInterface dialog, int id) {
-                                       for (OrderAssembly o: orderAssemblies_TEMP) {
-                                           if (o.getAssembly_id() == assembly.getId()){
-                                               o.setQty(Integer.parseInt(spinstock.getSelectedItem().toString()));
-                                           }
-                                       }
-                                        Toast.makeText(AgregarOrdenes.this,"El valor fue actualizado", Toast.LENGTH_SHORT).show();
+                                        for (OrderAssembly o: oa) {
+                                            if (o.getAssembly_id() == assembly.getId()){
+                                                o.setQty(Integer.parseInt(spinstock.getSelectedItem().toString()));
+                                                current_assembly_qty = Integer.parseInt(spinstock.getSelectedItem().toString());
+                                            }
+                                        }
+                                        Toast.makeText(ModificarOrden.this,"El valor fue actualizado", Toast.LENGTH_SHORT).show();
+                                        current_assembly = assembly;
+
                                     }
                                 });
                                 build.setView(view);
@@ -118,7 +116,7 @@ public class AgregarOrdenes extends AppCompatActivity {
                             }
                             if (item.getTitle().toString().equalsIgnoreCase("Eliminar")) {
                                 //ELIMINAR ESTE ENSAMBLE DE LA ORDEN
-                                AlertDialog.Builder build = new AlertDialog.Builder(AgregarOrdenes.this);
+                                AlertDialog.Builder build = new AlertDialog.Builder(ModificarOrden.this);
                                 build.setCancelable(false);
                                 build.setTitle("Eliminar ensamble de orden");
                                 build.setMessage(R.string.sure_text);
@@ -129,24 +127,26 @@ public class AgregarOrdenes extends AppCompatActivity {
                                     }
                                 }).setPositiveButton(R.string.delete_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        assemblies.remove(assembly);
+                                        assemblies2.remove(assembly);
 
-                                        Collections.sort(assemblies, new Comparator<Assembly>() {
+                                        Collections.sort(assemblies2, new Comparator<Assembly>() {
                                             @Override
                                             public int compare(Assembly o1, Assembly o2) {
                                                 return o1.getDescription().compareTo(o2.getDescription());
                                             }
                                         });
-                                        A_adapter = new AssemblyAdapter(assemblies);
+
+                                        A_adapter = new AssemblyAdapter(assemblies2);
                                         assemblyRV.setAdapter(A_adapter);
-                                        Toast.makeText(AgregarOrdenes.this, "Ensamble eliminado de orden", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ModificarOrden.this, "Ensamble eliminado de orden", Toast.LENGTH_SHORT).show();
                                     }
                                 });
+
                                 build.create().show();
                             }
                             return true;
                         }
-                    });
+                });
                     popup.show();
                 }
             });
@@ -158,7 +158,7 @@ public class AgregarOrdenes extends AppCompatActivity {
 
         private List<Assembly> assemblies;
 
-        public AssemblyAdapter (List<Assembly> assemblies){
+        public AssemblyAdapter(List<Assembly> assemblies) {
             this.assemblies = assemblies;
         }
 
@@ -169,56 +169,71 @@ public class AgregarOrdenes extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(AssemblyHolder holder, int position) {
-            holder.bindAssembly(assemblies.get(position));
-        }
+        public void onBindViewHolder(AssemblyHolder holder, int position) {holder.bindAssembly(assemblies.get(position));}
 
         @Override
-        public int getItemCount() {
-            return assemblies.size();
-        }
+        public int getItemCount() {return assemblies.size();}
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agregar_ordenes);
-        compuStore = new CompuStore(this);
-        assemblyRV = (RecyclerView)findViewById(R.id.addOrder_assemblies_RV);
-
+        setContentView(R.layout.activity_modificar_orden);
+        compuStore= new CompuStore(ModificarOrden.this);
+        assemblyRV = (RecyclerView)findViewById(R.id.modifyOrder_assemblies_RV);
 
         //LANDSCAPE
-        if (AgregarOrdenes.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (ModificarOrden.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             assemblyRV.setLayoutManager(new GridLayoutManager(this,2));
-        } else if (AgregarOrdenes.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (ModificarOrden.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             assemblyRV.setLayoutManager(new LinearLayoutManager(this));
         }
 
-        //SPINNER DE CLIENTES
-        AO_clientsSpinner = (Spinner)findViewById(R.id.AO_client_spinner);
-        ArrayAdapter<String> AO_cs_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item);
-        AO_clientsSpinner.setAdapter(AO_cs_adapter);
-        AO_cs_adapter.add("Todos");
-        List<Client> clients = compuStore.getAllClients();
-        for(Client client :clients){
-            AO_cs_adapter.add(client.getFirstName() + " " + client.getLastName());}
+        A_adapter = new AssemblyAdapter(new ArrayList<Assembly>()); //Aquí va la lista de los ensambles de cada orden :)
+        orderID = getIntent().getExtras().getInt("orderID");
+        status_id = getIntent().getExtras().getInt("status_id");
+        customer_id = getIntent().getExtras().getInt("customer_id");
+        date = getIntent().getExtras().getString("date");
+        change_log = getIntent().getExtras().getString("change_log");
 
-        //assemblyRV.setLayoutManager(new LinearLayoutManager(this));
-        A_adapter = new AssemblyAdapter(new ArrayList<Assembly>());
-        assemblyRV.setAdapter(A_adapter);
-        assemblies = new ArrayList<Assembly>(); //Lista de ensambles para el Recycler View
+        oa = compuStore.getEspecificOrderAssembly(orderID); //Lista de ensambles por orden determinada!
+
+        assemblies2 = new ArrayList<Assembly>(); //Lista de ensambles para el Recycler View
         AssembliesIDs=new ArrayList<Integer>(); //Lista de IDs de ensambles
 
-        if(savedInstanceState != null){
-            AssembliesIDs = savedInstanceState.getIntegerArrayList(KEY_RecyclerAssemblies1);
-
-            for (Integer i:AssembliesIDs) {
-                Assembly a = compuStore.getAssemblyFromId(i);
-                assemblies.add(a);
+        if(Llenarconensambleid) {
+            for (OrderAssembly ora : oa) { //Para cada OrderAssembly en la lista de ensambles por orden determinada
+                for (Assembly a : compuStore.getAllAssemblies()) { //Para cada ensamble de la lista de ensambles
+                    if (ora.getAssembly_id() == a.getId()) {
+                        compuStore.getOrderAssembly(a.getId(),orderID).setQty(ora.getQty());
+                        assemblies2.add(a);
+                    }
+                }
             }
-            A_adapter = new AssemblyAdapter(assemblies);
-            assemblyRV.setAdapter(A_adapter);
+            Llenarconensambleid =false; //Ya la llenaste
         }
+        else{ //Cuando rotas pantalla y se corre de nuevo el On Create, ya esta en false, entra aquí
+            if(savedInstanceState != null){
+                for (int i=0;i<assemblies2.size();i++) {
+                    assemblies2.remove(i);
+                }
+                AssembliesIDs = savedInstanceState.getIntegerArrayList(KEY_RecyclerAssemblies1);
+                for (Integer i:AssembliesIDs) {
+                    Assembly a = compuStore.getAssemblyFromId(i);
+                    assemblies2.add(a);
+                }
+            }
+        }
+
+        Collections.sort(assemblies2, new Comparator<Assembly>() {
+            @Override
+            public int compare(Assembly o1, Assembly o2) {
+                return o1.getDescription().compareTo(o2.getDescription());
+            }
+        });
+
+        A_adapter = new AssemblyAdapter(assemblies2);
+        assemblyRV.setAdapter(A_adapter);
     }
 
     @Override
@@ -229,82 +244,17 @@ public class AgregarOrdenes extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //AGREGAR ENSAMBLE PARA ÓRDENES
-        Intent i = new Intent(AgregarOrdenes.this,AgregarEnsambleParaOrden.class);
-        startActivityForResult(i,3);
+        Intent i = new Intent(ModificarOrden.this,AgregarEnsambleParaOrden.class);
+        startActivityForResult(i,2);
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) { //FALTA!
-        super.onActivityResult(requestCode, resultCode, data);
+    public void btnguardar (View v){
 
-        if (requestCode == 0){
+        compuStore.updateOrderAssembly(orderID,current_assembly.getId(),current_assembly_qty);
 
-        } else {
-            if (requestCode == 3) {
-                int assemblyId = data.getIntExtra("AssemblyId", -1);
-
-                orderAssembly = new OrderAssembly(compuStore.getMaxId(),assemblyId,1);
-
-                //MaxId = compuStore.getMaxId();
-//
-                //orderAssembly.setAssembly_id(assemblyId);
-                //orderAssembly.setQty(1);
-                //orderAssembly.setId(MaxId+1);
-
-                orderAssemblies_TEMP.add(orderAssembly); //Lista con las order assemblies!
-
-                Assembly assembly = compuStore.getAssemblyFromId(assemblyId);
-                boolean duplicado = false;
-
-                for (Assembly assembly1 : assemblies) {
-                    if (assembly1.getId() == assembly.getId()) {
-                        duplicado = true;
-                    }
-                }
-                if (duplicado) {
-                    Toast.makeText(AgregarOrdenes.this, "El ensamble ya está en la orden", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    assemblies.add(assembly);
-                    A_adapter = new AssemblyAdapter(assemblies);
-                    assemblyRV.setAdapter(A_adapter);
-                    Toast.makeText(AgregarOrdenes.this, "Agregado a la orden", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-
-    public void btnguardar (View v) {
-
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String current_date = df.format(c.getTime());
-
-
-        //PROTEGER SI NO HAY ENSAMBLES EN LA LISTA!!!
-
-        Integer client_id = (compuStore.filterClientsByName(AO_clientsSpinner.getSelectedItem().toString())).getId();
-
-        if (AO_clientsSpinner.getSelectedItem().toString() == "Todos"){
-            Toast.makeText(AgregarOrdenes.this, "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            //Agregar orden
-            compuStore.insertOrder(client_id, current_date);
-
-            //Agregar ensambles de orden
-            for (OrderAssembly oaTemp : orderAssemblies_TEMP){
-                //id de la orden
-                compuStore.insertOrderAssembly(compuStore.getMaxIdOrder(),oaTemp.getAssembly_id(),oaTemp.getQty());
-            }
-
-            MaxId = compuStore.getMaxIdOrder();
-
-            Toast.makeText(AgregarOrdenes.this, "Orden Agregada", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        Toast.makeText(ModificarOrden.this, "Orden modificada", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     public void btnCancelar (View v) {
@@ -330,10 +280,10 @@ public class AgregarOrdenes extends AppCompatActivity {
         for (int i=0;i<AssembliesIDs.size();i++) {
             AssembliesIDs.remove(i);
         }
-        for (Assembly a:assemblies) {
+        for (Assembly a:assemblies2) {
             AssembliesIDs.add(a.getId());
         }
+        Llenarconensambleid=false;
         outState.putIntegerArrayList(KEY_RecyclerAssemblies1,AssembliesIDs);
     }
-
 }

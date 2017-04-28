@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_item0" android:title="@string/formward_text"/>
+    <item android:id="@+id/menu_item1" android:title="@string/return_text"/>
+    <item android:id="@+id/menu_item2" android:title="@string/modify_text"/>
+</menu>

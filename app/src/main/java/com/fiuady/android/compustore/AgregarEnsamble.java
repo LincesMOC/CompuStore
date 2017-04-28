@@ -214,6 +214,7 @@ public class AgregarEnsamble extends AppCompatActivity {
                 //products.add(compuStore.getProductfromid(productid));
                 Product product = compuStore.getProductfromid(productid);
                 boolean duplicado = false;
+
                 for (Product product1 : products) {
                     if (product1.getId() == product.getId()) {
                         duplicado = true;
@@ -235,6 +236,7 @@ public class AgregarEnsamble extends AppCompatActivity {
     EditText descrip;
 
     public void btnguardar (View v) {
+
 
         //descrip = (EditText)findViewById(R.id.edittextdescripcion);
         if(descrip.getText().toString().isEmpty()){

@@ -172,7 +172,7 @@ public final class CompuStore {
 
             db.update(CategoriesTable.NAME,
                     values,
-                    CategoriesTable.Columns.ID+ "= ?",
+                    CategoriesTable.Columns.ID + "= ?",
                     new String[] {Integer.toString(id)});
         }
 
@@ -821,6 +821,19 @@ public final class CompuStore {
         return clients;
     }
 
+    public Client filterClientsByName (String text) {
+        Client client = null;
+
+        ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where first_name || ' ' || last_name like '%"+text.toString()+"%' ORDER BY last_name", null));
+        while(cursor.moveToNext()){
+            client = cursor.getClient();
+        }
+        cursor.close();
+
+        return client;
+    }
+
+
     // -------------------------------------------------------- ORDERS --------------------------------------------------------
 
     public List<Order> getAllOrders() {
@@ -872,32 +885,41 @@ public final class CompuStore {
         return clientName;
     }
 
-    public boolean insertOrder(int status_id, int customer_id, String date,String change_log) {
+    public boolean insertOrder(int customer_id, String date) { //EL USUARIO NO PUEDE HACER DOS PEDIDOS EL MISMO DÍA!
         boolean b = true;
-        //List<Product> a = getAllProducts();
-        //ContentValues values = new ContentValues();
-//
-        //if (text.isEmpty()) {
-        //    b = false;
-        //}
-//
-        //for(Product product : a) {
-        //    if (product.getDescription().toUpperCase().equals(text.toUpperCase())) {
-        //        b = false;
-        //    }
-        //}
-//
-        //if (b) {
-        //    Product c = a.get(a.size()-1);
-//
-        //    values.put(ProductsTable.Columns.DESCRIPTION, text);
-        //    values.put(ProductsTable.Columns.CATEGORY_ID, category_id);
-        //    values.put(ProductsTable.Columns.PRICE, precio);
-        //    values.put(ProductsTable.Columns.QUANTITY, qty);
-//
-        //    db.insert(ProductsTable.NAME, null, values);
-        //}
+        List<Order> o = getAllOrders();
+        ContentValues values = new ContentValues();
+
+        if (customer_id == 0 || date.isEmpty()) {
+            b = false;
+        }
+
+        for(Order order : o) {
+            if (order.getCustomer_id() == customer_id && order.getDate() == date ){
+                b = false;
+            }
+        }
+
+        if (b) {
+
+            values.put(OrdersTable.Columns.STATUS_ID,0); //Se agrega automáticamente como pendiente
+            values.put(OrdersTable.Columns.CUSTOMER_ID,customer_id);
+            values.put(OrdersTable.Columns.DATE,date);
+
+            db.insert(OrdersTable.NAME,null,values);
+        }
+
         return b;
+    }
+
+    public void insertOrderAssembly(int order_id, int assembly_id, int qty) {
+        ContentValues values = new ContentValues();
+
+        values.put(OrderAssembliesTable.Columns.ID,order_id);
+        values.put(OrderAssembliesTable.Columns.ASSEMBLY_ID,assembly_id);
+        values.put(OrderAssembliesTable.Columns.QUANTITY,qty);
+
+        db.insert(OrderAssembliesTable.NAME, null, values);
     }
 
     public boolean deleteOrder(int id, boolean dlt) {
@@ -945,6 +967,18 @@ public final class CompuStore {
         return orderAssembly;
     }
 
+    public int getMaxIdOrder(){
+
+        Order order = null;
+
+        OrderCursor cursor = new OrderCursor(db.rawQuery("select * from orders where id = (select max(id) from orders)", null));
+        while(cursor.moveToNext()){
+            order = cursor.getOrder();
+        }
+        cursor.close();
+
+        return order.getId();
+    }
 
     // -------------------------------------------------------- ORDER ASSEMBLIES --------------------------------------------------------
 
@@ -1479,75 +1513,28 @@ public final class CompuStore {
                 new String[] {Integer.toString(id)});
     }
 
-    public boolean updateOrder(int id, boolean dlt) {
-        boolean c = false;
-        boolean d = true;
-        boolean e = true;
+    public boolean updateOrderAssembly(int id, int assembly_id, int qty) {
+        boolean b = true;
+        List<OrderAssembly> oa = getAllOrderAssemblies();
 
-        List<Order> a = getAllOrders();
-        //List<Order> b = getAllOrders();
+        if (qty == 0) {
+            b = false;
+        }
 
-        //for(Client client : a) {
-        //    if (e) {
-        //        if (client.getId() == id) {  // Condición si la categoría ya existe en categorias
-        //            e = false;
-        //            if (d) {
-        //                for(Order order : b) {
-        //                    if (order.getCustomer_id() == id) {  // Condicion si algún cliente tiene asignado una orden
-        //                        c = true;
-        //                        d = false;
-        //                    }
-        //                    else {
-        //                        if (dlt){  // Quiero elimanrlo?
-        //                            db.delete(CustomersTable.NAME, CustomersTable.Columns.ID + "= ?",
-        //                                    new String[] {Integer.toString(id)});
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+        for (OrderAssembly orderAssembly: oa){
+            if (orderAssembly.getId() == id && orderAssembly.getAssembly_id() == assembly_id && orderAssembly.getQty() == qty){
+                b = false;
+            }
+        }
 
-        return  c;
-    }
+        if (b) {
+            ContentValues values = new ContentValues();
 
-    public boolean updateOrder2(int id, int status_id, int customer_id, String date, String change_log, boolean mdf) {
-//
-    //    List<Order> a = getAllOrders();
-//
-    //    for(Order order : a) {
-    //        if (order.getStatus_id() != 0){
-    //            mdf = false;
-    //        }
-    //    }
-//
-    //    boolean b = true;
-    //    List<Client> a = getAllClients();
-//
-    //    if (firstName.isEmpty()||lastName.isEmpty()||address.isEmpty()) {
-    //        b = false;
-    //    }
-//
-    //    if (b) {
-    //        ContentValues values = new ContentValues();
-//
-    //        values.put(CustomersTable.Columns.FIRST_NAME, firstName);
-    //        values.put(CustomersTable.Columns.LAST_NAME, lastName);
-    //        values.put(CustomersTable.Columns.ADDRESS,address);
-    //        values.put(CustomersTable.Columns.E_MAIL, email);
-    //        values.put(CustomersTable.Columns.PHONE1, phone1);
-    //        values.put(CustomersTable.Columns.PHONE2,phone2);
-    //        values.put(CustomersTable.Columns.PHONE3,phone3);
-//
-    //        db.update(CustomersTable.NAME,
-    //                values,
-    //                CustomersTable.Columns.ID+ "= ?",
-    //                new String[] {Integer.toString(id)});
-    //    }
+            db.execSQL("update order_assemblies set qty = "+qty+" where id = "+id+" and assembly_id = "+assembly_id+"");
 
-        //return b;
-        return true;
+        }
+
+        return b;
     }
 
     public String getDescription(int order_assembly_id){
@@ -1579,6 +1566,19 @@ public final class CompuStore {
         cursor.close();
 
         return assemblies.get(0); //PROBRA QUITANDO EL LIMIT 1
+    }
+
+    public int getMaxId(){
+
+       OrderAssembly orderAssembly = null;
+
+       OrderAssemblyCursor cursor = new OrderAssemblyCursor(db.rawQuery("select * from order_assemblies where id = (select max(id) from order_assemblies)", null));
+       while(cursor.moveToNext()){
+           orderAssembly = cursor.getOrderAssembly();
+       }
+       cursor.close();
+
+       return orderAssembly.getId();
     }
 
 

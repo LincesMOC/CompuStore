@@ -220,6 +220,7 @@ public class OrdersActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i = new Intent(OrdersActivity.this,AgregarOrdenes.class);
         startActivity(i);
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -288,6 +289,13 @@ public class OrdersActivity extends AppCompatActivity {
                 }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        O_adapter = new OrderAdapter(compuStore.getAllOrders());
+        orderRV.setAdapter(O_adapter);
     }
 
 }

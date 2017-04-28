@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.fiuady.db.Assembly;
 import com.fiuady.db.CompuStore;
+import com.fiuady.db.OrderAssembly;
 
 import org.w3c.dom.Text;
 
@@ -22,9 +23,11 @@ import java.util.List;
 
 public class AgregarEnsambleParaOrden extends AppCompatActivity {
 
+
     private class AssemblyHolder extends RecyclerView.ViewHolder{
 
         private TextView txtDescription;
+
 
         public AssemblyHolder(View itemView) {
             super(itemView);
@@ -32,6 +35,7 @@ public class AgregarEnsambleParaOrden extends AppCompatActivity {
         }
 
         public void bindAssembly(final Assembly assembly){
+
             txtDescription.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
@@ -44,6 +48,7 @@ public class AgregarEnsambleParaOrden extends AppCompatActivity {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getTitle().toString().equalsIgnoreCase("Agregar")) {
+
                                 Intent i = new Intent();
                                 i.putExtra("AssemblyId",assembly.getId());
                                 setResult(3,i);

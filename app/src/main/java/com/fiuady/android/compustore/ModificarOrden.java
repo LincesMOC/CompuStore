@@ -35,6 +35,8 @@ public class ModificarOrden extends AppCompatActivity {
     private CompuStore compuStore;
     private RecyclerView assemblyRV;
     private AssemblyAdapter A_adapter;
+    private Assembly current_assembly;
+    private Integer current_assembly_qty;
 
     private Boolean Llenarconensambleid = true ;
     private ArrayList<Integer> AssembliesIDs;
@@ -100,9 +102,12 @@ public class ModificarOrden extends AppCompatActivity {
                                         for (OrderAssembly o: oa) {
                                             if (o.getAssembly_id() == assembly.getId()){
                                                 o.setQty(Integer.parseInt(spinstock.getSelectedItem().toString()));
+                                                current_assembly_qty = Integer.parseInt(spinstock.getSelectedItem().toString());
                                             }
                                         }
                                         Toast.makeText(ModificarOrden.this,"El valor fue actualizado", Toast.LENGTH_SHORT).show();
+                                        current_assembly = assembly;
+
                                     }
                                 });
                                 build.setView(view);
@@ -244,17 +249,41 @@ public class ModificarOrden extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void btnguardar (View v){
 
+        compuStore.updateOrderAssembly(orderID,current_assembly.getId(),current_assembly_qty);
+
+        Toast.makeText(ModificarOrden.this, "Orden modificada", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     public void btnCancelar (View v) {
         finish();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            assemblyRV.setLayoutManager(new GridLayoutManager(this,2));
+            //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            assemblyRV.setLayoutManager(new LinearLayoutManager(this));
+            //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        for (int i=0;i<AssembliesIDs.size();i++) {
+            AssembliesIDs.remove(i);
+        }
+        for (Assembly a:assemblies2) {
+            AssembliesIDs.add(a.getId());
+        }
+        Llenarconensambleid=false;
+        outState.putIntegerArrayList(KEY_RecyclerAssemblies1,AssembliesIDs);
+    }
 }

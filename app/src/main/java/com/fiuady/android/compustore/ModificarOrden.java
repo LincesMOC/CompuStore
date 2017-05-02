@@ -37,13 +37,17 @@ public class ModificarOrden extends AppCompatActivity {
     private AssemblyAdapter A_adapter;
     private Assembly current_assembly;
     private Integer current_assembly_qty;
+    OrderAssembly orderAssembly = null;
 
     private Boolean Llenarconensambleid = true ;
     private ArrayList<Integer> AssembliesIDs;
 
     private final String KEY_RecyclerAssemblies1="recyclerAs1";
+    ArrayList<OrderAssembly> orderAssemblies_TEMP = new ArrayList<>();
 
     ArrayList<Assembly> assemblies2;
+    ArrayList<Assembly> deletedAssemblies;
+
     int orderID;
     int status_id;
     int customer_id;
@@ -82,7 +86,15 @@ public class ModificarOrden extends AppCompatActivity {
                                 //Llenado del adaptador con la cantidad de ensambles en la orden
                                 int assemblyQTY=0;
 
-                                for (OrderAssembly o: oa) {
+                                //BUSCAR EN LISTA DE OA TEMPORAL el oa buscado, y modificarlo
+
+                                for (OrderAssembly o: orderAssemblies_TEMP) {
+                                    if (o.getAssembly_id() == assembly.getId()){
+                                        assemblyQTY = o.getQty();
+                                    }
+                                }
+
+                                for (OrderAssembly o: orderAssemblies_TEMP) {
                                     if (o.getAssembly_id() == assembly.getId()){
                                         assemblyQTY = o.getQty();
                                     }
@@ -127,14 +139,9 @@ public class ModificarOrden extends AppCompatActivity {
                                     }
                                 }).setPositiveButton(R.string.delete_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        assemblies2.remove(assembly);
 
-                                        Collections.sort(assemblies2, new Comparator<Assembly>() {
-                                            @Override
-                                            public int compare(Assembly o1, Assembly o2) {
-                                                return o1.getDescription().compareTo(o2.getDescription());
-                                            }
-                                        });
+                                        deletedAssemblies.add(assembly);
+                                        assemblies2.remove(assembly);
 
                                         A_adapter = new AssemblyAdapter(assemblies2);
                                         assemblyRV.setAdapter(A_adapter);
@@ -190,16 +197,33 @@ public class ModificarOrden extends AppCompatActivity {
         }
 
         A_adapter = new AssemblyAdapter(new ArrayList<Assembly>()); //Aquí va la lista de los ensambles de cada orden :)
+
         orderID = getIntent().getExtras().getInt("orderID");
         status_id = getIntent().getExtras().getInt("status_id");
         customer_id = getIntent().getExtras().getInt("customer_id");
         date = getIntent().getExtras().getString("date");
         change_log = getIntent().getExtras().getString("change_log");
 
+
         oa = compuStore.getEspecificOrderAssembly(orderID); //Lista de ensambles por orden determinada!
 
+
         assemblies2 = new ArrayList<Assembly>(); //Lista de ensambles para el Recycler View
+        deletedAssemblies = new ArrayList<Assembly>();
         AssembliesIDs=new ArrayList<Integer>(); //Lista de IDs de ensambles
+
+        if(savedInstanceState != null){
+
+            assemblies2.clear();
+            AssembliesIDs = savedInstanceState.getIntegerArrayList(KEY_RecyclerAssemblies1);
+
+            for (Integer i:AssembliesIDs) {
+                Assembly a = compuStore.getAssemblyFromId(i);
+                assemblies2.add(a);
+            }
+
+            Llenarconensambleid = false;
+        }
 
         if(Llenarconensambleid) {
             for (OrderAssembly ora : oa) { //Para cada OrderAssembly en la lista de ensambles por orden determinada
@@ -211,18 +235,6 @@ public class ModificarOrden extends AppCompatActivity {
                 }
             }
             Llenarconensambleid =false; //Ya la llenaste
-        }
-        else{ //Cuando rotas pantalla y se corre de nuevo el On Create, ya esta en false, entra aquí
-            if(savedInstanceState != null){
-                for (int i=0;i<assemblies2.size();i++) {
-                    assemblies2.remove(i);
-                }
-                AssembliesIDs = savedInstanceState.getIntegerArrayList(KEY_RecyclerAssemblies1);
-                for (Integer i:AssembliesIDs) {
-                    Assembly a = compuStore.getAssemblyFromId(i);
-                    assemblies2.add(a);
-                }
-            }
         }
 
         Collections.sort(assemblies2, new Comparator<Assembly>() {
@@ -249,9 +261,60 @@ public class ModificarOrden extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == 0){
+            Llenarconensambleid=false;
+            //Toast.makeText(ModificarEnsamble.this, "Sali sin modificar", Toast.LENGTH_SHORT).show();
+        }else {
+
+            if (requestCode == 2) {
+                int assemblyId = data.getIntExtra("AssemblyId", -1);
+                orderAssembly = new OrderAssembly(orderID,assemblyId,1);
+
+                Assembly assembly = compuStore.getAssemblyFromId(assemblyId);
+                orderAssemblies_TEMP.add(orderAssembly);
+
+                boolean duplicado = false;
+                for (Assembly assembly1 : assemblies2) {
+                    if (assembly1.getId() == assembly.getId()) {
+                        duplicado = true;
+                    }
+                }
+                if (duplicado) {
+                    Toast.makeText(ModificarOrden.this, "El ensamble ya está en la orden", Toast.LENGTH_SHORT).show();
+                } else {
+                    assemblies2.add(assembly);
+
+                    Collections.sort(assemblies2, new Comparator<Assembly>() {
+                        @Override
+                        public int compare(Assembly o1, Assembly o2) {
+                            return o1.getDescription().compareTo(o2.getDescription());
+                        }
+                    });
+
+                    A_adapter = new AssemblyAdapter(assemblies2);
+                    assemblyRV.setAdapter(A_adapter);
+                    Toast.makeText(ModificarOrden.this, "Agregado a la orden", Toast.LENGTH_SHORT).show();
+                }
+                Llenarconensambleid=false;
+            }
+        }
+    }
+
     public void btnguardar (View v){
 
-        compuStore.updateOrderAssembly(orderID,current_assembly.getId(),current_assembly_qty);
+        for (OrderAssembly oaTemp : orderAssemblies_TEMP){
+            //id de la orden
+            compuStore.insertOrderAssembly(orderID,oaTemp.getAssembly_id(),oaTemp.getQty());
+
+        }
+
+        for (Assembly a: deletedAssemblies){
+            compuStore.deleteOrderAssembly2(orderID,a.getId());
+        }
 
         Toast.makeText(ModificarOrden.this, "Orden modificada", Toast.LENGTH_SHORT).show();
         finish();
@@ -277,13 +340,20 @@ public class ModificarOrden extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        for (int i=0;i<AssembliesIDs.size();i++) {
-            AssembliesIDs.remove(i);
-        }
+        AssembliesIDs.clear();
+
         for (Assembly a:assemblies2) {
             AssembliesIDs.add(a.getId());
         }
+
         Llenarconensambleid=false;
         outState.putIntegerArrayList(KEY_RecyclerAssemblies1,AssembliesIDs);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Llenarconensambleid=false;
+    }
+
 }

@@ -1515,6 +1515,12 @@ public final class CompuStore {
                 new String[] {Integer.toString(id)});
     }
 
+    public void deleteOrderAssembly2(int Orderid, int assemblyId){
+
+        db.execSQL("delete from order_assemblies where id = "+ Orderid +" and assembly_id = "+assemblyId+"");
+    }
+
+
     public boolean updateOrderAssembly(int id, int assembly_id, int qty) {
         boolean b = true;
         List<OrderAssembly> oa = getAllOrderAssemblies();

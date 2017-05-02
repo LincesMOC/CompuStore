@@ -96,6 +96,7 @@ public class AgregarOrdenes extends AppCompatActivity {
                                     adapter2.add(Integer.toString(i));
                                 }
                                 spinstock.setAdapter(adapter2);
+
                                 build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int id) {
@@ -183,9 +184,8 @@ public class AgregarOrdenes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_ordenes);
-        compuStore = new CompuStore(this);
+        compuStore = new CompuStore(AgregarOrdenes.this);
         assemblyRV = (RecyclerView)findViewById(R.id.addOrder_assemblies_RV);
-
 
         //LANDSCAPE
         if (AgregarOrdenes.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -216,6 +216,14 @@ public class AgregarOrdenes extends AppCompatActivity {
                 Assembly a = compuStore.getAssemblyFromId(i);
                 assemblies.add(a);
             }
+
+            Collections.sort(assemblies, new Comparator<Assembly>() {
+                @Override
+                public int compare(Assembly o1, Assembly o2) {
+                    return o1.getDescription().compareTo(o2.getDescription());
+                }
+            });
+
             A_adapter = new AssemblyAdapter(assemblies);
             assemblyRV.setAdapter(A_adapter);
         }
@@ -244,7 +252,6 @@ public class AgregarOrdenes extends AppCompatActivity {
         } else {
             if (requestCode == 3) {
                 int assemblyId = data.getIntExtra("AssemblyId", -1);
-
                 orderAssembly = new OrderAssembly(compuStore.getMaxId(),assemblyId,1);
 
                 //MaxId = compuStore.getMaxId();
@@ -268,6 +275,14 @@ public class AgregarOrdenes extends AppCompatActivity {
                 } else {
 
                     assemblies.add(assembly);
+
+                    Collections.sort(assemblies, new Comparator<Assembly>() {
+                        @Override
+                        public int compare(Assembly o1, Assembly o2) {
+                            return o1.getDescription().compareTo(o2.getDescription());
+                        }
+                    });
+
                     A_adapter = new AssemblyAdapter(assemblies);
                     assemblyRV.setAdapter(A_adapter);
                     Toast.makeText(AgregarOrdenes.this, "Agregado a la orden", Toast.LENGTH_SHORT).show();
@@ -327,9 +342,7 @@ public class AgregarOrdenes extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        for (int i=0;i<AssembliesIDs.size();i++) {
-            AssembliesIDs.remove(i);
-        }
+        AssembliesIDs.clear();
         for (Assembly a:assemblies) {
             AssembliesIDs.add(a.getId());
         }

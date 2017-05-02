@@ -86,11 +86,11 @@ public class AgregarOrdenes extends AppCompatActivity {
                                     }
                                 }
 
-                                for (OrderAssembly o: orderAssemblies_TEMP) {
-                                    if (o.getAssembly_id() == assembly.getId()){
-                                        assemblyQTY = o.getQty();
-                                    }
-                                }
+                                //for (OrderAssembly o: orderAssemblies_TEMP) {
+                                //    if (o.getAssembly_id() == assembly.getId()){
+                                //        assemblyQTY = o.getQty();
+                                //    }
+                                //}
 
                                 for(int i=assemblyQTY;i<assemblyQTY+10;i++){
                                     adapter2.add(Integer.toString(i));

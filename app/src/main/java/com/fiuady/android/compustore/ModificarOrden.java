@@ -88,17 +88,17 @@ public class ModificarOrden extends AppCompatActivity {
 
                                 //BUSCAR EN LISTA DE OA TEMPORAL el oa buscado, y modificarlo
 
-                                for (OrderAssembly o: orderAssemblies_TEMP) {
+                                for (OrderAssembly o: orderAssemblies_TEMP) { //LISTA VACÍA EN ESTE MOMENTO
                                     if (o.getAssembly_id() == assembly.getId()){
                                         assemblyQTY = o.getQty();
                                     }
                                 }
 
-                                for (OrderAssembly o: orderAssemblies_TEMP) {
-                                    if (o.getAssembly_id() == assembly.getId()){
-                                        assemblyQTY = o.getQty();
-                                    }
-                                }
+                                //for (OrderAssembly o: orderAssemblies_TEMP) {
+                                //    if (o.getAssembly_id() == assembly.getId()){
+                                //        assemblyQTY = o.getQty();
+                                //    }
+                                //}
 
                                 for(int i=assemblyQTY;i<assemblyQTY+10;i++){
                                     adapter2.add(Integer.toString(i));
@@ -111,7 +111,8 @@ public class ModificarOrden extends AppCompatActivity {
                                     }
                                 }).setPositiveButton(R.string.save_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        for (OrderAssembly o: oa) {
+
+                                        for (OrderAssembly o: orderAssemblies_TEMP) {
                                             if (o.getAssembly_id() == assembly.getId()){
                                                 o.setQty(Integer.parseInt(spinstock.getSelectedItem().toString()));
                                                 current_assembly_qty = Integer.parseInt(spinstock.getSelectedItem().toString());
@@ -206,6 +207,10 @@ public class ModificarOrden extends AppCompatActivity {
 
 
         oa = compuStore.getEspecificOrderAssembly(orderID); //Lista de ensambles por orden determinada!
+
+        for (OrderAssembly orderass: oa){
+            orderAssemblies_TEMP.add(orderass);
+        }
 
 
         assemblies2 = new ArrayList<Assembly>(); //Lista de ensambles para el Recycler View
@@ -306,11 +311,28 @@ public class ModificarOrden extends AppCompatActivity {
 
     public void btnguardar (View v){
 
-        for (OrderAssembly oaTemp : orderAssemblies_TEMP){
-            //id de la orden
-            compuStore.insertOrderAssembly(orderID,oaTemp.getAssembly_id(),oaTemp.getQty());
+        //for (OrderAssembly oaTemp : orderAssemblies_TEMP){ //ACTUALIZANDO, PERO NO INSERTANDO
+        //    //for (Assembly a: assemblies2) {
+        //    //    if (oaTemp.getAssembly_id() == a.getId()) {
+        //    //        compuStore.insertOrderAssembly(orderID, oaTemp.getAssembly_id(), oaTemp.getQty());
+        //    //
+        //    //    }
+        //    //}
+        //    compuStore.updateOrderAssembly(orderID,oaTemp.getAssembly_id(),oaTemp.getQty());
+        //}
 
+        oa = compuStore.getEspecificOrderAssembly(orderID);
+
+        for (OrderAssembly oaTemp : orderAssemblies_TEMP){
+            for (OrderAssembly oa2: oa){
+                if (oaTemp.getId() == oa2.getId() && oaTemp.getAssembly_id() == oa2.getAssembly_id()){
+                    compuStore.updateOrderAssembly(orderID,oaTemp.getAssembly_id(),oaTemp.getQty());
+                } else{
+                    compuStore.insertOrderAssembly(orderID,oaTemp.getAssembly_id(),oaTemp.getQty());
+                }
+            }
         }
+
 
         for (Assembly a: deletedAssemblies){
             compuStore.deleteOrderAssembly2(orderID,a.getId());

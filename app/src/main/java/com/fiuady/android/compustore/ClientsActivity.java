@@ -221,8 +221,6 @@ public class ClientsActivity extends AppCompatActivity {
         compuStore = new CompuStore(this);
 
         spinner = (MultiSpinner) findViewById(R.id.client_filter_spinner);
-
-
         texto = (EditText)findViewById(R.id.edittextdescripcion);
 
         final List<String> list = new ArrayList<>();
@@ -253,6 +251,8 @@ public class ClientsActivity extends AppCompatActivity {
             statesSpinner = savedInstanceState.getString(SPINNERSTATES);
             stringquesebusco = savedInstanceState.getString(STRINGTEXTO);
 
+
+
             spinner.setItems(list,statesSpinner, "Todos", new MultiSpinner.MultiSpinnerListener() {
 
                 @Override
@@ -263,7 +263,6 @@ public class ClientsActivity extends AppCompatActivity {
             });
 
             texto.setText(textoactual);
-
 
             if(buscarpressed){
                 //Llenar lista si se presiono buscar..
@@ -401,7 +400,7 @@ public class ClientsActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(SPINNERSTATES,SelectedList);
+        outState.putString(SPINNERSTATES,spinner.getSelectedItem().toString());
         outState.putString(STRINGACTUAL,texto.getText().toString()); //
         outState.putString(STRINGTEXTO,stringquesebusco);
         outState.putBoolean(BUSCARPRESSED,buscarpressed);

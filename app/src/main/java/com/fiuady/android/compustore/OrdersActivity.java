@@ -50,11 +50,13 @@ public class OrdersActivity extends AppCompatActivity {
     private final String SPINNERSTATES = "indexdespinner";
     private final String STRINGTEXTO = "stringtexto";
     private final String STRINGACTUAL = "stringactual";
+    private final String CLIENTNAME = "clientName";
     private final String INDEXCLIENTSPINNER = "indexclientspinner";
     private final String DATE1STATE = "date1state";
     private final String DATE2STATE = "date2state";
     private final String DATE1 = "date1";
     private final String DATE2 = "date2";
+    private final String SPINNERINFO = "spinnerArray";
     private boolean buscarpressed;
     private boolean dateS1;
     private boolean dateS2;
@@ -271,16 +273,17 @@ public class OrdersActivity extends AppCompatActivity {
         public int getItemCount() {return orders.size();}
     }
 
-    boolean[] selected1;
-    String textClient = "Todos";
-    String textStatus = "Todos";
+    private  boolean[] selected1;
+    private  String textClient = "Todos";
+    private  String textStatus = "Todos";
     private CheckBox chkDate1;
     private CheckBox chkDate2;
-    String textDate1;
-    String textDate2;
+    private  String textDate1;
+    private  String textDate2;
+    private int indice;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
 
@@ -298,17 +301,13 @@ public class OrdersActivity extends AppCompatActivity {
         list.add("En tránsito");
         list.add("Finalizado");
 
-        orderStateSpinner.setItems(list,null, "Todos", new MultiSpinner.MultiSpinnerListener() {
+        orderStateSpinner.setItems(list, null, "Todos", new MultiSpinner.MultiSpinnerListener() {
             @Override
             public void onItemsSelected(boolean[] selected) {
-
                 selected1 = selected;
-                SelectedList = orderStateSpinner.getSelectedItem().toString();
 
                 O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByEverything(selected1,textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked())); //BY EVERYTHING
                 orderRV.setAdapter(O_adapter);
-
-                buscarpressed = true; //Modificaron el spinner de Estados
             }
         });
 
@@ -332,10 +331,12 @@ public class OrdersActivity extends AppCompatActivity {
                     O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByClient(textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked()));
                     orderRV.setAdapter(O_adapter);
                 }else {
-                    O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByEverything(selected1,textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked()));
-                    orderRV.setAdapter(O_adapter);
+                    //O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByEverything(selected1,textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked()));
+                    //orderRV.setAdapter(O_adapter);
                 }
             }
+
+            //savedInstanceState.getBooleanArray(SPINNERINFO)
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -353,33 +354,34 @@ public class OrdersActivity extends AppCompatActivity {
 
             buscarpressed = savedInstanceState.getBoolean(BUSCARPRESSED);
             statesSpinner = savedInstanceState.getString(SPINNERSTATES);
-            clientName = savedInstanceState.getString(INDEXCLIENTSPINNER);
+            clientName = savedInstanceState.getString(CLIENTNAME);
+            indice = savedInstanceState.getInt(INDEXCLIENTSPINNER);
             dateS1 = savedInstanceState.getBoolean(DATE1STATE);
             dateS2 = savedInstanceState.getBoolean(DATE2STATE);
             textDate1 = savedInstanceState.getString(DATE1);
             textDate2 = savedInstanceState.getString(DATE2);
 
+            //clientsSpinner.setSelection(indice);
 
-            orderStateSpinner.setItems(list,statesSpinner, "Todos", new MultiSpinner.MultiSpinnerListener() {
+            //orderStateSpinner.setItems(list,statesSpinner, "Todos", new MultiSpinner.MultiSpinnerListener() {
+//
+            //    @Override
+            //    public void onItemsSelected(boolean[] selected) {
+            //        selected1 = selected;
+            //        SelectedList = orderStateSpinner.getSelectedItem().toString();
+            //    }
+            //});
 
-                @Override
-                public void onItemsSelected(boolean[] selected) {
-                    selected1 = selected;
-                    SelectedList = orderStateSpinner.getSelectedItem().toString();
-                }
-            });
 
-            if(buscarpressed){ //SE MODIFICÓ EL ESTADO
 
-                O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByEverything(selected1,clientName,textDate1,textDate2,dateS1,dateS2)); //BY EVERYTHING
-                orderRV.setAdapter(O_adapter);
+            //orderStateSpinner.setItems(list, statesSpinner, "Todos", new MultiSpinner.MultiSpinnerListener() {
+            //    @Override
+            //    public void onItemsSelected(boolean[] selected) {
+            //        selected1 = selected;
+            //        //SelectedList = orderStateSpinner.getSelectedItem().toString();
+            //    }
+            //});
 
-                buscarpressed = true;
-            }else //SOLO POR CLIENTES, NO ESTADO MODIFICADO
-            {
-                O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByClient(clientName,textDate1,textDate2,dateS1,dateS2));
-                orderRV.setAdapter(O_adapter);
-            }
         }
     }
 
@@ -488,12 +490,16 @@ public class OrdersActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(SPINNERSTATES,SelectedList); //ESTADOS DE ORDEN
-        outState.putString(INDEXCLIENTSPINNER,clientsSpinner.getSelectedItem().toString()); //Nombre del cliente
+        outState.putString(SPINNERSTATES,orderStateSpinner.getSelectedItem().toString()); //ESTADOS DE ORDEN TEXTO
+        outState.putBooleanArray(SPINNERINFO, selected1); //Arreglo booleano
+        outState.putString(CLIENTNAME,clientsSpinner.getSelectedItem().toString()); //Nombre del cliente
+        outState.putInt(INDEXCLIENTSPINNER,clientsSpinner.getSelectedItemPosition());
         outState.putBoolean(DATE1STATE,chkDate1.isChecked());
         outState.putBoolean(DATE2STATE,chkDate2.isChecked());
         outState.putString(DATE1,textDate1);
         outState.putString(DATE2,textDate2);
+
+
         outState.putBoolean(BUSCARPRESSED,buscarpressed);
 
     }

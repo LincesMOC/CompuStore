@@ -30,7 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/client_address_text"
-        android:paddingBottom="16dp"
         android:textSize="12dp"
         tools:text="Email" />
 
@@ -38,7 +37,7 @@
         android:id="@+id/client_phone1_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_below="@id/client_email_text"
         android:textSize="12dp"
         tools:text="Phone1" />
 
@@ -46,19 +45,20 @@
         android:id="@+id/client_phone2_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/client_phone1_text"
+        android:layout_toRightOf="@id/client_phone1_text"
+        android:layout_below="@id/client_email_text"
         android:textSize="12dp"
+        android:paddingLeft="10dp"
         tools:text="Phone2" />
 
     <TextView
         android:id="@+id/client_phone3_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/client_phone2_text"
+        android:layout_toRightOf="@id/client_phone2_text"
+        android:layout_below="@id/client_email_text"
         android:textSize="12dp"
+        android:paddingLeft="10dp"
         tools:text="Phone3" />
-
 
 </RelativeLayout>

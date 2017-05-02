@@ -102,6 +102,7 @@ public class ModificarEnsamble extends AppCompatActivity {
                                     }
                                 }).setPositiveButton(R.string.delete_text, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+
                                         products2.remove(product);
                                         adapter = new ProductAdapter(products2);
                                         productRV.setAdapter(adapter);
@@ -156,6 +157,7 @@ public class ModificarEnsamble extends AppCompatActivity {
 
         compuStore= new CompuStore(ModificarEnsamble.this);
         productRV = (RecyclerView) findViewById(R.id.recyclerviewproductos);
+
         if (ModificarEnsamble.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             productRV.setLayoutManager(new GridLayoutManager(this,2));
             //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();

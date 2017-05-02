@@ -23,15 +23,29 @@ import com.fiuady.db.CompuStore;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ListIterator;
 
 public class ClientsActivity extends AppCompatActivity {
+
+    private final String BUSCARPRESSED = "buscarpressed";
+    private final String SPINNERSTATES = "indexdespinner";
+    private final String STRINGTEXTO = "stringtexto";
+    private final String STRINGACTUAL = "stringactual";
+    private boolean buscarpressed;
 
     private RecyclerView clientRV;
     private ClientAdapter C_adapter;
     private CompuStore compuStore;
     private MultiSpinner spinner;
     private EditText texto;
+    private String textoactual;
+    private String stringquesebusco = "";
+    private String statesSpinner;
+    private  String SelectedList = null;
 
     private class ClientHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -198,7 +212,7 @@ public class ClientsActivity extends AppCompatActivity {
         public int getItemCount() {return clients.size();}
     }
 
-    boolean[] selected1;
+    boolean[] selected1 = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,8 +221,6 @@ public class ClientsActivity extends AppCompatActivity {
         compuStore = new CompuStore(this);
 
         spinner = (MultiSpinner) findViewById(R.id.client_filter_spinner);
-
-
         texto = (EditText)findViewById(R.id.edittextdescripcion);
 
         final List<String> list = new ArrayList<>();
@@ -218,21 +230,12 @@ public class ClientsActivity extends AppCompatActivity {
         list.add("Teléfono");
         list.add("Email");
 
-        spinner.setItems(list, "Todos", new MultiSpinner.MultiSpinnerListener() {
+        spinner.setItems(list,null, "Todos", new MultiSpinner.MultiSpinnerListener() {
 
             @Override
             public void onItemsSelected(boolean[] selected) {
-
-                int i=0;
-
-                for (Boolean b : selected){
-                    if (b){
-                        Toast.makeText(ClientsActivity.this,"Seleccionado: "+Integer.toString(i), Toast.LENGTH_SHORT).show();
-                    }
-                    i++;
-                }
-
                 selected1 = selected;
+                SelectedList = spinner.getSelectedItem().toString();
             }
         });
 
@@ -241,6 +244,55 @@ public class ClientsActivity extends AppCompatActivity {
 
         C_adapter=new ClientAdapter(compuStore.getAllClients()); //Creo el adaptador y me pide una lista de empleados.
         clientRV.setAdapter(C_adapter);
+
+        if(savedInstanceState != null){ //Si hay algo guardado
+            buscarpressed = savedInstanceState.getBoolean(BUSCARPRESSED);
+            textoactual = savedInstanceState.getString(STRINGACTUAL);
+            statesSpinner = savedInstanceState.getString(SPINNERSTATES);
+            stringquesebusco = savedInstanceState.getString(STRINGTEXTO);
+
+
+
+            spinner.setItems(list,statesSpinner, "Todos", new MultiSpinner.MultiSpinnerListener() {
+
+                @Override
+                public void onItemsSelected(boolean[] selected) {
+                    selected1 = selected;
+                    SelectedList = spinner.getSelectedItem().toString();
+                }
+            });
+
+            texto.setText(textoactual);
+
+            if(buscarpressed){
+                //Llenar lista si se presiono buscar..
+                List<Client> clientsAdapter = compuStore.filterClients(selected1,texto.getText().toString());
+
+                Collections.sort(clientsAdapter, new Comparator<Client>() {
+                    @Override
+                    public int compare(Client o1, Client o2) {
+                        return o1.getLastName().compareTo(o2.getLastName());
+                    }
+                });
+
+                for (int i = 1; i<clientsAdapter.size(); i++){
+                    Client c1 = clientsAdapter.get(i); //Cliente en lugar 1
+                    Client c2 = clientsAdapter.get(i-1); //Cliente en lugar 0
+
+                    if (c1.getId()==c2.getId()){
+                        clientsAdapter.remove(c1);
+                        i--;
+                    }
+                }
+
+                C_adapter = new ClientAdapter(clientsAdapter);
+                clientRV.setAdapter(C_adapter);
+
+                buscarpressed = true;
+                stringquesebusco = texto.getText().toString();
+            }
+        }
+
     }
 
     @Override
@@ -316,11 +368,43 @@ public class ClientsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void onSearchClick(View v){
 
-   public void onSearchClick(View v){
-       C_adapter = new  ClientsActivity.ClientAdapter(compuStore.filterClients(selected1,texto.getText().toString()));
+        List<Client> clientsAdapter = compuStore.filterClients(selected1,texto.getText().toString());
+
+        Collections.sort(clientsAdapter, new Comparator<Client>() {
+            @Override
+            public int compare(Client o1, Client o2) {
+                return o1.getLastName().compareTo(o2.getLastName());
+            }
+        });
+
+        for (int i = 1; i<clientsAdapter.size(); i++){
+            Client c1 = clientsAdapter.get(i); //Cliente en lugar 1
+            Client c2 = clientsAdapter.get(i-1); //Cliente en lugar 0
+
+            if (c1.getId()==c2.getId()){
+                clientsAdapter.remove(c1);
+                i--;
+            }
+        }
+
+        buscarpressed = true;
+        stringquesebusco = texto.getText().toString();
+
+       C_adapter = new ClientAdapter(clientsAdapter);
        clientRV.setAdapter(C_adapter);
    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(SPINNERSTATES,spinner.getSelectedItem().toString());
+        outState.putString(STRINGACTUAL,texto.getText().toString()); //
+        outState.putString(STRINGTEXTO,stringquesebusco);
+        outState.putBoolean(BUSCARPRESSED,buscarpressed);
+    }
 }
 
 

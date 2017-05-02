@@ -8,13 +8,17 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.IllegalFormatCodePointException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import com.fiuady.db.CompuStoreDbSchema.*;
 
@@ -766,57 +770,65 @@ public final class CompuStore {
     public List<Client> filterClients (boolean [] selected, String text){
 
         ArrayList<Client> clients = new ArrayList<>();
+
         if(text.isEmpty()){
             ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers ORDER BY last_name", null));
             while(cursor.moveToNext()){
                 clients.add(cursor.getClient());
             }
             cursor.close();
-        }else{
-            if(selected[0]==true){
-                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where first_name like '%"+text.toString()+"%' ORDER BY last_name", null));
-                while(cursor.moveToNext()){
-                    clients.add(cursor.getClient());
-                }
-                cursor.close();
-            }
+        }else {
 
-            if(selected[1]==true){
-                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where last_name like '%"+text.toString()+"%' ORDER BY last_name", null));
-                while(cursor.moveToNext()){
-                    clients.add(cursor.getClient());
+            if (selected == null) {
+              ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where first_name like '%" + text.toString() + "%' or last_name like '%" + text.toString() + "%' or address like '%" + text.toString() + "%' "+
+                "or phone1 like '%" + text.toString() + "%' or phone2 like '%" + text.toString() + "%' or phone3 like '%" + text.toString() + "%' or e_mail like '%" + text.toString() + "%' ORDER BY last_name", null));
+              while (cursor.moveToNext()) {
+                  clients.add(cursor.getClient());
+              }
+              cursor.close();
+            } else {
+                if (selected[0] == true) {
+                    ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where first_name like '%" + text.toString() + "%' ORDER BY last_name", null));
+                    while (cursor.moveToNext()) {
+                        clients.add(cursor.getClient());
+                    }
+                    cursor.close();
                 }
-                cursor.close();
-            }
 
-            if(selected[2]==true){
-                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where address like '%"+text.toString()+"%' ORDER BY last_name", null));
-                while(cursor.moveToNext()){
-                    clients.add(cursor.getClient());
+                if (selected[1] == true) {
+                    ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where last_name like '%" + text.toString() + "%' ORDER BY last_name", null));
+                    while (cursor.moveToNext()) {
+                        clients.add(cursor.getClient());
+                    }
+                    cursor.close();
                 }
-                cursor.close();
-            }
 
-            if(selected[3]==true){
-                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where phone1 like '%"+text.toString()+"%' or phone2 like '%"+text.toString()+"%' " +
-                        " or phone3 like '%"+text.toString()+"%'ORDER BY last_name", null));
-                while(cursor.moveToNext()){
-                    clients.add(cursor.getClient());
+                if (selected[2] == true) {
+                    ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where address like '%" + text.toString() + "%' ORDER BY last_name", null));
+                    while (cursor.moveToNext()) {
+                        clients.add(cursor.getClient());
+                    }
+                    cursor.close();
                 }
-                cursor.close();
-            }
 
-            if(selected[4]==true){
-                ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where e_mail like '%"+text.toString()+"%' ORDER BY last_name", null));
-                while(cursor.moveToNext()){
-                    clients.add(cursor.getClient());
+                if (selected[3] == true) {
+                    ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where phone1 like '%" + text.toString() + "%' or phone2 like '%" + text.toString() + "%' " +
+                            " or phone3 like '%" + text.toString() + "%'ORDER BY last_name", null));
+                    while (cursor.moveToNext()) {
+                        clients.add(cursor.getClient());
+                    }
+                    cursor.close();
                 }
-                cursor.close();
-            }
 
+                if (selected[4] == true) {
+                    ClientCursor cursor = new ClientCursor(db.rawQuery("SELECT * FROM customers where e_mail like '%" + text.toString() + "%' ORDER BY last_name", null));
+                    while (cursor.moveToNext()) {
+                        clients.add(cursor.getClient());
+                    }
+                    cursor.close();
+                }
+            }
         }
-
-        //Si no se especifica un texto válido se considera que no hay filtro de texto???
 
         return clients;
     }
@@ -1502,6 +1514,12 @@ public final class CompuStore {
         db.delete(OrderAssembliesTable.NAME, OrderAssembliesTable.Columns.ID + "= ?",
                 new String[] {Integer.toString(id)});
     }
+
+    public void deleteOrderAssembly2(int Orderid, int assemblyId){
+
+        db.execSQL("delete from order_assemblies where id = "+ Orderid +" and assembly_id = "+assemblyId+"");
+    }
+
 
     public boolean updateOrderAssembly(int id, int assembly_id, int qty) {
         boolean b = true;

@@ -363,31 +363,31 @@ public class OrdersActivity extends AppCompatActivity {
 
     }
 
-    public void onInicialDateClick (View v) {
-        final Calendar c = Calendar.getInstance();
-        final TextView InitialDate = (TextView) findViewById(R.id.start_date);
-
-        new DatePickerDialog(OrdersActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                InitialDate.setText("Fecha Inicial: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month) + "-" +
-                        Integer.toString(year) + "-");
-            }
-        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-    }
-
-    public void onFinishDateClick (View v) {
-        final Calendar c = Calendar.getInstance();
-        final TextView FinalDate = (TextView) findViewById(R.id.finish_date);
-
-        new DatePickerDialog(OrdersActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                FinalDate.setText("Fecha Final: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month) + "-" +
-                        Integer.toString(year) + "-");
-            }
-        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-    }
+//    public void onInicialDateClick (View v) {
+//        final Calendar c = Calendar.getInstance();
+//        final TextView InitialDate = (TextView) findViewById(R.id.start_date);
+//
+//        new DatePickerDialog(OrdersActivity.this, new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                InitialDate.setText("Fecha Inicial: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month) + "-" +
+//                        Integer.toString(year) + "-");
+//            }
+//        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+//    }
+//
+//    public void onFinishDateClick (View v) {
+//        final Calendar c = Calendar.getInstance();
+//        final TextView FinalDate = (TextView) findViewById(R.id.finish_date);
+//
+//        new DatePickerDialog(OrdersActivity.this, new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                FinalDate.setText("Fecha Final: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month) + "-" +
+//                        Integer.toString(year) + "-");
+//            }
+//        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

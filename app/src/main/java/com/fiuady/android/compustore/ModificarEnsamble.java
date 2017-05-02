@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.fiuady.db.AssemblyProduct;
 import com.fiuady.db.Category;
 import com.fiuady.db.CompuStore;
+import com.fiuady.db.OrderAssembly;
 import com.fiuady.db.Product;
 
 import java.util.ArrayList;
@@ -271,18 +272,29 @@ public class ModificarEnsamble extends AppCompatActivity {
     EditText descrip;
     public void btnguardar (View v) {
 
+        Boolean nomodificar = false;
+        for (OrderAssembly o:compuStore.getAllOrderAssemblies()) {
+            if(o.getAssembly_id() == paso){
+                nomodificar = true;
+            }
+        }
+        if(nomodificar){
+            Toast.makeText(this, "Ensamble esta en orden, no puede modificarse", Toast.LENGTH_SHORT).show();
+        }else {
+
             compuStore.deleteAssemblyproducts(paso);
             compuStore.deleteAssembly(paso, true);
             //Agregar ensamble
             compuStore.insertAssembly(descrip.getText().toString());
             int idensa = compuStore.getAssemblyid(descrip.getText().toString());
             //Agregar cada producto del ensamble con cantidades
-            for(Product p :products2){
-                compuStore.insertAssemblyproducts(idensa,p.getId(),p.getQuantity());
+            for (Product p : products2) {
+                compuStore.insertAssemblyproducts(idensa, p.getId(), p.getQuantity());
             }
 
             Toast.makeText(ModificarEnsamble.this, "Ensamble modificado", Toast.LENGTH_SHORT).show();
             finish();
+        }
 
     }
     public void btnCancelar (View v) {

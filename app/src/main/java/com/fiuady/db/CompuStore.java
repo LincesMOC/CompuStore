@@ -2,17 +2,12 @@ package com.fiuady.db;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import com.fiuady.db.CompuStoreDbSchema.*;
 
@@ -110,8 +105,21 @@ class MissingProductCursor extends CursorWrapper {
                 cursor.getString(cursor.getColumnIndex(CompuStoreDbSchema.ProductsTable.Columns.DESCRIPTION)),
                 cursor.getInt(cursor.getColumnIndex(ProductsTable.Columns.QUANTITY)));
     }
-
 }
+
+class SaleCursor extends CursorWrapper {
+    public SaleCursor(Cursor cursor) { super(cursor);}
+
+    public Sale getSale(){
+        Cursor cursor = getWrappedCursor();
+        return new Sale(cursor.getInt(cursor.getColumnIndex("id")),
+                cursor.getInt(cursor.getColumnIndex("id2")),
+                cursor.getString(cursor.getColumnIndex("name")),
+                cursor.getString(cursor.getColumnIndex("date")),
+                cursor.getInt(cursor.getColumnIndex("final_price")));
+    }
+}
+
 public final class CompuStore {
     private CompuStoreHelper compuStoreHelper;
     private SQLiteDatabase db;
@@ -780,4 +788,109 @@ public final class CompuStore {
 
         return list;
     }
+
+    public List<Sale> getAllSales() {
+        ArrayList<Sale> list = new ArrayList<>();
+
+        SaleCursor cursor = new SaleCursor(
+                db.rawQuery("SELECT o.id, p.assembly_id AS id2, (t.first_name ||' '|| t.last_name) AS name, o.date, SUM(p.qty * q.qty * r.price) AS final_price \n" +
+                        "FROM orders o\n" +
+                        "INNER JOIN order_assemblies p ON (o.id = p.id)\n" +
+                        "INNER JOIN assembly_products q ON (p.assembly_id = q.id)\n" +
+                        "INNER JOIN products r ON (q.product_id = r.id)\n" +
+                        "INNER JOIN order_status s ON (o.status_id = s.id)\n" +
+                        "INNER JOIN customers t ON (o.customer_id = t.id)\n" +
+                        "WHERE o.status_id >= 2\n" +
+                        "GROUP BY date(o.date), q.id, p.assembly_id\n" +
+                        "ORDER BY date(o.date) ASC, q.id, p.assembly_id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getSale());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public List<Sale> getSalesConfimationbyName() {
+        ArrayList<Sale> list = new ArrayList<>();
+        SaleCursor cursor = new SaleCursor(
+                db.rawQuery("SELECT o.id, o.status_id AS id2, (t.first_name ||' '|| t.last_name) AS name, o.date, SUM(p.qty * q.qty * r.price) AS final_price \n" +
+                        "FROM orders o\n" +
+                        "INNER JOIN order_assemblies p ON (o.id = p.id)\n" +
+                        "INNER JOIN assembly_products q ON (p.assembly_id = q.id)\n" +
+                        "INNER JOIN products r ON (q.product_id = r.id)\n" +
+                        "INNER JOIN order_status s ON (o.status_id = s.id)\n" +
+                        "INNER JOIN customers t ON (o.customer_id = t.id)\n" +
+                        "GROUP BY o.id\n" +
+                        "ORDER BY name ASC", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getSale());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public List<Sale> getSalesConfimationbyDate() {
+        ArrayList<Sale> list = new ArrayList<>();
+        SaleCursor cursor = new SaleCursor(
+                db.rawQuery("SELECT o.id, o.status_id AS id2, (t.first_name ||' '|| t.last_name) AS name, o.date, SUM(p.qty * q.qty * r.price) AS final_price \n" +
+                        "FROM orders o\n" +
+                        "INNER JOIN order_assemblies p ON (o.id = p.id)\n" +
+                        "INNER JOIN assembly_products q ON (p.assembly_id = q.id)\n" +
+                        "INNER JOIN products r ON (q.product_id = r.id)\n" +
+                        "INNER JOIN order_status s ON (o.status_id = s.id)\n" +
+                        "INNER JOIN customers t ON (o.customer_id = t.id)\n" +
+                        "GROUP BY o.id\n" +
+                        "ORDER BY date(o.date) ASC", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getSale());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public List<Sale> getSalesConfimationbyPrice() {
+        ArrayList<Sale> list = new ArrayList<>();
+        SaleCursor cursor = new SaleCursor(
+                db.rawQuery("SELECT o.id, o.status_id AS id2, (t.first_name ||' '|| t.last_name) AS name, o.date, SUM(p.qty * q.qty * r.price) AS final_price \n" +
+                        "FROM orders o\n" +
+                        "INNER JOIN order_assemblies p ON (o.id = p.id)\n" +
+                        "INNER JOIN assembly_products q ON (p.assembly_id = q.id)\n" +
+                        "INNER JOIN products r ON (q.product_id = r.id)\n" +
+                        "INNER JOIN order_status s ON (o.status_id = s.id)\n" +
+                        "INNER JOIN customers t ON (o.customer_id = t.id)\n" +
+                        "GROUP BY o.id\n" +
+                        "ORDER BY final_price DESC", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getSale());
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public List<Sale> getConfirmationSalesByOrder(int order) {
+        ArrayList<Sale> list = new ArrayList<>();
+
+        SaleCursor cursor = new SaleCursor(
+                db.rawQuery("SELECT o.id, r.id AS id2, (t.first_name ||' '|| t.last_name) AS name, o.date, SUM(p.qty * q.qty) AS final_price\n" +
+                        "FROM orders o\n" +
+                        "INNER JOIN order_assemblies p ON (o.id = p.id)\n" +
+                        "INNER JOIN assembly_products q ON (p.assembly_id = q.id)\n" +
+                        "INNER JOIN products r ON (q.product_id = r.id)\n" +
+                        "INNER JOIN order_status s ON (o.status_id = s.id)\n" +
+                        "INNER JOIN customers t ON (o.customer_id = t.id)\n" +
+                        "WHERE o.id = " +  Integer.toString(order) + "\n" +
+                        "GROUP BY r.id\n" +
+                        "ORDER BY o.id ASC, r.id", null));
+        while(cursor.moveToNext()){
+            list.add(cursor.getSale());
+        }
+        cursor.close();
+
+        return list;
+    }
+
 }

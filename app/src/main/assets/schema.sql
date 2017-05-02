@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS [order_assemblies];
+DROP TABLE IF EXISTS [orders];
+DROP TABLE IF EXISTS [order_status];
+DROP TABLE IF EXISTS [customers];
+DROP TABLE IF EXISTS [assembly_products];
+DROP TABLE IF EXISTS [assemblies];
+DROP TABLE IF EXISTS [products];
+DROP TABLE IF EXISTS [product_categories];
+
 CREATE TABLE [product_categories](
     [id] INTEGER PRIMARY KEY,
     [description] TEXT NOT NULL);

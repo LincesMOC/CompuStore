@@ -56,4 +56,9 @@
         <item>Email</item>
     </string-array>
 
+    <string-array name="filtro">
+        <item>Nombre</item>
+        <item>Fecha</item>
+        <item>Monto</item>
+    </string-array>
 </resources>

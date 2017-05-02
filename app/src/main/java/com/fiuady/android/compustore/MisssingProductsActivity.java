@@ -62,7 +62,6 @@ public class MisssingProductsActivity extends AppCompatActivity {
             return new MissingProductHolder(view);
         }
 
-
         @Override
         public int getItemCount() {
             return mProducts.size();
@@ -86,7 +85,7 @@ public class MisssingProductsActivity extends AppCompatActivity {
         mpRV.setAdapter(adapter);
     }
 
-    List<MissingProduct> productosFaltantes () {
+    List<MissingProduct> productosFaltantes() {
         List<Product> P = compuStore.getAllProducts();
         List<MissingProduct> M = compuStore.getAllMissingProduct();
         List<MissingProduct> MP = new ArrayList<MissingProduct>();

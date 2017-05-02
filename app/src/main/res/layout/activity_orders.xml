@@ -23,6 +23,8 @@
             android:textColor="@android:color/black"
             android:textSize="18dp" />
 
+
+
         <com.fiuady.android.compustore.MultiSpinner
             android:id="@+id/status_order_spinner"
             android:paddingTop="10dp"
@@ -51,6 +53,41 @@
             android:layout_toRightOf="@id/client_TAG"
             android:layout_below="@id/status_order_spinner"></Spinner>
 
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/start_date"
+            android:padding="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/checkBox"
+            android:textColor="@android:color/black"
+            android:onClick="onInicialDateClick"
+            android:text="Fecha Inicial: 00-00-0000"
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/finish_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/start_date"
+            android:layout_toLeftOf="@id/checkBox1"
+            android:text="Fecha Final: 99-99-9999"
+            android:padding="4dp"
+            android:onClick="onFinishDateClick"
+            android:textColor="@android:color/black"
+            android:textSize="18dp" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

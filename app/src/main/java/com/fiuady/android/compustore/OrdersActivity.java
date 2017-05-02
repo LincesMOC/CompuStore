@@ -1,5 +1,6 @@
 package com.fiuady.android.compustore;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import com.fiuady.db.CompuStore;
 import com.fiuady.db.Order;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class OrdersActivity extends AppCompatActivity {
@@ -132,6 +135,32 @@ public class OrdersActivity extends AppCompatActivity {
 
         O_adapter = new OrderAdapter(compuStore.getAllOrders());
         orderRV.setAdapter(O_adapter);
+    }
+
+    public void onInicialDateClick (View v) {
+        final Calendar c = Calendar.getInstance();
+        final TextView InitialDate = (TextView) findViewById(R.id.start_date);
+
+        new DatePickerDialog(OrdersActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                InitialDate.setText("Fecha Inicial: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month) + "-" +
+                        Integer.toString(year) + "-");
+            }
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public void onFinishDateClick (View v) {
+        final Calendar c = Calendar.getInstance();
+        final TextView FinalDate = (TextView) findViewById(R.id.finish_date);
+
+        new DatePickerDialog(OrdersActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                FinalDate.setText("Fecha Final: " + Integer.toString(dayOfMonth) + "-" + Integer.toString(month) + "-" +
+                        Integer.toString(year) + "-");
+            }
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     @Override

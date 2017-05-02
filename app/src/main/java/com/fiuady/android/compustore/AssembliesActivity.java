@@ -46,10 +46,6 @@ public class AssembliesActivity extends AppCompatActivity {
                   final PopupMenu popup = new PopupMenu(AssembliesActivity.this, txtDescription);
                   popup.getMenuInflater().inflate(R.menu.option2_menu, popup.getMenu());
 
-                  // if (compuStore.deleteCategory(category.getId(), false)) {
-                  //     popup.getMenu().removeItem(R.id.menu_item2);
-                  // }
-
                   popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                       @Override
                       public boolean onMenuItemClick(MenuItem item) {

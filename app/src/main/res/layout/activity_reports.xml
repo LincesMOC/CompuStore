@@ -13,7 +13,7 @@
         android:onClick="onImageClickFaltante"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:scaleType="fitCenter"
-        android:src="@drawable/categorias" />
+        android:src="@drawable/producto_faltante" />
 
     <ImageButton
         android:id="@+id/idImageButtonConfirmacion_Ordenes"
@@ -23,7 +23,7 @@
         android:onClick="onImageClickConfirmacion"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:scaleType="fitCenter"
-        android:src="@drawable/categorias" />
+        android:src="@drawable/simulador" />
 
     <ImageButton
         android:id="@+id/idImageButtonResumen_Ventas"
@@ -33,6 +33,6 @@
         android:onClick="onImageClickVentas"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:scaleType="fitCenter"
-        android:src="@drawable/categorias" />
+        android:src="@drawable/resumen_ventas" />
 
 </LinearLayout>

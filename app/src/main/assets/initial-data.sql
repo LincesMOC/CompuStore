@@ -207,15 +207,15 @@ INSERT INTO order_status (id, description, editable, previous, next) VALUES (2, 
 INSERT INTO order_status (id, description, editable, previous, next) VALUES (3, 'En tránsito', 0, '-', '4');
 INSERT INTO order_status (id, description, editable, previous, next) VALUES (4, 'Finalizado', 0, '-', '-');
 
-INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (0, 4, 5, '05-10-2016', NULL);
-INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (1, 4, 2, '12-11-2016', NULL);
-INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (2, 4, 2, '26-12-2016', NULL);
-INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (3, 3, 4, '03-01-2017', NULL);
-INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (4, 1, 1, '15-01-2017', NULL);
-INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (5, 3, 0, '04-02-2017', NULL);
-INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (6, 2, 1, '05-03-2017', NULL);
-INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (7, 0, 4, '12-03-2017', NULL);
-INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (8, 0, 3, '18-03-2017', NULL);
+INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (0, 4, 5, '2016-10-05', NULL);
+INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (1, 4, 2, '2016-11-12', NULL);
+INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (2, 4, 2, '2016-12-26', NULL);
+INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (3, 3, 4, '2017-01-03', NULL);
+INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (4, 1, 1, '2017-01-15', NULL);
+INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (5, 3, 0, '2017-02-04', NULL);
+INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (6, 2, 1, '2017-03-05', NULL);
+INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (7, 0, 4, '2017-03-12', NULL);
+INSERT INTO orders (id, status_id, customer_id, date, change_log) VALUES (8, 0, 3, '2017-03-18', NULL);
 
 INSERT INTO order_assemblies (id, assembly_id, qty) VALUES (0, 0, 2);
 INSERT INTO order_assemblies (id, assembly_id, qty) VALUES (0, 3, 2);

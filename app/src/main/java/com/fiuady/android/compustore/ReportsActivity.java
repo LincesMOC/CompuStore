@@ -48,7 +48,7 @@ public class ReportsActivity extends AppCompatActivity {
         Intent i = new Intent(this, ConfimationActivity.class);
         startActivity(i);
     }
-
+//
     public void onImageClickVentas (View v) {
         Intent i = new Intent(this, SalesActivity.class);
         startActivity(i);

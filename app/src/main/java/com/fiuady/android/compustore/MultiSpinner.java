@@ -82,20 +82,40 @@ public class MultiSpinner extends android.support.v7.widget.AppCompatSpinner imp
         return true;
     }
 
-    public void setItems(List<String> items, String allText,
+    public void setItems(List<String> items, String selectedList, String allText,
                          MultiSpinnerListener listener) {
         this.items = items;
         this.defaultText = allText;
         this.listener = listener;
 
-        // all selected by default
+        String spinnerText = allText;
+
+        //Todos empiezan marcados
         selected = new boolean[items.size()];
         for (int i = 0; i < selected.length; i++)
             selected[i] = true;
 
-        // all text on the spinner
+        if (selectedList != null) {
+           // Extract selected items
+            spinnerText = "";
+
+            String[] selectedItems = selectedList.trim().split(",");
+
+           // Marcando los seleccionados
+           for (int i = 0; i < selectedItems.length; i++) {
+               for (int j = 0; j < items.size(); j++) {
+                   if (selectedItems[i].trim().equals(items.get(j))) {
+                       selected[j] = true;
+                       spinnerText += (spinnerText.equals("")?"":", ") + items.get(j);
+                       break;
+                   }
+               }
+           }
+       }
+
+        //Texto al spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, new String[] { allText });
+                android.R.layout.simple_spinner_item, new String[] { spinnerText });
         setAdapter(adapter);
     }
 

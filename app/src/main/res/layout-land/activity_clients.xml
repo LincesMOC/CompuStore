@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,32 +13,41 @@
     android:paddingLeft="16dp"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context="com.fiuady.android.compustore.ClientsActivity">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/filtrado_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:paddingTop="10dp"
+            android:layout_alignParentTop="true"
+            android:paddingTop="5dp"
             android:text="Filtrado: "
             android:textColor="@android:color/black"
-            android:textSize="12dp" />
+            android:textSize="16dp" />
 
         <com.fiuady.android.compustore.MultiSpinner
             android:id="@+id/client_filter_spinner"
             android:paddingTop="10dp"
             android:textSize="10dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/filtrado_tag"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/filtrado_tag"
             />
+
+        <EditText
+            android:id="@+id/edittextdescripcion"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/client_filter_spinner"
+            android:textSize="10dp"
+            android:textAlignment="center"
+            android:hint="Texto de búsqueda..." />
 
         <ImageButton
             android:id="@+id/search_imagebutton"
@@ -43,17 +57,8 @@
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:onClick="onSearchClick"
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@+id/client_filter_spinner" />
-
-        <EditText
-            android:id="@+id/edittextdescripcion"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/search_imagebutton"
-            android:textSize="10dp"
-            android:textAlignment="center"
-            android:hint="Texto de búsqueda..." />
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/edittextdescripcion" />
 
     </RelativeLayout>
 
@@ -72,3 +77,5 @@
     </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
+
+</RelativeLayout>

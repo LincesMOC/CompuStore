@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:paddingTop="10dp"
-        android:textSize="20dp"
+        android:textSize="18dp"
         android:textStyle="bold"
         tools:text="Nombre del cliente"/>
 
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:textSize="18dp"
+        android:textSize="15dp"
         tools:text="Fecha"/>
 
     <TextView
@@ -32,7 +32,7 @@
         android:paddingBottom="10dp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/txt_clientName"
-        android:textSize="18dp"
+        android:textSize="15dp"
         tools:text="Estado..."/>
 
 </RelativeLayout>

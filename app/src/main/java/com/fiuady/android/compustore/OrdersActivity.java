@@ -3,9 +3,11 @@ package com.fiuady.android.compustore;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +32,8 @@ import com.fiuady.db.Order;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +45,25 @@ public class OrdersActivity extends AppCompatActivity {
     private Spinner clientsSpinner;
     private MultiSpinner orderStateSpinner;
     private EditText LISTA;
+
+    private final String BUSCARPRESSED = "buscarpressed";
+    private final String SPINNERSTATES = "indexdespinner";
+    private final String STRINGTEXTO = "stringtexto";
+    private final String STRINGACTUAL = "stringactual";
+    private final String INDEXCLIENTSPINNER = "indexclientspinner";
+    private final String DATE1STATE = "date1state";
+    private final String DATE2STATE = "date2state";
+    private final String DATE1 = "date1";
+    private final String DATE2 = "date2";
+    private boolean buscarpressed;
+    private boolean dateS1;
+    private boolean dateS2;
+
+    private String textoactual;
+    private String stringquesebusco = "";
+    private String statesSpinner;
+    private String SelectedList = null;
+    private String clientName;
 
     private class OrderHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -266,7 +289,6 @@ public class OrdersActivity extends AppCompatActivity {
         chkDate2 = (CheckBox)findViewById(R.id.checkBox2);
 
         //SPINNER DE ESTADO DE ORDEN
-        LISTA = (EditText)findViewById(R.id.edittextdescripcion);
         orderStateSpinner = (MultiSpinner) findViewById(R.id.status_order_spinner);
 
         final List<String> list = new ArrayList<>();
@@ -276,24 +298,17 @@ public class OrdersActivity extends AppCompatActivity {
         list.add("En tránsito");
         list.add("Finalizado");
 
-        orderStateSpinner.setItems(list, "Todos", new MultiSpinner.MultiSpinnerListener() {
+        orderStateSpinner.setItems(list,null, "Todos", new MultiSpinner.MultiSpinnerListener() {
             @Override
             public void onItemsSelected(boolean[] selected) {
 
-                textStatus = orderStateSpinner.getSelectedItem().toString();
-                Toast.makeText(OrdersActivity.this,"Seleccionado: "+textStatus, Toast.LENGTH_SHORT).show();
-
-                int i=0;
-
                 selected1 = selected;
+                SelectedList = orderStateSpinner.getSelectedItem().toString();
 
                 O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByEverything(selected1,textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked())); //BY EVERYTHING
-                //O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByStatus(selected1,textClient));
                 orderRV.setAdapter(O_adapter);
 
-                if (chkDate1.isChecked()){
-                    Toast.makeText(OrdersActivity.this,"Fecha inicial: "+textDate1, Toast.LENGTH_SHORT).show();
-                }
+                buscarpressed = true; //Modificaron el spinner de Estados
             }
         });
 
@@ -312,7 +327,6 @@ public class OrdersActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 textClient = clientsSpinner.getSelectedItem().toString();
-                Toast.makeText(OrdersActivity.this,"Seleccionado: "+textClient, Toast.LENGTH_SHORT).show();
 
                 if(orderStateSpinner.getSelectedItem().toString() == "Todos"){
                     O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByClient(textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked()));
@@ -334,6 +348,39 @@ public class OrdersActivity extends AppCompatActivity {
 
         O_adapter = new OrderAdapter(compuStore.getAllOrders());
         orderRV.setAdapter(O_adapter);
+
+        if(savedInstanceState != null){ //Si hay algo guardado
+
+            buscarpressed = savedInstanceState.getBoolean(BUSCARPRESSED);
+            statesSpinner = savedInstanceState.getString(SPINNERSTATES);
+            clientName = savedInstanceState.getString(INDEXCLIENTSPINNER);
+            dateS1 = savedInstanceState.getBoolean(DATE1STATE);
+            dateS2 = savedInstanceState.getBoolean(DATE2STATE);
+            textDate1 = savedInstanceState.getString(DATE1);
+            textDate2 = savedInstanceState.getString(DATE2);
+
+
+            orderStateSpinner.setItems(list,statesSpinner, "Todos", new MultiSpinner.MultiSpinnerListener() {
+
+                @Override
+                public void onItemsSelected(boolean[] selected) {
+                    selected1 = selected;
+                    SelectedList = orderStateSpinner.getSelectedItem().toString();
+                }
+            });
+
+            if(buscarpressed){ //SE MODIFICÓ EL ESTADO
+
+                O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByEverything(selected1,clientName,textDate1,textDate2,dateS1,dateS2)); //BY EVERYTHING
+                orderRV.setAdapter(O_adapter);
+
+                buscarpressed = true;
+            }else //SOLO POR CLIENTES, NO ESTADO MODIFICADO
+            {
+                O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByClient(clientName,textDate1,textDate2,dateS1,dateS2));
+                orderRV.setAdapter(O_adapter);
+            }
+        }
     }
 
     @Override
@@ -424,4 +471,30 @@ public class OrdersActivity extends AppCompatActivity {
         orderRV.setAdapter(O_adapter);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            orderRV.setLayoutManager(new GridLayoutManager(this,2));
+            //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            orderRV.setLayoutManager(new LinearLayoutManager(this));
+            //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(SPINNERSTATES,SelectedList); //ESTADOS DE ORDEN
+        outState.putString(INDEXCLIENTSPINNER,clientsSpinner.getSelectedItem().toString()); //Nombre del cliente
+        outState.putBoolean(DATE1STATE,chkDate1.isChecked());
+        outState.putBoolean(DATE2STATE,chkDate2.isChecked());
+        outState.putString(DATE1,textDate1);
+        outState.putString(DATE2,textDate2);
+        outState.putBoolean(BUSCARPRESSED,buscarpressed);
+
+    }
 }

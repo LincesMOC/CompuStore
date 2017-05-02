@@ -94,7 +94,6 @@ public class OrdersActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(OrdersActivity.this, R.string.error_msg, Toast.LENGTH_SHORT).show();
 
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -330,7 +329,6 @@ public class OrdersActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 textClient = clientsSpinner.getSelectedItem().toString();
-                Toast.makeText(OrdersActivity.this,"Seleccionado: "+textClient, Toast.LENGTH_SHORT).show();
 
                 if(orderStateSpinner.getSelectedItem().toString() == "Todos"){
                     O_adapter = new  OrdersActivity.OrderAdapter(compuStore.filterOrdersByClient(textClient,textDate1,textDate2,chkDate1.isChecked(),chkDate2.isChecked()));
@@ -352,10 +350,8 @@ public class OrdersActivity extends AppCompatActivity {
 
         if (OrdersActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             orderRV.setLayoutManager(new GridLayoutManager(this,2));
-            //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
         } else if (OrdersActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             orderRV.setLayoutManager(new LinearLayoutManager(this));
-            //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }
 
         O_adapter = new OrderAdapter(compuStore.getAllOrders());
@@ -480,13 +476,10 @@ public class OrdersActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             orderRV.setLayoutManager(new GridLayoutManager(this,2));
-            //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             orderRV.setLayoutManager(new LinearLayoutManager(this));
-            //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }
     }
 

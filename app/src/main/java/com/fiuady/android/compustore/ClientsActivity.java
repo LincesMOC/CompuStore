@@ -133,7 +133,7 @@ public class ClientsActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 AlertDialog.Builder build = new AlertDialog.Builder(ClientsActivity.this);
                                 build.setCancelable(false);
-                                build.setTitle(getString(R.string.client_add));
+                                build.setTitle("Modificar cliente");
                                 build.setMessage(R.string.sure_text);
 
                                 build.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
